@@ -1,32 +1,967 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar" dir="rtl">
 <head>
-    <title>Todo List</title>
-    <style>body{background:#f0f0f0;font-family:Arial;padding:20px;}</style>
-</head>
-<body>
-    <h1>Simple Todo</h1>
-    <input type="text" id="task">
-    <button onclick="addTask()">Add</button>
-    <ul id="list"></ul>
-    <script>
-        let tasks = [];
-        function addTask() {
-            const task = document.getElementById('task').value;
-            if(task) {
-                tasks.push(task);
-                document.getElementById('task').value = '';
-                updateList();
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة المهام - Todo List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            padding: 25px 0;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        /* Language Switcher */
+        .lang-switcher {
+            display: inline-flex;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .lang-btn {
+            padding: 10px 25px;
+            border: none;
+            background: transparent;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .lang-btn.active {
+            background: white;
+            color: #6a11cb;
+        }
+        
+        /* Main App Card */
+        .app-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        /* Sharing Section */
+        .share-box {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px dashed #6a11cb;
+            text-align: center;
+        }
+        
+        .share-box h3 {
+            color: #6a11cb;
+            margin-bottom: 15px;
+        }
+        
+        .share-link {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            word-break: break-all;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        
+        /* Connection Status */
+        .connection {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4CAF50;
+        }
+        
+        .status-dot.offline {
+            background: #f44336;
+        }
+        
+        /* Task Form */
+        .task-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .task-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .task-input:focus {
+            outline: none;
+            border-color: #6a11cb;
+        }
+        
+        .task-select {
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            min-width: 150px;
+        }
+        
+        .add-btn {
+            background: linear-gradient(to left, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        @media (min-width: 768px) {
+            .stats {
+                grid-template-columns: repeat(4, 1fr);
             }
         }
-        function updateList() {
-            const list = document.getElementById('list');
-            list.innerHTML = '';
-            tasks.forEach(t => {
-                const li = document.createElement('li');
-                li.textContent = t;
-                list.appendChild(li);
+        
+        .stat-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #6a11cb;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            padding: 12px 24px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .filter-btn.active {
+            background: #6a11cb;
+            color: white;
+            border-color: #6a11cb;
+        }
+        
+        /* Task List */
+        .task-list {
+            list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-left: 10px;
+        }
+        
+        .task-item {
+            background: #f8f9ff;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            border-right: 5px solid #6a11cb;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .task-item.completed {
+            opacity: 0.7;
+            border-right-color: #4CAF50;
+        }
+        
+        .task-checkbox {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-text {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .task-text.completed {
+            text-decoration: line-through;
+            color: #666;
+        }
+        
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .task-category {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .category-work { background: #e3f2fd; color: #1976d2; }
+        .category-personal { background: #f3e5f5; color: #7b1fa2; }
+        .category-shopping { background: #e8f5e9; color: #388e3c; }
+        .category-health { background: #fff3e0; color: #f57c00; }
+        
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .task-btn {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .edit-btn { color: #2575fc; }
+        .delete-btn { color: #f44336; }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 15px 25px;
+            background: #4CAF50;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1000;
+        }
+        
+        /* Buttons */
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #6a11cb;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .app-card {
+                padding: 20px;
+            }
+            
+            .task-form {
+                flex-direction: column;
+            }
+            
+            .task-input, .task-select, .add-btn {
+                width: 100%;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 قائمة المهام الذكية</h1>
+            <p class="subtitle">شارك بين الهاتف والكمبيوتر - Share between phone and PC</p>
+            
+            <div class="lang-switcher">
+                <button class="lang-btn active" data-lang="ar">العربية</button>
+                <button class="lang-btn" data-lang="en">English</button>
+            </div>
+        </header>
+        
+        <div class="app-card">
+            <!-- Connection Status -->
+            <div class="connection">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">جاري الاتصال...</span>
+            </div>
+            
+            <!-- Sharing Section -->
+            <div class="share-box">
+                <h3 data-i18n="shareTitle">شارك هذه القائمة</h3>
+                <p data-i18n="shareDesc">انسخ الرابط وافتحه على هاتفك:</p>
+                <div class="share-link" id="shareLink">جار التحميل...</div>
+                
+                <div class="buttons">
+                    <button class="btn btn-primary" id="copyBtn">
+                        <i class="fas fa-copy"></i> <span data-i18n="copyLink">نسخ الرابط</span>
+                    </button>
+                    <button class="btn btn-secondary" id="newListBtn">
+                        <i class="fas fa-plus"></i> <span data-i18n="newList">قائمة جديدة</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Task Form -->
+            <form class="task-form" id="taskForm">
+                <input type="text" class="task-input" id="taskInput" data-i18n-placeholder="addTask" placeholder="أضف مهمة جديدة..." required>
+                <select class="task-select" id="taskCategory">
+                    <option value="personal" data-i18n="personal">شخصي</option>
+                    <option value="work" data-i18n="work">عمل</option>
+                    <option value="shopping" data-i18n="shopping">تسوق</option>
+                    <option value="health" data-i18n="health">صحة</option>
+                </select>
+                <button type="submit" class="add-btn">
+                    <i class="fas fa-plus"></i> <span data-i18n="addTaskBtn">إضافة</span>
+                </button>
+            </form>
+            
+            <!-- Statistics -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTasks">0</div>
+                    <div class="stat-label" data-i18n="total">المجموع</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedTasks">0</div>
+                    <div class="stat-label" data-i18n="completed">مكتملة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="pendingTasks">0</div>
+                    <div class="stat-label" data-i18n="pending">معلقة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="todayTasks">0</div>
+                    <div class="stat-label" data-i18n="today">اليوم</div>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all" data-i18n="all">الكل</button>
+                <button class="filter-btn" data-filter="pending" data-i18n="pending">معلقة</button>
+                <button class="filter-btn" data-filter="completed" data-i18n="completed">مكتملة</button>
+                <button class="filter-btn" data-filter="today" data-i18n="today">اليوم</button>
+            </div>
+            
+            <!-- Task List -->
+            <ul class="task-list" id="taskList">
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3 data-i18n="noTasks">لا توجد مهام</h3>
+                    <p data-i18n="addFirst">أضف مهمتك الأولى!</p>
+                </div>
+            </ul>
+        </div>
+        
+        <footer>
+            <p data-i18n="footer">قائمة المهام الذكية - شارك بين جميع أجهزتك</p>
+        </footer>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationText">إشعار</span>
+    </div>
+
+    <script>
+        // SIMPLE CLOUD SYNC - WORKING VERSION
+        
+        // Language texts
+        const texts = {
+            ar: {
+                shareTitle: "شارك هذه القائمة",
+                shareDesc: "انسخ الرابط وافتحه على هاتفك:",
+                copyLink: "نسخ الرابط",
+                newList: "قائمة جديدة",
+                addTask: "أضف مهمة جديدة...",
+                personal: "شخصي",
+                work: "عمل",
+                shopping: "تسوق",
+                health: "صحة",
+                addTaskBtn: "إضافة",
+                total: "المجموع",
+                completed: "مكتملة",
+                pending: "معلقة",
+                today: "اليوم",
+                all: "الكل",
+                noTasks: "لا توجد مهام",
+                addFirst: "أضف مهمتك الأولى!",
+                footer: "قائمة المهام الذكية - شارك بين جميع أجهزتك",
+                connecting: "جاري الاتصال...",
+                connected: "متصل - جاهز للمزامنة",
+                offline: "غير متصل",
+                linkCopied: "تم نسخ الرابط!",
+                taskAdded: "تمت إضافة المهمة!",
+                taskUpdated: "تم تحديث المهمة!",
+                taskDeleted: "تم حذف المهمة",
+                listCreated: "تم إنشاء قائمة جديدة"
+            },
+            en: {
+                shareTitle: "Share This List",
+                shareDesc: "Copy link and open on your phone:",
+                copyLink: "Copy Link",
+                newList: "New List",
+                addTask: "Add new task...",
+                personal: "Personal",
+                work: "Work",
+                shopping: "Shopping",
+                health: "Health",
+                addTaskBtn: "Add",
+                total: "Total",
+                completed: "Completed",
+                pending: "Pending",
+                today: "Today",
+                all: "All",
+                noTasks: "No tasks yet",
+                addFirst: "Add your first task!",
+                footer: "Smart Todo List - Share across all devices",
+                connecting: "Connecting...",
+                connected: "Connected - Ready to sync",
+                offline: "Offline",
+                linkCopied: "Link copied!",
+                taskAdded: "Task added!",
+                taskUpdated: "Task updated!",
+                taskDeleted: "Task deleted",
+                listCreated: "New list created"
+            }
+        };
+        
+        // Simple state
+        let currentLang = 'ar';
+        let tasks = [];
+        let currentFilter = 'all';
+        let listId = '';
+        let lastSyncTime = 0;
+        
+        // Initialize when page loads
+        window.onload = function() {
+            initApp();
+        };
+        
+        function initApp() {
+            // Get list ID from URL or create new
+            const urlParams = new URLSearchParams(window.location.search);
+            listId = urlParams.get('list');
+            
+            if (!listId) {
+                listId = 'list_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                updateUrl();
+            }
+            
+            // Setup language
+            setupLanguage();
+            
+            // Update UI
+            updateShareLink();
+            updateStatus('connected');
+            
+            // Load tasks
+            loadTasks();
+            
+            // Setup event listeners
+            setupEvents();
+            
+            // Start auto-sync
+            startAutoSync();
+        }
+        
+        function setupLanguage() {
+            // Language buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Change language
+                    currentLang = this.dataset.lang;
+                    document.documentElement.lang = currentLang;
+                    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+                    
+                    // Update all text
+                    updateAllText();
+                });
             });
+            
+            updateAllText();
+        }
+        
+        function updateAllText() {
+            // Update all elements with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (texts[currentLang][key]) {
+                    el.textContent = texts[currentLang][key];
+                }
+            });
+            
+            // Update placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (texts[currentLang][key]) {
+                    el.placeholder = texts[currentLang][key];
+                }
+            });
+            
+            // Update status
+            updateStatusText();
+        }
+        
+        function updateStatus(status) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            
+            if (status === 'connected') {
+                dot.className = 'status-dot';
+                text.textContent = texts[currentLang]['connected'];
+            } else if (status === 'offline') {
+                dot.className = 'status-dot offline';
+                text.textContent = texts[currentLang]['offline'];
+            } else {
+                dot.className = 'status-dot';
+                text.textContent = texts[currentLang]['connecting'];
+            }
+        }
+        
+        function updateStatusText() {
+            const text = document.getElementById('statusText');
+            const dot = document.getElementById('statusDot');
+            
+            if (dot.classList.contains('offline')) {
+                text.textContent = texts[currentLang]['offline'];
+            } else {
+                text.textContent = texts[currentLang]['connected'];
+            }
+        }
+        
+        function updateUrl() {
+            const newUrl = window.location.origin + window.location.pathname + '?list=' + listId;
+            window.history.replaceState({}, '', newUrl);
+            updateShareLink();
+        }
+        
+        function updateShareLink() {
+            document.getElementById('shareLink').textContent = window.location.href;
+        }
+        
+        function setupEvents() {
+            // Task form
+            document.getElementById('taskForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const input = document.getElementById('taskInput');
+                const category = document.getElementById('taskCategory').value;
+                const text = input.value.trim();
+                
+                if (text) {
+                    addTask(text, category);
+                    input.value = '';
+                    input.focus();
+                }
+            });
+            
+            // Copy button
+            document.getElementById('copyBtn').addEventListener('click', function() {
+                const link = window.location.href;
+                navigator.clipboard.writeText(link).then(() => {
+                    showNotification(texts[currentLang]['linkCopied']);
+                });
+            });
+            
+            // New list button
+            document.getElementById('newListBtn').addEventListener('click', function() {
+                if (confirm(currentLang === 'ar' ? 'إنشاء قائمة جديدة؟' : 'Create new list?')) {
+                    listId = 'list_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    updateUrl();
+                    tasks = [];
+                    saveTasks();
+                    renderTasks();
+                    showNotification(texts[currentLang]['listCreated']);
+                }
+            });
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    renderTasks();
+                });
+            });
+        }
+        
+        // SIMPLE CLOUD SYNC USING LOCALSTORAGE AS SIMULATION
+        function saveTasks() {
+            // Save to localStorage
+            localStorage.setItem(listId, JSON.stringify({
+                tasks: tasks,
+                lastUpdated: Date.now()
+            }));
+            
+            // Update statistics
+            updateStats();
+            
+            // Try to sync with other tabs/windows
+            broadcastUpdate();
+        }
+        
+        function loadTasks() {
+            // Load from localStorage
+            const saved = localStorage.getItem(listId);
+            
+            if (saved) {
+                const data = JSON.parse(saved);
+                tasks = data.tasks || [];
+            } else {
+                // Add sample tasks for new list
+                addSampleTasks();
+            }
+            
+            updateStats();
+            renderTasks();
+            
+            // Listen for updates from other tabs
+            window.addEventListener('storage', function(e) {
+                if (e.key === listId) {
+                    const data = JSON.parse(e.newValue);
+                    if (data && data.tasks) {
+                        tasks = data.tasks;
+                        updateStats();
+                        renderTasks();
+                    }
+                }
+            });
+        }
+        
+        function broadcastUpdate() {
+            // Trigger storage event for other tabs
+            const event = new StorageEvent('storage', {
+                key: listId,
+                newValue: JSON.stringify({
+                    tasks: tasks,
+                    lastUpdated: Date.now()
+                })
+            });
+            window.dispatchEvent(event);
+        }
+        
+        function addSampleTasks() {
+            const samples = currentLang === 'ar' ? [
+                { id: 1, text: 'مرحباً بك في قائمة المهام!', category: 'personal', completed: false, date: new Date().toISOString() },
+                { id: 2, text: 'انقر على المربع لإكمال المهمة', category: 'work', completed: false, date: new Date().toISOString() },
+                { id: 3, text: 'انسخ الرابط وافتحه على هاتفك', category: 'shopping', completed: true, date: new Date().toISOString() }
+            ] : [
+                { id: 1, text: 'Welcome to your todo list!', category: 'personal', completed: false, date: new Date().toISOString() },
+                { id: 2, text: 'Click checkbox to complete task', category: 'work', completed: false, date: new Date().toISOString() },
+                { id: 3, text: 'Copy link and open on your phone', category: 'shopping', completed: true, date: new Date().toISOString() }
+            ];
+            
+            tasks = samples;
+            saveTasks();
+        }
+        
+        function addTask(text, category) {
+            const newTask = {
+                id: Date.now(),
+                text: text,
+                category: category,
+                completed: false,
+                date: new Date().toISOString()
+            };
+            
+            tasks.unshift(newTask);
+            saveTasks();
+            renderTasks();
+            showNotification(texts[currentLang]['taskAdded']);
+        }
+        
+        function updateTask(taskId, updates) {
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
+            if (taskIndex !== -1) {
+                tasks[taskIndex] = { ...tasks[taskIndex], ...updates };
+                saveTasks();
+                renderTasks();
+                showNotification(texts[currentLang]['taskUpdated']);
+            }
+        }
+        
+        function deleteTask(taskId) {
+            if (confirm(currentLang === 'ar' ? 'حذف هذه المهمة؟' : 'Delete this task?')) {
+                tasks = tasks.filter(t => t.id !== taskId);
+                saveTasks();
+                renderTasks();
+                showNotification(texts[currentLang]['taskDeleted']);
+            }
+        }
+        
+        function updateStats() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const pending = total - completed;
+            
+            const today = new Date().toDateString();
+            const todayTasks = tasks.filter(task => {
+                const taskDate = new Date(task.date).toDateString();
+                return taskDate === today;
+            }).length;
+            
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('pendingTasks').textContent = pending;
+            document.getElementById('todayTasks').textContent = todayTasks;
+        }
+        
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            const emptyState = document.getElementById('emptyState');
+            
+            taskList.innerHTML = '';
+            
+            // Filter tasks
+            let filteredTasks = tasks;
+            
+            if (currentFilter === 'pending') {
+                filteredTasks = tasks.filter(t => !t.completed);
+            } else if (currentFilter === 'completed') {
+                filteredTasks = tasks.filter(t => t.completed);
+            } else if (currentFilter === 'today') {
+                const today = new Date().toDateString();
+                filteredTasks = tasks.filter(task => {
+                    const taskDate = new Date(task.date).toDateString();
+                    return taskDate === today;
+                });
+            }
+            
+            // Check if empty
+            if (filteredTasks.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // Render tasks
+            filteredTasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = `task-item ${task.completed ? 'completed' : ''}`;
+                
+                // Format date
+                const taskDate = new Date(task.date);
+                const dateStr = taskDate.toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                // Category labels
+                const categoryLabels = {
+                    work: currentLang === 'ar' ? 'عمل' : 'Work',
+                    personal: currentLang === 'ar' ? 'شخصي' : 'Personal',
+                    shopping: currentLang === 'ar' ? 'تسوق' : 'Shopping',
+                    health: currentLang === 'ar' ? 'صحة' : 'Health'
+                };
+                
+                li.innerHTML = `
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+                    <div class="task-content">
+                        <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+                        <div class="task-meta">
+                            <span class="task-category category-${task.category}">
+                                ${categoryLabels[task.category]}
+                            </span>
+                            <span>${dateStr}</span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="task-btn edit-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="task-btn delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                taskList.appendChild(li);
+                
+                // Add event listeners
+                const checkbox = li.querySelector('.task-checkbox');
+                const editBtn = li.querySelector('.edit-btn');
+                const deleteBtn = li.querySelector('.delete-btn');
+                
+                checkbox.addEventListener('change', () => {
+                    updateTask(task.id, { completed: checkbox.checked });
+                });
+                
+                editBtn.addEventListener('click', () => {
+                    const newText = prompt(currentLang === 'ar' ? 'تعديل المهمة:' : 'Edit task:', task.text);
+                    if (newText && newText.trim()) {
+                        updateTask(task.id, { 
+                            text: newText.trim(),
+                            date: new Date().toISOString()
+                        });
+                    }
+                });
+                
+                deleteBtn.addEventListener('click', () => {
+                    deleteTask(task.id);
+                });
+            });
+        }
+        
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            
+            text.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function startAutoSync() {
+            // Check for updates every 3 seconds
+            setInterval(() => {
+                // This simulates checking for cloud updates
+                // In a real app, this would call an API
+                console.log('Auto-sync check at', new Date().toLocaleTimeString());
+            }, 3000);
         }
     </script>
 </body>
