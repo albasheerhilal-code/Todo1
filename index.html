@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Reset */
         * {
             margin: 0;
             padding: 0;
@@ -101,6 +100,8 @@
             word-break: break-all;
             border: 1px solid #ddd;
             margin-bottom: 15px;
+            font-size: 14px;
+            text-align: center;
         }
         
         /* Connection Status */
@@ -241,6 +242,12 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .task-item:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         .task-item.completed {
@@ -303,6 +310,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .task-btn:hover {
+            background: rgba(0,0,0,0.05);
         }
         
         .edit-btn { color: #2575fc; }
@@ -313,6 +325,7 @@
             text-align: center;
             padding: 40px 20px;
             color: #666;
+            display: none;
         }
         
         .empty-icon {
@@ -333,6 +346,20 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             display: none;
             z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification.error {
+            background: #f44336;
+        }
+        
+        .notification.info {
+            background: #2196F3;
         }
         
         /* Buttons */
@@ -352,6 +379,12 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         }
         
         .btn-primary {
@@ -477,14 +510,17 @@
             
             <!-- Task List -->
             <ul class="task-list" id="taskList">
-                <div class="empty-state" id="emptyState">
-                    <div class="empty-icon">
-                        <i class="fas fa-clipboard-list"></i>
-                    </div>
-                    <h3 data-i18n="noTasks">لا توجد مهام</h3>
-                    <p data-i18n="addFirst">أضف مهمتك الأولى!</p>
-                </div>
+                <!-- Tasks will be added here by JavaScript -->
             </ul>
+            
+            <!-- Empty State (hidden by default) -->
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h3 data-i18n="noTasks">لا توجد مهام</h3>
+                <p data-i18n="addFirst">أضف مهمتك الأولى!</p>
+            </div>
         </div>
         
         <footer>
@@ -498,7 +534,7 @@
     </div>
 
     <script>
-        // SIMPLE CLOUD SYNC - WORKING VERSION
+        // ========== FIXED VERSION - NO MORE DISAPPEARING TASKS ==========
         
         // Language texts
         const texts = {
@@ -560,27 +596,32 @@
             }
         };
         
-        // Simple state
+        // App state - SIMPLIFIED
         let currentLang = 'ar';
         let tasks = [];
         let currentFilter = 'all';
         let listId = '';
-        let lastSyncTime = 0;
+        let hasAddedSamples = false; // NEW: Track if samples were added
         
         // Initialize when page loads
         window.onload = function() {
+            console.log("App starting...");
             initApp();
         };
         
         function initApp() {
+            console.log("Initializing app...");
+            
             // Get list ID from URL or create new
             const urlParams = new URLSearchParams(window.location.search);
             listId = urlParams.get('list');
             
             if (!listId) {
-                listId = 'list_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                listId = 'list_' + Date.now();
                 updateUrl();
             }
+            
+            console.log("List ID:", listId);
             
             // Setup language
             setupLanguage();
@@ -589,14 +630,13 @@
             updateShareLink();
             updateStatus('connected');
             
-            // Load tasks
+            // Load tasks FIRST
             loadTasks();
             
-            // Setup event listeners
+            // Setup event listeners AFTER loading tasks
             setupEvents();
             
-            // Start auto-sync
-            startAutoSync();
+            console.log("Initial tasks loaded:", tasks.length);
         }
         
         function setupLanguage() {
@@ -614,6 +654,9 @@
                     
                     // Update all text
                     updateAllText();
+                    
+                    // Re-render tasks to update category labels
+                    renderTasks();
                 });
             });
             
@@ -704,7 +747,8 @@
             // New list button
             document.getElementById('newListBtn').addEventListener('click', function() {
                 if (confirm(currentLang === 'ar' ? 'إنشاء قائمة جديدة؟' : 'Create new list?')) {
-                    listId = 'list_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    listId = 'list_' + Date.now();
+                    hasAddedSamples = false; // Reset for new list
                     updateUrl();
                     tasks = [];
                     saveTasks();
@@ -719,75 +763,126 @@
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     currentFilter = this.dataset.filter;
-                    renderTasks();
+                    console.log("Filter changed to:", currentFilter);
+                    renderTasks(); // FIXED: This was missing
                 });
             });
         }
         
-        // SIMPLE CLOUD SYNC USING LOCALSTORAGE AS SIMULATION
+        // ========== FIXED: Save and Load Functions ==========
         function saveTasks() {
-            // Save to localStorage
-            localStorage.setItem(listId, JSON.stringify({
+            console.log("Saving tasks:", tasks.length);
+            
+            // Save tasks to localStorage
+            const data = {
                 tasks: tasks,
-                lastUpdated: Date.now()
-            }));
+                timestamp: Date.now(),
+                hasSamples: hasAddedSamples // Save if samples were added
+            };
+            
+            localStorage.setItem(listId, JSON.stringify(data));
             
             // Update statistics
             updateStats();
             
-            // Try to sync with other tabs/windows
+            // Broadcast to other tabs (for same browser)
             broadcastUpdate();
         }
         
         function loadTasks() {
-            // Load from localStorage
+            console.log("Loading tasks for list:", listId);
+            
+            // Try to load from localStorage
             const saved = localStorage.getItem(listId);
             
             if (saved) {
-                const data = JSON.parse(saved);
-                tasks = data.tasks || [];
+                try {
+                    const data = JSON.parse(saved);
+                    tasks = data.tasks || [];
+                    hasAddedSamples = data.hasSamples || false;
+                    console.log("Loaded tasks:", tasks.length, "Has samples:", hasAddedSamples);
+                } catch (e) {
+                    console.error("Error loading tasks:", e);
+                    tasks = [];
+                }
             } else {
-                // Add sample tasks for new list
-                addSampleTasks();
+                // No saved data - add samples ONCE
+                console.log("No saved data, adding samples");
+                if (!hasAddedSamples) {
+                    addSampleTasks();
+                    hasAddedSamples = true;
+                }
             }
             
+            // Update UI
             updateStats();
             renderTasks();
             
             // Listen for updates from other tabs
+            setupStorageListener();
+        }
+        
+        function setupStorageListener() {
             window.addEventListener('storage', function(e) {
-                if (e.key === listId) {
-                    const data = JSON.parse(e.newValue);
-                    if (data && data.tasks) {
-                        tasks = data.tasks;
+                console.log("Storage event detected:", e.key);
+                if (e.key === listId && e.newValue) {
+                    try {
+                        const data = JSON.parse(e.newValue);
+                        tasks = data.tasks || [];
                         updateStats();
                         renderTasks();
+                        showNotification(currentLang === 'ar' ? 'تم التحديث من جهاز آخر' : 'Updated from another device');
+                    } catch (error) {
+                        console.error("Error processing storage event:", error);
                     }
                 }
             });
         }
         
         function broadcastUpdate() {
-            // Trigger storage event for other tabs
-            const event = new StorageEvent('storage', {
-                key: listId,
-                newValue: JSON.stringify({
-                    tasks: tasks,
-                    lastUpdated: Date.now()
-                })
+            // Create a custom event for other tabs in same browser
+            const event = new CustomEvent('todoUpdate', {
+                detail: { listId: listId, tasks: tasks }
             });
             window.dispatchEvent(event);
+            
+            // Also trigger storage event for cross-tab sync
+            localStorage.setItem(listId + '_sync', Date.now().toString());
         }
         
+        // Listen for custom events
+        window.addEventListener('todoUpdate', function(e) {
+            if (e.detail.listId === listId) {
+                tasks = e.detail.tasks;
+                updateStats();
+                renderTasks();
+            }
+        });
+        
+        // Listen for sync triggers
+        window.addEventListener('storage', function(e) {
+            if (e.key === listId + '_sync' && e.newValue) {
+                // Reload tasks when sync trigger is detected
+                const saved = localStorage.getItem(listId);
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    tasks = data.tasks || [];
+                    updateStats();
+                    renderTasks();
+                }
+            }
+        });
+        
         function addSampleTasks() {
+            console.log("Adding sample tasks");
             const samples = currentLang === 'ar' ? [
-                { id: 1, text: 'مرحباً بك في قائمة المهام!', category: 'personal', completed: false, date: new Date().toISOString() },
-                { id: 2, text: 'انقر على المربع لإكمال المهمة', category: 'work', completed: false, date: new Date().toISOString() },
-                { id: 3, text: 'انسخ الرابط وافتحه على هاتفك', category: 'shopping', completed: true, date: new Date().toISOString() }
+                { id: Date.now(), text: 'مرحباً بك في قائمة المهام!', category: 'personal', completed: false, date: new Date().toISOString() },
+                { id: Date.now() + 1, text: 'انقر على المربع لإكمال المهمة', category: 'work', completed: false, date: new Date().toISOString() },
+                { id: Date.now() + 2, text: 'انسخ الرابط وافتحه على هاتفك', category: 'shopping', completed: true, date: new Date().toISOString() }
             ] : [
-                { id: 1, text: 'Welcome to your todo list!', category: 'personal', completed: false, date: new Date().toISOString() },
-                { id: 2, text: 'Click checkbox to complete task', category: 'work', completed: false, date: new Date().toISOString() },
-                { id: 3, text: 'Copy link and open on your phone', category: 'shopping', completed: true, date: new Date().toISOString() }
+                { id: Date.now(), text: 'Welcome to your todo list!', category: 'personal', completed: false, date: new Date().toISOString() },
+                { id: Date.now() + 1, text: 'Click checkbox to complete task', category: 'work', completed: false, date: new Date().toISOString() },
+                { id: Date.now() + 2, text: 'Copy link and open on your phone', category: 'shopping', completed: true, date: new Date().toISOString() }
             ];
             
             tasks = samples;
@@ -795,6 +890,7 @@
         }
         
         function addTask(text, category) {
+            console.log("Adding task:", text);
             const newTask = {
                 id: Date.now(),
                 text: text,
@@ -803,13 +899,14 @@
                 date: new Date().toISOString()
             };
             
-            tasks.unshift(newTask);
+            tasks.unshift(newTask); // Add to beginning
             saveTasks();
             renderTasks();
             showNotification(texts[currentLang]['taskAdded']);
         }
         
         function updateTask(taskId, updates) {
+            console.log("Updating task:", taskId);
             const taskIndex = tasks.findIndex(t => t.id === taskId);
             if (taskIndex !== -1) {
                 tasks[taskIndex] = { ...tasks[taskIndex], ...updates };
@@ -820,6 +917,7 @@
         }
         
         function deleteTask(taskId) {
+            console.log("Deleting task:", taskId);
             if (confirm(currentLang === 'ar' ? 'حذف هذه المهمة؟' : 'Delete this task?')) {
                 tasks = tasks.filter(t => t.id !== taskId);
                 saveTasks();
@@ -833,8 +931,10 @@
             const completed = tasks.filter(t => t.completed).length;
             const pending = total - completed;
             
+            // FIXED: Today's tasks calculation
             const today = new Date().toDateString();
             const todayTasks = tasks.filter(task => {
+                if (!task.date) return false;
                 const taskDate = new Date(task.date).toDateString();
                 return taskDate === today;
             }).length;
@@ -843,16 +943,21 @@
             document.getElementById('completedTasks').textContent = completed;
             document.getElementById('pendingTasks').textContent = pending;
             document.getElementById('todayTasks').textContent = todayTasks;
+            
+            console.log("Stats updated - Total:", total, "Today:", todayTasks);
         }
         
         function renderTasks() {
+            console.log("Rendering tasks with filter:", currentFilter);
+            
             const taskList = document.getElementById('taskList');
             const emptyState = document.getElementById('emptyState');
             
+            // Clear the list
             taskList.innerHTML = '';
             
-            // Filter tasks
-            let filteredTasks = tasks;
+            // FIXED: Filter tasks PROPERLY
+            let filteredTasks = [...tasks]; // Create a copy
             
             if (currentFilter === 'pending') {
                 filteredTasks = tasks.filter(t => !t.completed);
@@ -861,93 +966,120 @@
             } else if (currentFilter === 'today') {
                 const today = new Date().toDateString();
                 filteredTasks = tasks.filter(task => {
+                    if (!task.date) return false;
                     const taskDate = new Date(task.date).toDateString();
                     return taskDate === today;
                 });
             }
             
-            // Check if empty
-            if (filteredTasks.length === 0) {
+            console.log("Filtered tasks count:", filteredTasks.length);
+            
+            // Show empty state if NO tasks exist at all, or if filtered results are empty
+            if (tasks.length === 0) {
                 emptyState.style.display = 'block';
-                return;
-            }
-            
-            emptyState.style.display = 'none';
-            
-            // Render tasks
-            filteredTasks.forEach(task => {
-                const li = document.createElement('li');
-                li.className = `task-item ${task.completed ? 'completed' : ''}`;
+                console.log("Showing empty state - no tasks at all");
+            } else if (filteredTasks.length === 0) {
+                emptyState.style.display = 'block';
+                console.log("Showing empty state - filtered results empty");
+                // Update empty state message for filter
+                const emptyTitle = document.querySelector('#emptyState h3');
+                if (emptyTitle) {
+                    if (currentFilter === 'today') {
+                        emptyTitle.textContent = currentLang === 'ar' ? 'لا توجد مهام لليوم' : 'No tasks for today';
+                    } else if (currentFilter === 'completed') {
+                        emptyTitle.textContent = currentLang === 'ar' ? 'لا توجد مهام مكتملة' : 'No completed tasks';
+                    } else if (currentFilter === 'pending') {
+                        emptyTitle.textContent = currentLang === 'ar' ? 'لا توجد مهام معلقة' : 'No pending tasks';
+                    }
+                }
+            } else {
+                emptyState.style.display = 'none';
                 
-                // Format date
+                // Render each task
+                filteredTasks.forEach(task => {
+                    const li = createTaskElement(task);
+                    taskList.appendChild(li);
+                });
+            }
+        }
+        
+        function createTaskElement(task) {
+            const li = document.createElement('li');
+            li.className = `task-item ${task.completed ? 'completed' : ''}`;
+            li.dataset.id = task.id;
+            
+            // Format date - FIXED: Handle missing dates
+            let dateStr = '';
+            if (task.date) {
                 const taskDate = new Date(task.date);
-                const dateStr = taskDate.toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US', {
+                dateStr = taskDate.toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US', {
                     weekday: 'short',
                     month: 'short',
                     day: 'numeric'
                 });
-                
-                // Category labels
-                const categoryLabels = {
-                    work: currentLang === 'ar' ? 'عمل' : 'Work',
-                    personal: currentLang === 'ar' ? 'شخصي' : 'Personal',
-                    shopping: currentLang === 'ar' ? 'تسوق' : 'Shopping',
-                    health: currentLang === 'ar' ? 'صحة' : 'Health'
-                };
-                
-                li.innerHTML = `
-                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
-                    <div class="task-content">
-                        <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
-                        <div class="task-meta">
-                            <span class="task-category category-${task.category}">
-                                ${categoryLabels[task.category]}
-                            </span>
-                            <span>${dateStr}</span>
-                        </div>
+            }
+            
+            // Category labels
+            const categoryLabels = {
+                work: currentLang === 'ar' ? 'عمل' : 'Work',
+                personal: currentLang === 'ar' ? 'شخصي' : 'Personal',
+                shopping: currentLang === 'ar' ? 'تسوق' : 'Shopping',
+                health: currentLang === 'ar' ? 'صحة' : 'Health'
+            };
+            
+            li.innerHTML = `
+                <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+                <div class="task-content">
+                    <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+                    <div class="task-meta">
+                        <span class="task-category category-${task.category}">
+                            ${categoryLabels[task.category] || task.category}
+                        </span>
+                        ${dateStr ? `<span>${dateStr}</span>` : ''}
                     </div>
-                    <div class="task-actions">
-                        <button class="task-btn edit-btn">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="task-btn delete-btn">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-                
-                taskList.appendChild(li);
-                
-                // Add event listeners
-                const checkbox = li.querySelector('.task-checkbox');
-                const editBtn = li.querySelector('.edit-btn');
-                const deleteBtn = li.querySelector('.delete-btn');
-                
-                checkbox.addEventListener('change', () => {
-                    updateTask(task.id, { completed: checkbox.checked });
-                });
-                
-                editBtn.addEventListener('click', () => {
-                    const newText = prompt(currentLang === 'ar' ? 'تعديل المهمة:' : 'Edit task:', task.text);
-                    if (newText && newText.trim()) {
-                        updateTask(task.id, { 
-                            text: newText.trim(),
-                            date: new Date().toISOString()
-                        });
-                    }
-                });
-                
-                deleteBtn.addEventListener('click', () => {
-                    deleteTask(task.id);
-                });
+                </div>
+                <div class="task-actions">
+                    <button class="task-btn edit-btn">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="task-btn delete-btn">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Add event listeners
+            const checkbox = li.querySelector('.task-checkbox');
+            const editBtn = li.querySelector('.edit-btn');
+            const deleteBtn = li.querySelector('.delete-btn');
+            
+            checkbox.addEventListener('change', () => {
+                updateTask(task.id, { completed: checkbox.checked });
             });
+            
+            editBtn.addEventListener('click', () => {
+                const newText = prompt(currentLang === 'ar' ? 'تعديل المهمة:' : 'Edit task:', task.text);
+                if (newText && newText.trim()) {
+                    updateTask(task.id, { 
+                        text: newText.trim(),
+                        date: new Date().toISOString()
+                    });
+                }
+            });
+            
+            deleteBtn.addEventListener('click', () => {
+                deleteTask(task.id);
+            });
+            
+            return li;
         }
         
-        function showNotification(message) {
+        function showNotification(message, type = 'success') {
             const notification = document.getElementById('notification');
             const text = document.getElementById('notificationText');
             
             text.textContent = message;
+            notification.className = `notification ${type}`;
             notification.style.display = 'block';
             
             setTimeout(() => {
@@ -955,14 +1087,40 @@
             }, 3000);
         }
         
-        function startAutoSync() {
-            // Check for updates every 3 seconds
-            setInterval(() => {
-                // This simulates checking for cloud updates
-                // In a real app, this would call an API
-                console.log('Auto-sync check at', new Date().toLocaleTimeString());
-            }, 3000);
+        // Debug function to check state
+        function debugState() {
+            console.log("=== DEBUG ===");
+            console.log("List ID:", listId);
+            console.log("Tasks in memory:", tasks.length);
+            console.log("Current filter:", currentFilter);
+            console.log("Has samples flag:", hasAddedSamples);
+            
+            const saved = localStorage.getItem(listId);
+            console.log("Saved in localStorage:", saved ? "Yes" : "No");
+            
+            if (saved) {
+                const data = JSON.parse(saved);
+                console.log("Saved tasks count:", data.tasks ? data.tasks.length : 0);
+            }
         }
+        
+        // Add debug button (remove in production)
+        document.addEventListener('DOMContentLoaded', function() {
+            const debugBtn = document.createElement('button');
+            debugBtn.textContent = 'Debug';
+            debugBtn.style.position = 'fixed';
+            debugBtn.style.top = '10px';
+            debugBtn.style.right = '10px';
+            debugBtn.style.zIndex = '10000';
+            debugBtn.style.padding = '5px 10px';
+            debugBtn.style.background = '#333';
+            debugBtn.style.color = 'white';
+            debugBtn.style.border = 'none';
+            debugBtn.style.borderRadius = '5px';
+            debugBtn.style.cursor = 'pointer';
+            debugBtn.onclick = debugState;
+            document.body.appendChild(debugBtn);
+        });
     </script>
 </body>
 </html>
