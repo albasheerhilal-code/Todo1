@@ -1,87 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SimpleToDo - Online Task Manager</title>
+    <title>قائمة المهام - Todo List</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        :root {
+            --primary: #4361ee;
+            --primary-light: #4895ef;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #2d3748;
+            --gray: #718096;
+            --border-radius: 16px;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
         
         body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: var(--dark);
+            direction: rtl;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         
+        /* Header */
         header {
-            text-align: center;
-            padding: 30px 0;
-            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
         
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            background: white;
+            color: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: var(--shadow);
+        }
+        
+        .logo-text h1 {
+            font-size: 32px;
+            color: white;
+            margin-bottom: 5px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
         
-        .tagline {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 20px;
+        .logo-text p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
         }
         
-        .app-box {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
-        }
-        
-        /* Welcome Section */
-        .welcome-section {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(to right, #f8f9fa, #e9ecef);
-            border-radius: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .welcome-section h2 {
-            color: #2575fc;
-            margin-bottom: 15px;
-        }
-        
-        .user-id-display {
-            background: white;
-            border: 2px dashed #2575fc;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-family: monospace;
-            font-size: 1.1rem;
-            word-break: break-all;
-        }
-        
-        .user-controls {
+        .controls {
             display: flex;
+            align-items: center;
             gap: 15px;
-            justify-content: center;
             flex-wrap: wrap;
-            margin-top: 20px;
+        }
+        
+        /* Language Switcher */
+        .language-switcher {
+            display: flex;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 5px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .lang-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .lang-btn.active {
+            background: white;
+            color: var(--primary);
+        }
+        
+        /* Main App */
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 992px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Card Design */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+        
+        .card-header h2 {
+            color: var(--primary);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Sharing Section */
+        .sharing-section {
+            margin-bottom: 30px;
+        }
+        
+        .share-info {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 2px dashed var(--primary);
+        }
+        
+        .share-link-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .share-link {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
         }
         
         /* Task Form */
@@ -96,103 +198,121 @@
             flex: 1;
             min-width: 250px;
             padding: 18px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
-            font-size: 1.1rem;
-            transition: all 0.3s;
+            font-size: 16px;
+            transition: var(--transition);
         }
         
         .task-input:focus {
             outline: none;
-            border-color: #6a11cb;
-            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
         }
         
-        .task-category {
+        .task-select {
             padding: 18px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
-            font-size: 1rem;
+            font-size: 16px;
             background: white;
             min-width: 150px;
         }
         
-        .add-btn {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-            border: none;
+        .btn {
             padding: 18px 30px;
+            border: none;
             border-radius: 12px;
-            font-size: 1.1rem;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: flex;
+            transition: var(--transition);
+            display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
         }
         
-        .add-btn:hover {
+        .btn-primary {
+            background: linear-gradient(to left, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 7px 14px rgba(106, 17, 203, 0.2);
+            box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f0f2f5;
+            color: var(--dark);
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
         }
         
         /* Stats */
-        .stats {
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .stat-card {
-            background: #f8f9fa;
+            background: #f8f9ff;
             padding: 20px;
             border-radius: 12px;
             text-align: center;
             border: 2px solid transparent;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
         
         .stat-card:hover {
-            border-color: #6a11cb;
+            border-color: var(--primary);
             transform: translateY(-5px);
         }
         
         .stat-value {
-            font-size: 2rem;
+            font-size: 32px;
             font-weight: 700;
-            color: #2575fc;
+            color: var(--primary);
             margin-bottom: 5px;
         }
         
         .stat-label {
-            color: #666;
-            font-size: 0.9rem;
+            color: var(--gray);
+            font-size: 14px;
         }
         
         /* Filters */
         .filters {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
         }
         
         .filter-btn {
             padding: 12px 24px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #e2e8f0;
             background: white;
             border-radius: 30px;
             cursor: pointer;
             font-weight: 500;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
         
         .filter-btn.active {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
+            background: var(--primary);
             color: white;
-            border-color: #6a11cb;
+            border-color: var(--primary);
         }
         
         /* Task List */
@@ -200,7 +320,7 @@
             list-style: none;
             max-height: 500px;
             overflow-y: auto;
-            padding-right: 10px;
+            padding-left: 10px;
         }
         
         .task-list::-webkit-scrollbar {
@@ -213,22 +333,21 @@
         }
         
         .task-list::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #6a11cb, #2575fc);
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
             border-radius: 10px;
         }
         
         .task-item {
-            background: white;
+            background: #f8f9ff;
             padding: 20px;
             margin-bottom: 15px;
             border-radius: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border-right: 5px solid var(--primary);
             display: flex;
             align-items: center;
             gap: 15px;
-            border-left: 5px solid #2575fc;
+            transition: var(--transition);
             animation: slideIn 0.3s ease;
-            transition: transform 0.2s;
         }
         
         @keyframes slideIn {
@@ -237,20 +356,20 @@
         }
         
         .task-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
         .task-item.completed {
             opacity: 0.7;
-            border-left-color: #28a745;
+            border-right-color: var(--success);
         }
         
         .task-checkbox {
             width: 22px;
             height: 22px;
             cursor: pointer;
-            accent-color: #2575fc;
+            accent-color: var(--primary);
         }
         
         .task-content {
@@ -258,27 +377,27 @@
         }
         
         .task-text {
-            font-size: 1.1rem;
+            font-size: 18px;
             margin-bottom: 8px;
             font-weight: 500;
         }
         
         .task-text.completed {
             text-decoration: line-through;
-            color: #666;
+            color: var(--gray);
         }
         
         .task-meta {
             display: flex;
             gap: 15px;
-            font-size: 0.9rem;
-            color: #666;
+            font-size: 14px;
+            color: var(--gray);
         }
         
-        .task-category-badge {
+        .task-category {
             padding: 4px 12px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 12px;
             font-weight: 500;
         }
         
@@ -301,7 +420,7 @@
         .task-btn {
             background: none;
             border: none;
-            font-size: 1.1rem;
+            font-size: 18px;
             cursor: pointer;
             width: 40px;
             height: 40px;
@@ -309,117 +428,105 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
         
         .edit-btn {
-            color: #2575fc;
+            color: var(--primary);
         }
         
         .edit-btn:hover {
-            background: rgba(37, 117, 252, 0.1);
+            background: rgba(67, 97, 238, 0.1);
         }
         
         .delete-btn {
-            color: #dc3545;
+            color: var(--danger);
         }
         
         .delete-btn:hover {
-            background: rgba(220, 53, 69, 0.1);
+            background: rgba(247, 37, 133, 0.1);
         }
         
         /* Empty State */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #666;
+            color: var(--gray);
         }
         
         .empty-icon {
-            font-size: 4rem;
-            color: #ddd;
+            font-size: 64px;
+            color: #e2e8f0;
             margin-bottom: 20px;
         }
         
         .empty-state h3 {
-            font-size: 1.5rem;
+            font-size: 24px;
             margin-bottom: 10px;
-            color: #555;
+            color: var(--dark);
         }
         
-        /* Sharing Section */
-        .sharing-section {
-            background: linear-gradient(to right, #f8f9fa, #e9ecef);
-            padding: 25px;
-            border-radius: 15px;
-            margin-top: 30px;
-            text-align: center;
-        }
-        
-        .sharing-section h3 {
-            color: #2575fc;
-            margin-bottom: 15px;
-        }
-        
-        .share-link-container {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-        }
-        
-        .share-link {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid #2575fc;
-            border-radius: 10px;
-            background: white;
-            font-family: monospace;
-            word-break: break-all;
-        }
-        
-        .copy-btn {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
+        /* Connection Status */
+        .connection-status {
             display: flex;
             align-items: center;
             gap: 10px;
+            padding: 12px 20px;
+            background: #f8f9ff;
+            border-radius: 30px;
+            font-size: 14px;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        .status-dot.offline {
+            background: var(--danger);
+            animation: none;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
         
         /* Notification */
         .notification {
             position: fixed;
             top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 10px;
+            left: 20px;
+            padding: 20px 30px;
+            border-radius: 12px;
             color: white;
             font-weight: 500;
             z-index: 1000;
-            animation: slideInRight 0.3s ease;
+            animation: slideInLeft 0.3s ease;
             display: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
         }
         
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
         
         .notification.success {
-            background: linear-gradient(to right, #28a745, #20c997);
+            background: linear-gradient(to left, #28a745, #20c997);
         }
         
         .notification.error {
-            background: linear-gradient(to right, #dc3545, #e83e8c);
+            background: linear-gradient(to left, #dc3545, #e83e8c);
         }
         
         .notification.info {
-            background: linear-gradient(to right, #6a11cb, #2575fc);
+            background: linear-gradient(to left, var(--primary), var(--secondary));
         }
         
         /* Footer */
@@ -427,36 +534,46 @@
             text-align: center;
             color: white;
             padding: 20px;
-            opacity: 0.8;
-            font-size: 0.9rem;
+            opacity: 0.9;
+            font-size: 14px;
+            direction: ltr;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2.2rem;
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .card {
+                padding: 20px;
             }
             
             .task-form {
                 flex-direction: column;
             }
             
-            .task-input, .task-category, .add-btn {
+            .task-input, .task-select, .btn {
                 width: 100%;
             }
             
             .share-link-container {
                 flex-direction: column;
             }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         @media (max-width: 480px) {
-            .app-box {
-                padding: 20px;
+            h1 {
+                font-size: 24px;
             }
             
-            .stats {
-                grid-template-columns: 1fr 1fr;
+            .card-header h2 {
+                font-size: 20px;
             }
             
             .filters {
@@ -467,494 +584,771 @@
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <header>
-            <h1>SimpleToDo</h1>
-            <p class="tagline">Your online task manager - No signup required!</p>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>قائمة المهام الذكية</h1>
+                    <p>شارك قائمتك بين الهاتف والكمبيوتر - Smart Todo List</p>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="connection-status">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">جاري المزامنة...</span>
+                </div>
+                
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="ar">العربية</button>
+                    <button class="lang-btn" data-lang="en">English</button>
+                </div>
+            </div>
         </header>
         
-        <div class="app-box">
-            <!-- Welcome Section -->
-            <div class="welcome-section">
-                <h2>Welcome to Your Online To-Do List!</h2>
-                <p>Your tasks are automatically saved online. Share the link below with anyone to access your list.</p>
-                
-                <div class="user-id-display" id="userIdDisplay">
-                    Generating your personal link...
+        <!-- Main App -->
+        <div class="app-container">
+            <!-- Left Column - Sharing & Stats -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-share-alt"></i> <span data-i18n="sharing">مشاركة القائمة</span></h2>
                 </div>
                 
-                <div class="user-controls">
-                    <button class="copy-btn" id="copyUserIdBtn">
-                        <i class="fas fa-copy"></i> Copy My Link
-                    </button>
-                    <button class="filter-btn" id="newListBtn">
-                        <i class="fas fa-plus"></i> Create New List
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Task Form -->
-            <form class="task-form" id="taskForm">
-                <input type="text" class="task-input" id="taskInput" placeholder="What do you need to do?" required>
-                <select class="task-category" id="taskCategory">
-                    <option value="personal">Personal</option>
-                    <option value="work">Work</option>
-                    <option value="shopping">Shopping</option>
-                    <option value="health">Health</option>
-                </select>
-                <button type="submit" class="add-btn">
-                    <i class="fas fa-plus"></i> Add Task
-                </button>
-            </form>
-            
-            <!-- Statistics -->
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-value" id="totalTasks">0</div>
-                    <div class="stat-label">Total Tasks</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="completedTasks">0</div>
-                    <div class="stat-label">Completed</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="pendingTasks">0</div>
-                    <div class="stat-label">Pending</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="todayTasks">0</div>
-                    <div class="stat-label">Today's Tasks</div>
-                </div>
-            </div>
-            
-            <!-- Filters -->
-            <div class="filters">
-                <button class="filter-btn active" data-filter="all">All Tasks</button>
-                <button class="filter-btn" data-filter="pending">Pending</button>
-                <button class="filter-btn" data-filter="completed">Completed</button>
-                <button class="filter-btn" data-filter="today">Today</button>
-                <button class="filter-btn" data-filter="work">Work</button>
-                <button class="filter-btn" data-filter="personal">Personal</button>
-            </div>
-            
-            <!-- Task List -->
-            <ul class="task-list" id="taskList">
-                <!-- Tasks will appear here -->
-                <div class="empty-state" id="emptyState">
-                    <div class="empty-icon">
-                        <i class="fas fa-tasks"></i>
+                <div class="sharing-section">
+                    <p data-i18n="shareDesc">شارك هذا الرابط مع نفسك على أجهزة أخرى أو مع أصدقائك:</p>
+                    
+                    <div class="share-info">
+                        <div class="share-link-container">
+                            <input type="text" class="share-link" id="shareLink" readonly>
+                            <button class="btn btn-primary" id="copyBtn">
+                                <i class="fas fa-copy"></i> <span data-i18n="copy">نسخ</span>
+                            </button>
+                        </div>
+                        
+                        <div style="margin-top: 15px; display: flex; gap: 10px;">
+                            <button class="btn btn-secondary" id="newListBtn">
+                                <i class="fas fa-plus"></i> <span data-i18n="newList">قائمة جديدة</span>
+                            </button>
+                            <button class="btn btn-success" id="refreshBtn">
+                                <i class="fas fa-sync-alt"></i> <span data-i18n="refresh">تحديث</span>
+                            </button>
+                        </div>
                     </div>
-                    <h3>No tasks yet</h3>
-                    <p>Add your first task using the form above</p>
+                    
+                    <p style="margin-top: 15px; font-size: 14px; color: var(--gray);">
+                        <i class="fas fa-info-circle"></i> <span data-i18n="syncInfo">التغييرات تظهر تلقائياً على جميع الأجهزة</span>
+                    </p>
                 </div>
-            </ul>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTasks">0</div>
+                        <div class="stat-label" data-i18n="totalTasks">المهام الكلية</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completedTasks">0</div>
+                        <div class="stat-label" data-i18n="completed">مكتملة</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="pendingTasks">0</div>
+                        <div class="stat-label" data-i18n="pending">قيد الانتظار</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="todayTasks">0</div>
+                        <div class="stat-label" data-i18n="today">مهام اليوم</div>
+                    </div>
+                </div>
+            </div>
             
-            <!-- Sharing Section -->
-            <div class="sharing-section">
-                <h3>Share This List</h3>
-                <p>Anyone with this link can view and edit this to-do list. Perfect for family, friends, or team projects!</p>
-                
-                <div class="share-link-container">
-                    <input type="text" class="share-link" id="shareLink" readonly>
-                    <button class="copy-btn" id="copyLinkBtn">
-                        <i class="fas fa-copy"></i> Copy Link
-                    </button>
+            <!-- Right Column - Tasks -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-tasks"></i> <span data-i18n="myTasks">مهامي</span></h2>
+                    <div style="font-size: 14px; color: var(--gray);" id="listInfo">
+                        <span data-i18n="listId">معرّف القائمة:</span> <span id="listId">...</span>
+                    </div>
                 </div>
                 
-                <p style="font-size: 0.9rem; color: #666;">
-                    <i class="fas fa-info-circle"></i> Changes are saved automatically and visible to everyone with the link
-                </p>
+                <form class="task-form" id="taskForm">
+                    <input type="text" class="task-input" id="taskInput" data-i18n-placeholder="taskPlaceholder" placeholder="أضف مهمة جديدة..." required>
+                    <select class="task-select" id="taskCategory">
+                        <option value="personal" data-i18n="personal">شخصي</option>
+                        <option value="work" data-i18n="work">عمل</option>
+                        <option value="shopping" data-i18n="shopping">تسوق</option>
+                        <option value="health" data-i18n="health">صحة</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> <span data-i18n="addTask">إضافة مهمة</span>
+                    </button>
+                </form>
+                
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="all" data-i18n="all">الكل</button>
+                    <button class="filter-btn" data-filter="pending" data-i18n="pending">قيد الانتظار</button>
+                    <button class="filter-btn" data-filter="completed" data-i18n="completed">مكتملة</button>
+                    <button class="filter-btn" data-filter="today" data-i18n="today">اليوم</button>
+                </div>
+                
+                <ul class="task-list" id="taskList">
+                    <!-- Tasks will appear here -->
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h3 data-i18n="noTasks">لا توجد مهام</h3>
+                        <p data-i18n="addFirstTask">أضف مهمتك الأولى باستخدام النموذج أعلاه</p>
+                    </div>
+                </ul>
             </div>
         </div>
         
         <footer>
-            <p>SimpleToDo &copy; 2023 | Your tasks are saved online automatically | No signup required</p>
+            <p>© 2023 Smart Todo List | <span data-i18n="footer">المهام متزامنة بين جميع الأجهزة</span></p>
         </footer>
     </div>
     
     <!-- Notification -->
     <div class="notification" id="notification">
-        <span id="notificationText">Notification message</span>
+        <span id="notificationText">إشعار</span>
     </div>
 
     <script>
-        // Simple Cloud Storage using localStorage as a fallback
-        // In a real app, this would connect to a backend API
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM Elements
-            const taskForm = document.getElementById('taskForm');
-            const taskInput = document.getElementById('taskInput');
-            const taskCategory = document.getElementById('taskCategory');
-            const taskList = document.getElementById('taskList');
-            const emptyState = document.getElementById('emptyState');
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const shareLink = document.getElementById('shareLink');
-            const userIdDisplay = document.getElementById('userIdDisplay');
-            const copyLinkBtn = document.getElementById('copyLinkBtn');
-            const copyUserIdBtn = document.getElementById('copyUserIdBtn');
-            const newListBtn = document.getElementById('newListBtn');
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notificationText');
-            
-            // Statistics elements
-            const totalTasksEl = document.getElementById('totalTasks');
-            const completedTasksEl = document.getElementById('completedTasks');
-            const pendingTasksEl = document.getElementById('pendingTasks');
-            const todayTasksEl = document.getElementById('todayTasks');
-            
-            // State variables
-            let tasks = [];
-            let currentFilter = 'all';
-            let userId = '';
-            
-            // Initialize the app
-            function initApp() {
-                // Get or create user ID from URL
-                const urlParams = new URLSearchParams(window.location.search);
-                userId = urlParams.get('list') || generateUserId();
-                
-                // Update URL without reloading page
-                if (!urlParams.get('list')) {
-                    const newUrl = window.location.origin + window.location.pathname + '?list=' + userId;
-                    window.history.replaceState({}, '', newUrl);
-                }
-                
-                // Update UI with user ID
-                userIdDisplay.textContent = window.location.href;
-                shareLink.value = window.location.href;
-                
-                // Load tasks from localStorage (keyed by userId)
-                loadTasks();
-                updateStatistics();
-                renderTasks();
-                
-                // Show welcome notification
-                showNotification('Welcome to SimpleToDo! Your list is saved online.', 'info');
+        // Simulated Cloud Database (In a real app, use Firebase or similar)
+        class CloudStorage {
+            constructor() {
+                this.db = {};
+                this.listeners = {};
+                this.syncInterval = 2000; // Sync every 2 seconds
             }
             
-            // Generate a random user ID
-            function generateUserId() {
-                return 'list_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-            }
-            
-            // Show notification
-            function showNotification(message, type = 'info') {
-                notificationText.textContent = message;
-                notification.className = `notification ${type}`;
-                notification.style.display = 'block';
+            // Save tasks to cloud (simulated)
+            async save(listId, tasks) {
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 100));
                 
-                setTimeout(() => {
-                    notification.style.display = 'none';
-                }, 3000);
-            }
-            
-            // Load tasks from localStorage
-            function loadTasks() {
-                const savedTasks = localStorage.getItem(`tasks_${userId}`);
-                if (savedTasks) {
-                    tasks = JSON.parse(savedTasks);
-                } else {
-                    tasks = [];
-                    // Add some sample tasks for new users
-                    addSampleTasks();
-                }
-            }
-            
-            // Save tasks to localStorage
-            function saveTasks() {
-                localStorage.setItem(`tasks_${userId}`, JSON.stringify(tasks));
-                updateStatistics();
-                
-                // In a real app, this would save to a cloud database
-                // For now, we simulate cloud saving
-                simulateCloudSave();
-            }
-            
-            // Simulate cloud saving (in a real app, this would be an API call)
-            function simulateCloudSave() {
-                // This is where you would connect to a real backend
-                // For example: fetch('https://api.yourbackend.com/save', {...})
-                console.log('Simulating cloud save for list:', userId);
-            }
-            
-            // Add sample tasks for new users
-            function addSampleTasks() {
-                const sampleTasks = [
-                    { id: Date.now(), text: 'Welcome to SimpleToDo!', category: 'personal', completed: false, date: new Date().toISOString() },
-                    { id: Date.now() + 1, text: 'Click the checkbox to mark tasks complete', category: 'work', completed: false, date: new Date().toISOString() },
-                    { id: Date.now() + 2, text: 'Try adding your own tasks below', category: 'personal', completed: false, date: new Date().toISOString() },
-                    { id: Date.now() + 3, text: 'Share the link with friends or family', category: 'work', completed: false, date: new Date().toISOString() }
-                ];
-                
-                tasks = sampleTasks;
-                saveTasks();
-            }
-            
-            // Update statistics
-            function updateStatistics() {
-                const totalTasks = tasks.length;
-                const completedTasks = tasks.filter(task => task.completed).length;
-                const pendingTasks = totalTasks - completedTasks;
-                
-                // Count today's tasks
-                const today = new Date().toDateString();
-                const todayTasks = tasks.filter(task => {
-                    const taskDate = new Date(task.date).toDateString();
-                    return taskDate === today;
-                }).length;
-                
-                totalTasksEl.textContent = totalTasks;
-                completedTasksEl.textContent = completedTasks;
-                pendingTasksEl.textContent = pendingTasks;
-                todayTasksEl.textContent = todayTasks;
-            }
-            
-            // Render tasks based on current filter
-            function renderTasks() {
-                // Clear the task list
-                taskList.innerHTML = '';
-                
-                // Filter tasks based on current selection
-                let filteredTasks = tasks;
-                
-                if (currentFilter === 'pending') {
-                    filteredTasks = filteredTasks.filter(task => !task.completed);
-                } else if (currentFilter === 'completed') {
-                    filteredTasks = filteredTasks.filter(task => task.completed);
-                } else if (currentFilter === 'today') {
-                    const today = new Date().toDateString();
-                    filteredTasks = filteredTasks.filter(task => {
-                        const taskDate = new Date(task.date).toDateString();
-                        return taskDate === today;
-                    });
-                } else if (['work', 'personal', 'shopping', 'health'].includes(currentFilter)) {
-                    filteredTasks = filteredTasks.filter(task => task.category === currentFilter);
-                }
-                
-                // Show empty state if no tasks
-                if (filteredTasks.length === 0) {
-                    emptyState.style.display = 'block';
-                    return;
-                } else {
-                    emptyState.style.display = 'none';
-                }
-                
-                // Sort tasks: pending first, then by date
-                filteredTasks.sort((a, b) => {
-                    if (a.completed !== b.completed) {
-                        return a.completed ? 1 : -1;
-                    }
-                    return new Date(b.date) - new Date(a.date);
-                });
-                
-                // Create task elements
-                filteredTasks.forEach(task => {
-                    const taskItem = document.createElement('li');
-                    taskItem.className = `task-item ${task.completed ? 'completed' : ''}`;
-                    taskItem.dataset.id = task.id;
-                    
-                    // Format date
-                    const taskDate = new Date(task.date);
-                    const formattedDate = taskDate.toLocaleDateString('en-US', {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric'
-                    });
-                    
-                    // Category label
-                    const categoryLabels = {
-                        'work': 'Work',
-                        'personal': 'Personal',
-                        'shopping': 'Shopping',
-                        'health': 'Health'
-                    };
-                    
-                    taskItem.innerHTML = `
-                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
-                        <div class="task-content">
-                            <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
-                            <div class="task-meta">
-                                <span class="task-category-badge category-${task.category}">
-                                    ${categoryLabels[task.category]}
-                                </span>
-                                <span class="task-date">
-                                    <i class="far fa-calendar"></i> ${formattedDate}
-                                </span>
-                            </div>
-                        </div>
-                        <div class="task-actions">
-                            <button class="task-btn edit-btn" title="Edit task">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="task-btn delete-btn" title="Delete task">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    `;
-                    
-                    taskList.appendChild(taskItem);
-                    
-                    // Add event listeners to this task
-                    const checkbox = taskItem.querySelector('.task-checkbox');
-                    const editBtn = taskItem.querySelector('.edit-btn');
-                    const deleteBtn = taskItem.querySelector('.delete-btn');
-                    
-                    checkbox.addEventListener('change', function() {
-                        toggleTaskCompletion(task.id);
-                    });
-                    
-                    editBtn.addEventListener('click', function() {
-                        editTask(task.id);
-                    });
-                    
-                    deleteBtn.addEventListener('click', function() {
-                        deleteTask(task.id);
-                    });
-                });
-            }
-            
-            // Add a new task
-            function addTask(text, category) {
-                const newTask = {
-                    id: Date.now(), // Simple ID based on timestamp
-                    text: text,
-                    category: category,
-                    completed: false,
-                    date: new Date().toISOString()
+                this.db[listId] = {
+                    tasks: JSON.parse(JSON.stringify(tasks)),
+                    lastUpdated: Date.now()
                 };
                 
-                tasks.unshift(newTask); // Add to beginning
-                saveTasks();
-                renderTasks();
-                showNotification('Task added successfully!', 'success');
+                // Notify all listeners
+                if (this.listeners[listId]) {
+                    this.listeners[listId].forEach(callback => callback(tasks));
+                }
+                
+                return true;
             }
             
-            // Toggle task completion
-            function toggleTaskCompletion(id) {
-                tasks = tasks.map(task => {
-                    if (task.id === id) {
-                        return { ...task, completed: !task.completed };
-                    }
-                    return task;
+            // Load tasks from cloud (simulated)
+            async load(listId) {
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                if (this.db[listId]) {
+                    return JSON.parse(JSON.stringify(this.db[listId].tasks));
+                }
+                
+                return [];
+            }
+            
+            // Subscribe to changes
+            subscribe(listId, callback) {
+                if (!this.listeners[listId]) {
+                    this.listeners[listId] = [];
+                }
+                this.listeners[listId].push(callback);
+                
+                // Return unsubscribe function
+                return () => {
+                    this.listeners[listId] = this.listeners[listId].filter(cb => cb !== callback);
+                };
+            }
+            
+            // Check if list exists
+            async listExists(listId) {
+                await new Promise(resolve => setTimeout(resolve, 50));
+                return !!this.db[listId];
+            }
+        }
+
+        // App instance
+        const cloudStorage = new CloudStorage();
+        
+        // Language dictionary
+        const translations = {
+            ar: {
+                // Header
+                "sharing": "مشاركة القائمة",
+                "shareDesc": "شارك هذا الرابط مع نفسك على أجهزة أخرى أو مع أصدقائك:",
+                "copy": "نسخ",
+                "newList": "قائمة جديدة",
+                "refresh": "تحديث",
+                "syncInfo": "التغييرات تظهر تلقائياً على جميع الأجهزة",
+                
+                // Stats
+                "totalTasks": "المهام الكلية",
+                "completed": "مكتملة",
+                "pending": "قيد الانتظار",
+                "today": "مهام اليوم",
+                
+                // Tasks
+                "myTasks": "مهامي",
+                "listId": "معرّف القائمة:",
+                "taskPlaceholder": "أضف مهمة جديدة...",
+                "personal": "شخصي",
+                "work": "عمل",
+                "shopping": "تسوق",
+                "health": "صحة",
+                "addTask": "إضافة مهمة",
+                
+                // Filters
+                "all": "الكل",
+                
+                // Empty state
+                "noTasks": "لا توجد مهام",
+                "addFirstTask": "أضف مهمتك الأولى باستخدام النموذج أعلاه",
+                
+                // Status
+                "syncing": "جاري المزامنة...",
+                "online": "متصل - متزامن",
+                "offline": "غير متصل",
+                
+                // Footer
+                "footer": "المهام متزامنة بين جميع الأجهزة",
+                
+                // Notifications
+                "taskAdded": "تمت إضافة المهمة!",
+                "taskUpdated": "تم تحديث المهمة!",
+                "taskDeleted": "تم حذف المهمة",
+                "linkCopied": "تم نسخ الرابط!",
+                "newListCreated": "تم إنشاء قائمة جديدة",
+                "listRefreshed": "تم تحديث القائمة",
+                "synced": "تمت المزامنة مع السحابة",
+                "connecting": "جاري الاتصال بالسحابة..."
+            },
+            en: {
+                // Header
+                "sharing": "Share List",
+                "shareDesc": "Share this link with yourself on other devices or with friends:",
+                "copy": "Copy",
+                "newList": "New List",
+                "refresh": "Refresh",
+                "syncInfo": "Changes appear automatically on all devices",
+                
+                // Stats
+                "totalTasks": "Total Tasks",
+                "completed": "Completed",
+                "pending": "Pending",
+                "today": "Today's Tasks",
+                
+                // Tasks
+                "myTasks": "My Tasks",
+                "listId": "List ID:",
+                "taskPlaceholder": "Add a new task...",
+                "personal": "Personal",
+                "work": "Work",
+                "shopping": "Shopping",
+                "health": "Health",
+                "addTask": "Add Task",
+                
+                // Filters
+                "all": "All",
+                
+                // Empty state
+                "noTasks": "No tasks yet",
+                "addFirstTask": "Add your first task using the form above",
+                
+                // Status
+                "syncing": "Syncing...",
+                "online": "Online - Synced",
+                "offline": "Offline",
+                
+                // Footer
+                "footer": "Tasks synced across all devices",
+                
+                // Notifications
+                "taskAdded": "Task added!",
+                "taskUpdated": "Task updated!",
+                "taskDeleted": "Task deleted",
+                "linkCopied": "Link copied!",
+                "newListCreated": "New list created",
+                "listRefreshed": "List refreshed",
+                "synced": "Synced with cloud",
+                "connecting": "Connecting to cloud..."
+            }
+        };
+
+        // Current language
+        let currentLang = 'ar';
+        
+        // App state
+        let tasks = [];
+        let currentFilter = 'all';
+        let currentListId = '';
+        let isOnline = false;
+        let unsubscribeFromCloud = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize
+            initApp();
+        });
+        
+        async function initApp() {
+            // Get list ID from URL or generate new
+            const urlParams = new URLSearchParams(window.location.search);
+            currentListId = urlParams.get('list') || generateListId();
+            
+            // Update URL without reload
+            if (!urlParams.get('list')) {
+                updateUrlWithListId(currentListId);
+            }
+            
+            // Update UI
+            updateShareLink();
+            document.getElementById('listId').textContent = currentListId.substring(0, 8) + '...';
+            
+            // Setup language
+            setupLanguage();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Connect to cloud
+            await connectToCloud();
+            
+            // Load initial tasks
+            await loadTasks();
+            
+            // Start sync interval
+            startSyncInterval();
+        }
+        
+        function generateListId() {
+            return 'list_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+        
+        function updateUrlWithListId(listId) {
+            const newUrl = window.location.origin + window.location.pathname + '?list=' + listId;
+            window.history.replaceState({}, '', newUrl);
+        }
+        
+        function updateShareLink() {
+            document.getElementById('shareLink').value = window.location.href;
+        }
+        
+        function setupLanguage() {
+            const langButtons = document.querySelectorAll('.lang-btn');
+            
+            langButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    langButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Change language
+                    currentLang = this.dataset.lang;
+                    document.documentElement.lang = currentLang;
+                    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+                    
+                    // Update all text
+                    updateTextForLanguage();
                 });
-                
-                saveTasks();
-                renderTasks();
-                
-                const task = tasks.find(t => t.id === id);
-                if (task.completed) {
-                    showNotification('Task marked as complete!', 'success');
+            });
+        }
+        
+        function updateTextForLanguage() {
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.textContent = translations[currentLang][key];
                 }
-            }
+            });
             
-            // Edit a task
-            function editTask(id) {
-                const task = tasks.find(task => task.id === id);
-                if (!task) return;
-                
-                const newText = prompt('Edit your task:', task.text);
-                if (newText && newText.trim() !== '') {
-                    task.text = newText.trim();
-                    task.date = new Date().toISOString(); // Update date
-                    saveTasks();
-                    renderTasks();
-                    showNotification('Task updated successfully!', 'success');
+            // Update placeholder texts
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[currentLang][key]) {
+                    el.placeholder = translations[currentLang][key];
                 }
-            }
+            });
             
-            // Delete a task
-            function deleteTask(id) {
-                if (confirm('Are you sure you want to delete this task?')) {
-                    tasks = tasks.filter(task => task.id !== id);
-                    saveTasks();
-                    renderTasks();
-                    showNotification('Task deleted', 'info');
-                }
-            }
+            // Update status text
+            updateStatusText();
+        }
+        
+        function updateStatusText() {
+            const statusText = document.getElementById('statusText');
+            const statusDot = document.getElementById('statusDot');
             
-            // Create a new list
-            function createNewList() {
-                if (confirm('Create a new to-do list? Your current list will still be accessible via its link.')) {
-                    userId = generateUserId();
-                    const newUrl = window.location.origin + window.location.pathname + '?list=' + userId;
-                    window.location.href = newUrl;
-                }
+            if (isOnline) {
+                statusText.textContent = translations[currentLang]['online'];
+                statusDot.classList.remove('offline');
+            } else {
+                statusText.textContent = translations[currentLang]['offline'];
+                statusDot.classList.add('offline');
             }
-            
-            // Event Listeners
-            taskForm.addEventListener('submit', function(e) {
+        }
+        
+        function setupEventListeners() {
+            // Task form
+            document.getElementById('taskForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
-                const taskText = taskInput.value.trim();
-                const taskCat = taskCategory.value;
+                const taskInput = document.getElementById('taskInput');
+                const taskCategory = document.getElementById('taskCategory');
+                const text = taskInput.value.trim();
                 
-                if (taskText) {
-                    addTask(taskText, taskCat);
+                if (text) {
+                    await addTask(text, taskCategory.value);
                     taskInput.value = '';
                     taskInput.focus();
                 }
             });
             
+            // Copy button
+            document.getElementById('copyBtn').addEventListener('click', function() {
+                const shareLink = document.getElementById('shareLink');
+                shareLink.select();
+                shareLink.setSelectionRange(0, 99999);
+                
+                navigator.clipboard.writeText(shareLink.value)
+                    .then(() => showNotification(translations[currentLang]['linkCopied'], 'success'))
+                    .catch(() => showNotification('Failed to copy', 'error'));
+            });
+            
+            // New list button
+            document.getElementById('newListBtn').addEventListener('click', function() {
+                if (confirm(currentLang === 'ar' ? 'إنشاء قائمة جديدة؟ سيتم حفظ القائمة الحالية.' : 'Create new list? Current list will be saved.')) {
+                    currentListId = generateListId();
+                    updateUrlWithListId(currentListId);
+                    updateShareLink();
+                    document.getElementById('listId').textContent = currentListId.substring(0, 8) + '...';
+                    
+                    // Clear current tasks
+                    tasks = [];
+                    saveTasks();
+                    renderTasks();
+                    
+                    showNotification(translations[currentLang]['newListCreated'], 'info');
+                }
+            });
+            
+            // Refresh button
+            document.getElementById('refreshBtn').addEventListener('click', async function() {
+                await loadTasks();
+                showNotification(translations[currentLang]['listRefreshed'], 'info');
+            });
+            
             // Filter buttons
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remove active class from all filter buttons
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Add active class to clicked button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    
-                    // Update current filter and re-render
                     currentFilter = this.dataset.filter;
                     renderTasks();
                 });
             });
+        }
+        
+        async function connectToCloud() {
+            updateStatus(translations[currentLang]['connecting'], false);
             
-            // Copy link button
-            copyLinkBtn.addEventListener('click', function() {
-                shareLink.select();
-                shareLink.setSelectionRange(0, 99999); // For mobile devices
-                
-                try {
-                    document.execCommand('copy');
-                    showNotification('Link copied to clipboard!', 'success');
-                } catch (err) {
-                    // Fallback for browsers that don't support execCommand
-                    navigator.clipboard.writeText(shareLink.value)
-                        .then(() => showNotification('Link copied to clipboard!', 'success'))
-                        .catch(() => showNotification('Failed to copy link', 'error'));
+            // Simulate connection
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Subscribe to changes
+            if (unsubscribeFromCloud) {
+                unsubscribeFromCloud();
+            }
+            
+            unsubscribeFromCloud = cloudStorage.subscribe(currentListId, (cloudTasks) => {
+                if (JSON.stringify(tasks) !== JSON.stringify(cloudTasks)) {
+                    tasks = cloudTasks;
+                    saveToLocalStorage();
+                    updateStatistics();
+                    renderTasks();
+                    showNotification(translations[currentLang]['synced'], 'success');
                 }
             });
             
-            // Copy user ID button
-            copyUserIdBtn.addEventListener('click', function() {
-                shareLink.select();
-                shareLink.setSelectionRange(0, 99999);
+            updateStatus(translations[currentLang]['online'], true);
+        }
+        
+        function updateStatus(text, online) {
+            isOnline = online;
+            document.getElementById('statusText').textContent = text;
+            const statusDot = document.getElementById('statusDot');
+            
+            if (online) {
+                statusDot.classList.remove('offline');
+            } else {
+                statusDot.classList.add('offline');
+            }
+        }
+        
+        async function loadTasks() {
+            updateStatus(translations[currentLang]['syncing'], true);
+            
+            try {
+                // Try to load from cloud first
+                const cloudTasks = await cloudStorage.load(currentListId);
                 
+                if (cloudTasks && cloudTasks.length > 0) {
+                    tasks = cloudTasks;
+                } else {
+                    // Fallback to localStorage
+                    loadFromLocalStorage();
+                    
+                    // If no tasks, add samples
+                    if (tasks.length === 0) {
+                        addSampleTasks();
+                    }
+                    
+                    // Save to cloud
+                    await cloudStorage.save(currentListId, tasks);
+                }
+                
+                updateStatistics();
+                renderTasks();
+                updateStatus(translations[currentLang]['online'], true);
+                
+            } catch (error) {
+                console.error('Failed to load from cloud:', error);
+                loadFromLocalStorage();
+                updateStatus(translations[currentLang]['offline'], false);
+            }
+        }
+        
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem(`todo_${currentListId}`);
+            if (saved) {
+                tasks = JSON.parse(saved);
+            }
+        }
+        
+        function saveToLocalStorage() {
+            localStorage.setItem(`todo_${currentListId}`, JSON.stringify(tasks));
+        }
+        
+        async function saveTasks() {
+            saveToLocalStorage();
+            updateStatistics();
+            
+            // Save to cloud if online
+            if (isOnline) {
                 try {
-                    document.execCommand('copy');
-                    showNotification('Your personal link copied! Share it with anyone.', 'success');
-                } catch (err) {
-                    navigator.clipboard.writeText(shareLink.value)
-                        .then(() => showNotification('Your personal link copied! Share it with anyone.', 'success'))
-                        .catch(() => showNotification('Failed to copy link', 'error'));
+                    await cloudStorage.save(currentListId, tasks);
+                } catch (error) {
+                    console.error('Failed to save to cloud:', error);
+                    updateStatus(translations[currentLang]['offline'], false);
                 }
+            }
+        }
+        
+        function addSampleTasks() {
+            const sampleTasks = currentLang === 'ar' ? [
+                { id: 1, text: 'مرحباً بك في قائمة المهام الذكية!', category: 'personal', completed: false, date: new Date().toISOString() },
+                { id: 2, text: 'انقر على المربع لإكمال المهمة', category: 'work', completed: false, date: new Date().toISOString() },
+                { id: 3, text: 'شارك الرابط مع هاتفك', category: 'personal', completed: false, date: new Date().toISOString() },
+                { id: 4, text: 'جرب إضافة مهام جديدة', category: 'shopping', completed: true, date: new Date().toISOString() }
+            ] : [
+                { id: 1, text: 'Welcome to Smart Todo List!', category: 'personal', completed: false, date: new Date().toISOString() },
+                { id: 2, text: 'Click the checkbox to complete task', category: 'work', completed: false, date: new Date().toISOString() },
+                { id: 3, text: 'Share link with your phone', category: 'personal', completed: false, date: new Date().toISOString() },
+                { id: 4, text: 'Try adding new tasks', category: 'shopping', completed: true, date: new Date().toISOString() }
+            ];
+            
+            tasks = sampleTasks;
+        }
+        
+        async function addTask(text, category) {
+            const newTask = {
+                id: Date.now(),
+                text: text,
+                category: category,
+                completed: false,
+                date: new Date().toISOString()
+            };
+            
+            tasks.unshift(newTask);
+            await saveTasks();
+            renderTasks();
+            showNotification(translations[currentLang]['taskAdded'], 'success');
+        }
+        
+        async function updateTask(taskId, updates) {
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
+            if (taskIndex !== -1) {
+                tasks[taskIndex] = { ...tasks[taskIndex], ...updates };
+                await saveTasks();
+                renderTasks();
+                showNotification(translations[currentLang]['taskUpdated'], 'success');
+            }
+        }
+        
+        async function deleteTask(taskId) {
+            if (confirm(currentLang === 'ar' ? 'حذف هذه المهمة؟' : 'Delete this task?')) {
+                tasks = tasks.filter(t => t.id !== taskId);
+                await saveTasks();
+                renderTasks();
+                showNotification(translations[currentLang]['taskDeleted'], 'info');
+            }
+        }
+        
+        function updateStatistics() {
+            const total = tasks.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const pending = total - completed;
+            
+            // Today's tasks
+            const today = new Date().toDateString();
+            const todayTasks = tasks.filter(task => {
+                const taskDate = new Date(task.date).toDateString();
+                return taskDate === today;
+            }).length;
+            
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('pendingTasks').textContent = pending;
+            document.getElementById('todayTasks').textContent = todayTasks;
+        }
+        
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            const emptyState = document.getElementById('emptyState');
+            
+            // Clear the list
+            taskList.innerHTML = '';
+            
+            // Filter tasks
+            let filteredTasks = tasks;
+            
+            if (currentFilter === 'pending') {
+                filteredTasks = tasks.filter(t => !t.completed);
+            } else if (currentFilter === 'completed') {
+                filteredTasks = tasks.filter(t => t.completed);
+            } else if (currentFilter === 'today') {
+                const today = new Date().toDateString();
+                filteredTasks = tasks.filter(task => {
+                    const taskDate = new Date(task.date).toDateString();
+                    return taskDate === today;
+                });
+            }
+            
+            // Check if empty
+            if (filteredTasks.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // Render tasks
+            filteredTasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = `task-item ${task.completed ? 'completed' : ''}`;
+                
+                // Format date
+                const taskDate = new Date(task.date);
+                const dateStr = taskDate.toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                // Category labels
+                const categoryLabels = {
+                    'work': currentLang === 'ar' ? 'عمل' : 'Work',
+                    'personal': currentLang === 'ar' ? 'شخصي' : 'Personal',
+                    'shopping': currentLang === 'ar' ? 'تسوق' : 'Shopping',
+                    'health': currentLang === 'ar' ? 'صحة' : 'Health'
+                };
+                
+                li.innerHTML = `
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+                    <div class="task-content">
+                        <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+                        <div class="task-meta">
+                            <span class="task-category category-${task.category}">
+                                ${categoryLabels[task.category]}
+                            </span>
+                            <span class="task-date">
+                                <i class="far fa-calendar"></i> ${dateStr}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="task-btn edit-btn">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="task-btn delete-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                taskList.appendChild(li);
+                
+                // Add event listeners
+                const checkbox = li.querySelector('.task-checkbox');
+                const editBtn = li.querySelector('.edit-btn');
+                const deleteBtn = li.querySelector('.delete-btn');
+                
+                checkbox.addEventListener('change', () => {
+                    updateTask(task.id, { completed: checkbox.checked });
+                });
+                
+                editBtn.addEventListener('click', () => {
+                    const newText = prompt(currentLang === 'ar' ? 'تعديل المهمة:' : 'Edit task:', task.text);
+                    if (newText && newText.trim()) {
+                        updateTask(task.id, { 
+                            text: newText.trim(),
+                            date: new Date().toISOString()
+                        });
+                    }
+                });
+                
+                deleteBtn.addEventListener('click', () => {
+                    deleteTask(task.id);
+                });
             });
+        }
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
             
-            // New list button
-            newListBtn.addEventListener('click', createNewList);
+            notificationText.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
             
-            // Initialize the app
-            initApp();
-            
-            // Auto-save simulation (every 30 seconds)
-            setInterval(() => {
-                if (tasks.length > 0) {
-                    saveTasks();
-                    console.log('Auto-saved tasks to cloud simulation');
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function startSyncInterval() {
+            // Auto-sync every 5 seconds
+            setInterval(async () => {
+                if (isOnline) {
+                    try {
+                        const cloudTasks = await cloudStorage.load(currentListId);
+                        if (JSON.stringify(tasks) !== JSON.stringify(cloudTasks)) {
+                            tasks = cloudTasks;
+                            saveToLocalStorage();
+                            updateStatistics();
+                            renderTasks();
+                        }
+                    } catch (error) {
+                        console.error('Sync error:', error);
+                    }
                 }
-            }, 30000);
-        });
+            }, 5000);
+        }
     </script>
 </body>
 </html>
