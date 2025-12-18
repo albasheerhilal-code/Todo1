@@ -100,11 +100,11 @@
             height: 12px;
             border-radius: 50%;
             background: #4CAF50;
-            animation: pulse 2s infinite;
         }
         
         .sync-dot.syncing {
             background: #FF9800;
+            animation: pulse 1.5s infinite;
         }
         
         .sync-dot.error {
@@ -114,7 +114,7 @@
         
         @keyframes pulse {
             0% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.3; }
             100% { opacity: 1; }
         }
         
@@ -383,7 +383,7 @@
             background: #2196F3;
         }
         
-        .notification.sync {
+        .notification.warning {
             background: #FF9800;
         }
         
@@ -420,11 +420,6 @@
         .btn-secondary {
             background: #f0f0f0;
             color: #333;
-        }
-        
-        .btn-sync {
-            background: #FF9800;
-            color: white;
         }
         
         /* Footer */
@@ -465,7 +460,7 @@
     <div class="container">
         <header>
             <h1>📝 قائمة المهام الذكية</h1>
-            <p class="subtitle">مزامنة فورية بين الهاتف والكمبيوتر - Real-time PC/Mobile Sync</p>
+            <p class="subtitle">مشاركة مباشرة بين الهاتف والكمبيوتر - Instant PC/Mobile Sharing</p>
             
             <div class="lang-switcher">
                 <button class="lang-btn active" data-lang="ar">العربية</button>
@@ -478,15 +473,15 @@
             <div class="sync-status">
                 <div class="sync-info">
                     <div class="sync-dot" id="syncDot"></div>
-                    <span id="syncStatus">جاري المزامنة...</span>
+                    <span id="syncStatus">جاهز للمشاركة</span>
                 </div>
-                <p id="lastSync" style="font-size: 0.9rem; color: #666;">آخر مزامنة: الآن</p>
+                <p style="font-size: 0.9rem; color: #666;" data-i18n="syncHint">انقر على "نسخ الرابط" وارسله إلى جهازك الآخر</p>
             </div>
             
             <!-- Sharing Section -->
             <div class="share-box">
                 <h3 data-i18n="shareTitle">شارك هذه القائمة</h3>
-                <p data-i18n="shareDesc">انسخ الرابط وافتحه على هاتفك أو كمبيوتر آخر:</p>
+                <p data-i18n="shareDesc">انسخ هذا الرابط وافتحه على جهازك الآخر:</p>
                 <div class="share-link" id="shareLink">جار التحميل...</div>
                 
                 <div class="buttons">
@@ -496,9 +491,13 @@
                     <button class="btn btn-secondary" id="newListBtn">
                         <i class="fas fa-plus"></i> <span data-i18n="newList">قائمة جديدة</span>
                     </button>
-                    <button class="btn btn-sync" id="forceSyncBtn">
-                        <i class="fas fa-sync-alt"></i> <span data-i18n="forceSync">مزامنة الآن</span>
-                    </button>
+                </div>
+                
+                <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 8px;">
+                    <p style="color: #388e3c; font-size: 0.9rem; margin: 0;">
+                        <i class="fas fa-lightbulb"></i> 
+                        <span data-i18n="syncTip">افتح نفس الرابط على جميع أجهزتك لتظهر المهام مباشرة</span>
+                    </p>
                 </div>
             </div>
             
@@ -560,7 +559,7 @@
         </div>
         
         <footer>
-            <p data-i18n="footer">المهام متزامنة بين جميع الأجهزة عبر الإنترنت</p>
+            <p data-i18n="footer">شارك الرابط بين أجهزتك - المهام تظهر مباشرة</p>
         </footer>
     </div>
     
@@ -570,16 +569,16 @@
     </div>
 
     <script>
-        // ========== REAL PC-MOBILE SYNC USING JSONBIN.IO ==========
+        // ========== SIMPLE SHARING SOLUTION - NO API NEEDED ==========
+        // This works by sharing the URL with encoded task data
         
         // Language texts
         const texts = {
             ar: {
                 shareTitle: "شارك هذه القائمة",
-                shareDesc: "انسخ الرابط وافتحه على هاتفك أو كمبيوتر آخر:",
+                shareDesc: "انسخ هذا الرابط وافتحه على جهازك الآخر:",
                 copyLink: "نسخ الرابط",
                 newList: "قائمة جديدة",
-                forceSync: "مزامنة الآن",
                 addTask: "أضف مهمة جديدة...",
                 personal: "شخصي",
                 work: "عمل",
@@ -593,26 +592,24 @@
                 all: "الكل",
                 noTasks: "لا توجد مهام",
                 addFirst: "أضف مهمتك الأولى!",
-                footer: "المهام متزامنة بين جميع الأجهزة عبر الإنترنت",
-                syncing: "جاري المزامنة...",
-                online: "متصل - جاهز",
-                offline: "غير متصل",
+                footer: "شارك الرابط بين أجهزتك - المهام تظهر مباشرة",
+                syncHint: "انقر على 'نسخ الرابط' وارسله إلى جهازك الآخر",
+                syncTip: "افتح نفس الرابط على جميع أجهزتك لتظهر المهام مباشرة",
                 linkCopied: "تم نسخ الرابط!",
                 taskAdded: "تمت إضافة المهمة!",
                 taskUpdated: "تم تحديث المهمة!",
                 taskDeleted: "تم حذف المهمة",
                 listCreated: "تم إنشاء قائمة جديدة",
-                syncStarted: "بدء المزامنة...",
-                syncSuccess: "تمت المزامنة بنجاح!",
-                syncError: "خطأ في المزامنة",
-                syncedFromDevice: "تم تحديث القائمة من جهاز آخر"
+                sharingReady: "جاهز للمشاركة",
+                encodedData: "بيانات المهام مخزنة في الرابط",
+                refreshWarning: "جاري تحديث المهام...",
+                tasksLoaded: "تم تحميل المهام بنجاح"
             },
             en: {
                 shareTitle: "Share This List",
-                shareDesc: "Copy link and open on your phone or another computer:",
+                shareDesc: "Copy this link and open on your other device:",
                 copyLink: "Copy Link",
                 newList: "New List",
-                forceSync: "Sync Now",
                 addTask: "Add new task...",
                 personal: "Personal",
                 work: "Work",
@@ -626,73 +623,71 @@
                 all: "All",
                 noTasks: "No tasks yet",
                 addFirst: "Add your first task!",
-                footer: "Tasks synced across all devices via internet",
-                syncing: "Syncing...",
-                online: "Connected - Ready",
-                offline: "Offline",
+                footer: "Share link between devices - Tasks appear instantly",
+                syncHint: "Click 'Copy Link' and send to your other device",
+                syncTip: "Open same link on all devices to see tasks instantly",
                 linkCopied: "Link copied!",
                 taskAdded: "Task added!",
                 taskUpdated: "Task updated!",
                 taskDeleted: "Task deleted",
                 listCreated: "New list created",
-                syncStarted: "Sync started...",
-                syncSuccess: "Sync successful!",
-                syncError: "Sync error",
-                syncedFromDevice: "List updated from another device"
+                sharingReady: "Ready to share",
+                encodedData: "Task data stored in link",
+                refreshWarning: "Refreshing tasks...",
+                tasksLoaded: "Tasks loaded successfully"
             }
         };
-        
-        // FREE CLOUD STORAGE API (JSONBin.io - No signup required for small usage)
-        const JSONBIN_API_KEY = '$2a$10$ZqN6H4i9Y8Q6T7R2V1W3X4Y5Z6A7B8C9D0E1F2G3H4I5J6K7L8M9N0O1P2Q';
-        const JSONBIN_BASE_URL = 'https://api.jsonbin.io/v3/b';
         
         // App state
         let currentLang = 'ar';
         let tasks = [];
         let currentFilter = 'all';
         let listId = '';
-        let binId = ''; // The ID for cloud storage
-        let syncInterval = null;
-        let lastSyncTime = null;
+        let isEncodedInURL = false;
         
         // Initialize when page loads
         window.onload = function() {
-            console.log("App starting with REAL sync...");
+            console.log("App starting with URL-based sharing...");
             initApp();
         };
         
         function initApp() {
-            // Get list ID from URL or create new
+            // Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            listId = urlParams.get('list');
             
-            if (!listId) {
-                // Create a new list with random ID
-                listId = 'todo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                updateUrl();
+            // Check if we have encoded data in URL
+            const encodedData = urlParams.get('data');
+            
+            if (encodedData) {
+                // Load tasks from encoded URL data
+                console.log("Loading tasks from URL encoded data");
+                isEncodedInURL = true;
+                loadTasksFromURL(encodedData);
+                listId = 'url_encoded';
+            } else {
+                // Create new list or load from localStorage
+                listId = urlParams.get('list') || 'list_' + Date.now();
+                
+                if (!urlParams.get('list')) {
+                    updateUrlWithListId();
+                }
+                
+                console.log("Loading tasks from localStorage, List ID:", listId);
+                loadTasksFromStorage();
             }
-            
-            // Generate bin ID from list ID (for cloud storage)
-            binId = btoa(listId).replace(/[^a-zA-Z0-9]/g, '').substr(0, 20);
-            
-            console.log("List ID:", listId);
-            console.log("Bin ID (for cloud):", binId);
             
             // Setup language
             setupLanguage();
             
             // Update UI
             updateShareLink();
-            updateSyncStatus('syncing');
-            
-            // Load tasks from cloud
-            loadTasks();
+            updateSyncStatus('ready');
             
             // Setup event listeners
             setupEvents();
             
-            // Start auto-sync every 10 seconds
-            startAutoSync();
+            // Start auto-save
+            startAutoSave();
         }
         
         function setupLanguage() {
@@ -726,53 +721,69 @@
                     el.placeholder = texts[currentLang][key];
                 }
             });
+            
+            // Update sync status text
+            updateSyncStatusText();
         }
         
-        function updateSyncStatus(status, message = '') {
+        function updateSyncStatus(status) {
             const dot = document.getElementById('syncDot');
             const statusText = document.getElementById('syncStatus');
-            const lastSync = document.getElementById('lastSync');
             
             dot.className = 'sync-dot';
             
             if (status === 'syncing') {
                 dot.classList.add('syncing');
-                statusText.textContent = texts[currentLang]['syncing'];
-            } else if (status === 'online') {
+                statusText.textContent = currentLang === 'ar' ? 'جاري التحديث...' : 'Updating...';
+            } else if (status === 'ready') {
                 dot.classList.remove('syncing');
-                statusText.textContent = texts[currentLang]['online'];
+                if (isEncodedInURL) {
+                    statusText.textContent = texts[currentLang]['encodedData'];
+                } else {
+                    statusText.textContent = texts[currentLang]['sharingReady'];
+                }
             } else if (status === 'error') {
                 dot.classList.add('error');
-                statusText.textContent = message || texts[currentLang]['syncError'];
-            }
-            
-            if (lastSyncTime) {
-                const timeDiff = Math.floor((Date.now() - lastSyncTime) / 1000);
-                let timeText = '';
-                
-                if (timeDiff < 10) {
-                    timeText = currentLang === 'ar' ? 'الآن' : 'Just now';
-                } else if (timeDiff < 60) {
-                    timeText = currentLang === 'ar' 
-                        ? `قبل ${timeDiff} ثانية` 
-                        : `${timeDiff} seconds ago`;
-                } else {
-                    const minutes = Math.floor(timeDiff / 60);
-                    timeText = currentLang === 'ar'
-                        ? `قبل ${minutes} دقيقة`
-                        : `${minutes} minutes ago`;
-                }
-                
-                lastSync.textContent = currentLang === 'ar' 
-                    ? `آخر مزامنة: ${timeText}`
-                    : `Last sync: ${timeText}`;
+                statusText.textContent = currentLang === 'ar' ? 'خطأ' : 'Error';
             }
         }
         
-        function updateUrl() {
+        function updateSyncStatusText() {
+            const statusText = document.getElementById('syncStatus');
+            if (isEncodedInURL) {
+                statusText.textContent = texts[currentLang]['encodedData'];
+            } else {
+                statusText.textContent = texts[currentLang]['sharingReady'];
+            }
+        }
+        
+        function updateUrlWithListId() {
             const newUrl = window.location.origin + window.location.pathname + '?list=' + listId;
             window.history.replaceState({}, '', newUrl);
             updateShareLink();
+        }
+        
+        function updateUrlWithEncodedData() {
+            if (tasks.length === 0) return;
+            
+            try {
+                // Encode tasks to Base64 for URL
+                const jsonStr = JSON.stringify(tasks);
+                const encoded = btoa(encodeURIComponent(jsonStr));
+                
+                // Create URL with encoded data
+                const newUrl = window.location.origin + window.location.pathname + '?data=' + encoded;
+                window.history.replaceState({}, '', newUrl);
+                updateShareLink();
+                isEncodedInURL = true;
+                updateSyncStatusText();
+                
+            } catch (error) {
+                console.error("Error encoding data:", error);
+                // Fallback to list ID method
+                isEncodedInURL = false;
+                updateUrlWithListId();
+            }
         }
         
         function updateShareLink() {
@@ -799,26 +810,27 @@
                 const link = window.location.href;
                 navigator.clipboard.writeText(link).then(() => {
                     showNotification(texts[currentLang]['linkCopied']);
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const shareLink = document.getElementById('shareLink');
+                    shareLink.select();
+                    document.execCommand('copy');
+                    showNotification(texts[currentLang]['linkCopied']);
                 });
             });
             
             // New list button
             document.getElementById('newListBtn').addEventListener('click', function() {
                 if (confirm(currentLang === 'ar' ? 'إنشاء قائمة جديدة؟' : 'Create new list?')) {
-                    listId = 'todo_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                    binId = btoa(listId).replace(/[^a-zA-Z0-9]/g, '').substr(0, 20);
-                    updateUrl();
+                    listId = 'list_' + Date.now();
                     tasks = [];
+                    isEncodedInURL = false;
+                    updateUrlWithListId();
                     updateStats();
                     renderTasks();
-                    saveToCloud(); // Save empty list to cloud
+                    localStorage.removeItem(`todo_${listId}`);
                     showNotification(texts[currentLang]['listCreated']);
                 }
-            });
-            
-            // Force sync button
-            document.getElementById('forceSyncBtn').addEventListener('click', function() {
-                syncWithCloud();
             });
             
             // Filter buttons
@@ -832,222 +844,114 @@
             });
         }
         
-        // ========== REAL CLOUD SYNC FUNCTIONS ==========
-        
-        async function saveToCloud() {
-            console.log("Saving to cloud...");
-            updateSyncStatus('syncing');
-            
+        function loadTasksFromURL(encodedData) {
             try {
-                const data = {
-                    tasks: tasks,
-                    lastUpdated: Date.now(),
-                    listId: listId
-                };
+                console.log("Decoding URL data...");
+                updateSyncStatus('syncing');
                 
-                // Try to update existing bin or create new one
-                const response = await fetch(`${JSONBIN_BASE_URL}/${binId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY,
-                        'X-Bin-Name': `TodoList_${listId}`,
-                        'X-Bin-Versioning': 'false'
-                    },
-                    body: JSON.stringify(data)
-                });
+                // Decode Base64 data from URL
+                const jsonStr = decodeURIComponent(atob(encodedData));
+                tasks = JSON.parse(jsonStr);
                 
-                if (!response.ok) {
-                    // If update fails, try to create new bin
-                    const createResponse = await fetch(`${JSONBIN_BASE_URL}/new`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Master-Key': JSONBIN_API_KEY,
-                            'X-Bin-Name': `TodoList_${listId}`,
-                            'X-Bin-Versioning': 'false'
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    
-                    if (!createResponse.ok) {
-                        throw new Error('Failed to create bin');
-                    }
-                    
-                    const result = await createResponse.json();
-                    console.log("Created new bin:", result.metadata.id);
-                }
-                
-                lastSyncTime = Date.now();
-                updateSyncStatus('online');
-                console.log("Saved to cloud successfully");
+                console.log("Loaded from URL:", tasks.length, "tasks");
+                updateSyncStatus('ready');
+                updateStats();
+                renderTasks();
+                showNotification(texts[currentLang]['tasksLoaded'], 'info');
                 
             } catch (error) {
-                console.error("Error saving to cloud:", error);
-                updateSyncStatus('error', error.message);
-                showNotification(texts[currentLang]['syncError'], 'error');
+                console.error("Error loading from URL:", error);
+                showNotification(currentLang === 'ar' ? 'خطأ في تحميل البيانات' : 'Error loading data', 'error');
+                updateSyncStatus('error');
                 
-                // Fallback: Save to localStorage
-                localStorage.setItem(`todo_backup_${listId}`, JSON.stringify(tasks));
+                // Fallback to localStorage
+                loadTasksFromStorage();
             }
         }
         
-        async function loadFromCloud() {
-            console.log("Loading from cloud...");
+        function loadTasksFromStorage() {
+            console.log("Loading from localStorage...");
             updateSyncStatus('syncing');
             
             try {
-                const response = await fetch(`${JSONBIN_BASE_URL}/${binId}/latest`, {
-                    headers: {
-                        'X-Master-Key': JSONBIN_API_KEY
-                    }
-                });
+                const saved = localStorage.getItem(`todo_${listId}`);
                 
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        console.log("Bin not found, will create on first save");
-                        return null;
-                    }
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const result = await response.json();
-                const data = result.record;
-                
-                lastSyncTime = Date.now();
-                updateSyncStatus('online');
-                console.log("Loaded from cloud:", data ? data.tasks?.length : 0, "tasks");
-                
-                return data;
-                
-            } catch (error) {
-                console.error("Error loading from cloud:", error);
-                updateSyncStatus('error', error.message);
-                
-                // Fallback: Try to load from localStorage backup
-                try {
-                    const backup = localStorage.getItem(`todo_backup_${listId}`);
-                    if (backup) {
-                        console.log("Loaded from localStorage backup");
-                        return { tasks: JSON.parse(backup) };
-                    }
-                } catch (e) {
-                    console.error("Failed to load from backup:", e);
-                }
-                
-                return null;
-            }
-        }
-        
-        async function loadTasks() {
-            console.log("Loading tasks...");
-            
-            // First try cloud
-            const cloudData = await loadFromCloud();
-            
-            if (cloudData && cloudData.tasks) {
-                // Use cloud data
-                tasks = cloudData.tasks;
-                console.log("Using cloud data:", tasks.length, "tasks");
-            } else {
-                // No cloud data, check localStorage
-                const localData = localStorage.getItem(`todo_${listId}`);
-                
-                if (localData) {
-                    try {
-                        const parsed = JSON.parse(localData);
-                        tasks = parsed.tasks || parsed || [];
-                        console.log("Using localStorage data:", tasks.length, "tasks");
-                    } catch (e) {
-                        console.error("Error parsing local data:", e);
-                        tasks = [];
-                    }
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    tasks = data.tasks || data || [];
+                    console.log("Loaded from storage:", tasks.length, "tasks");
                 } else {
                     // First time user - add sample tasks
                     console.log("First time user, adding samples");
                     addSampleTasks();
                 }
-            }
-            
-            updateStats();
-            renderTasks();
-            
-            // Save to cloud if we have tasks but no cloud data yet
-            if (tasks.length > 0 && (!cloudData || !cloudData.tasks)) {
-                setTimeout(() => saveToCloud(), 1000);
-            }
-        }
-        
-        async function syncWithCloud() {
-            console.log("Manual sync triggered");
-            showNotification(texts[currentLang]['syncStarted'], 'sync');
-            
-            // First save our current state to cloud
-            await saveToCloud();
-            
-            // Then load any new changes from cloud
-            const cloudData = await loadFromCloud();
-            
-            if (cloudData && cloudData.tasks) {
-                // Check if cloud data is newer than local
-                const cloudTimestamp = cloudData.lastUpdated || 0;
-                const localTimestamp = lastSyncTime || 0;
                 
-                if (cloudTimestamp > localTimestamp) {
-                    // Cloud has newer data, update local
-                    tasks = cloudData.tasks;
-                    updateStats();
-                    renderTasks();
-                    showNotification(texts[currentLang]['syncedFromDevice'], 'info');
-                } else {
-                    showNotification(texts[currentLang]['syncSuccess'], 'success');
-                }
+                updateSyncStatus('ready');
+                updateStats();
+                renderTasks();
+                
+            } catch (error) {
+                console.error("Error loading from storage:", error);
+                showNotification(currentLang === 'ar' ? 'خطأ في تحميل المهام' : 'Error loading tasks', 'error');
+                updateSyncStatus('error');
+                tasks = [];
+                renderTasks();
             }
         }
-        
-        function startAutoSync() {
-            // Auto-sync every 10 seconds
-            syncInterval = setInterval(async () => {
-                try {
-                    const cloudData = await loadFromCloud();
-                    if (cloudData && cloudData.tasks) {
-                        const cloudTimestamp = cloudData.lastUpdated || 0;
-                        const localTimestamp = lastSyncTime || 0;
-                        
-                        if (cloudTimestamp > localTimestamp + 1000) { // 1 second buffer
-                            console.log("Auto-sync: Cloud has newer data");
-                            tasks = cloudData.tasks;
-                            updateStats();
-                            renderTasks();
-                            lastSyncTime = cloudTimestamp;
-                            updateSyncStatus('online');
-                        }
-                    }
-                } catch (error) {
-                    console.log("Auto-sync check failed:", error.message);
-                }
-            }, 10000); // Every 10 seconds
-        }
-        
-        // ========== TASK MANAGEMENT FUNCTIONS ==========
         
         function addSampleTasks() {
             console.log("Adding sample tasks");
             const samples = currentLang === 'ar' ? [
-                { id: Date.now(), text: 'مرحباً بك في قائمة المهام!', category: 'personal', completed: false, date: new Date().toISOString() },
-                { id: Date.now() + 1, text: 'انقر على المربع لإكمال المهمة', category: 'work', completed: false, date: new Date().toISOString() },
-                { id: Date.now() + 2, text: 'المهام تظهر على جميع أجهزتك', category: 'shopping', completed: true, date: new Date().toISOString() }
+                { 
+                    id: Date.now(), 
+                    text: 'مرحباً بك في قائمة المهام!', 
+                    category: 'personal', 
+                    completed: false, 
+                    date: new Date().toISOString() 
+                },
+                { 
+                    id: Date.now() + 1, 
+                    text: 'انقر على المربع لإكمال المهمة', 
+                    category: 'work', 
+                    completed: false, 
+                    date: new Date().toISOString() 
+                },
+                { 
+                    id: Date.now() + 2, 
+                    text: 'انسخ الرابط وافتحه على جهازك الآخر', 
+                    category: 'shopping', 
+                    completed: true, 
+                    date: new Date().toISOString() 
+                }
             ] : [
-                { id: Date.now(), text: 'Welcome to your todo list!', category: 'personal', completed: false, date: new Date().toISOString() },
-                { id: Date.now() + 1, text: 'Click checkbox to complete task', category: 'work', completed: false, date: new Date().toISOString() },
-                { id: Date.now() + 2, text: 'Tasks appear on all your devices', category: 'shopping', completed: true, date: new Date().toISOString() }
+                { 
+                    id: Date.now(), 
+                    text: 'Welcome to your todo list!', 
+                    category: 'personal', 
+                    completed: false, 
+                    date: new Date().toISOString() 
+                },
+                { 
+                    id: Date.now() + 1, 
+                    text: 'Click checkbox to complete task', 
+                    category: 'work', 
+                    completed: false, 
+                    date: new Date().toISOString() 
+                },
+                { 
+                    id: Date.now() + 2, 
+                    text: 'Copy link and open on your other device', 
+                    category: 'shopping', 
+                    completed: true, 
+                    date: new Date().toISOString() 
+                }
             ];
             
             tasks = samples;
-            saveTasks(); // This will trigger cloud save
+            saveTasks();
         }
         
-        async function addTask(text, category) {
+        function addTask(text, category) {
             console.log("Adding task:", text);
             const newTask = {
                 id: Date.now(),
@@ -1058,45 +962,64 @@
             };
             
             tasks.unshift(newTask);
-            await saveTasks(); // Wait for save to complete
+            saveTasks();
             renderTasks();
             showNotification(texts[currentLang]['taskAdded']);
         }
         
-        async function updateTask(taskId, updates) {
+        function updateTask(taskId, updates) {
             console.log("Updating task:", taskId);
             const taskIndex = tasks.findIndex(t => t.id === taskId);
             if (taskIndex !== -1) {
                 tasks[taskIndex] = { ...tasks[taskIndex], ...updates };
-                await saveTasks();
+                saveTasks();
                 renderTasks();
                 showNotification(texts[currentLang]['taskUpdated']);
             }
         }
         
-        async function deleteTask(taskId) {
+        function deleteTask(taskId) {
             console.log("Deleting task:", taskId);
             if (confirm(currentLang === 'ar' ? 'حذف هذه المهمة؟' : 'Delete this task?')) {
                 tasks = tasks.filter(t => t.id !== taskId);
-                await saveTasks();
+                saveTasks();
                 renderTasks();
                 showNotification(texts[currentLang]['taskDeleted']);
             }
         }
         
-        async function saveTasks() {
-            console.log("Saving tasks locally and to cloud...");
+        function saveTasks() {
+            console.log("Saving tasks...");
+            updateSyncStatus('syncing');
             
             // Save to localStorage
-            localStorage.setItem(`todo_${listId}`, JSON.stringify(tasks));
+            try {
+                localStorage.setItem(`todo_${listId}`, JSON.stringify(tasks));
+            } catch (error) {
+                console.error("Error saving to localStorage:", error);
+            }
+            
+            // Update URL with encoded data (for sharing)
+            if (tasks.length > 0 && tasks.length < 50) { // Limit to prevent URL too long
+                setTimeout(() => {
+                    try {
+                        updateUrlWithEncodedData();
+                    } catch (error) {
+                        console.log("URL too long, using list ID method instead");
+                        isEncodedInURL = false;
+                        updateUrlWithListId();
+                    }
+                }, 100);
+            } else {
+                isEncodedInURL = false;
+                updateUrlWithListId();
+            }
             
             // Update statistics
             updateStats();
             
-            // Save to cloud (async, don't wait)
-            saveToCloud().catch(error => {
-                console.error("Background cloud save failed:", error);
-            });
+            // Update sync status
+            setTimeout(() => updateSyncStatus('ready'), 300);
         }
         
         function updateStats() {
@@ -1173,11 +1096,10 @@
             if (task.date) {
                 const taskDate = new Date(task.date);
                 dateStr = taskDate.toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric',
                     hour: '2-digit',
-                    minute: '2-digit'
+                    minute: '2-digit',
+                    day: 'numeric',
+                    month: 'short'
                 });
             }
             
@@ -1247,10 +1169,29 @@
             }, 3000);
         }
         
-        // Clean up on page unload
-        window.addEventListener('beforeunload', function() {
-            if (syncInterval) {
-                clearInterval(syncInterval);
+        function startAutoSave() {
+            // Auto-save every 30 seconds
+            setInterval(() => {
+                if (tasks.length > 0) {
+                    console.log("Auto-saving tasks...");
+                    saveTasks();
+                }
+            }, 30000);
+        }
+        
+        // Listen for storage events (for same browser, different tabs)
+        window.addEventListener('storage', function(e) {
+            if (e.key === `todo_${listId}` && e.newValue) {
+                console.log("Storage updated from another tab");
+                try {
+                    const data = JSON.parse(e.newValue);
+                    tasks = data.tasks || data || [];
+                    updateStats();
+                    renderTasks();
+                    showNotification(currentLang === 'ar' ? 'تم التحديث من نافذة أخرى' : 'Updated from another tab', 'info');
+                } catch (error) {
+                    console.error("Error processing storage update:", error);
+                }
             }
         });
     </script>
