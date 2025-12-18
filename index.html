@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sync To-Do List</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Simple Sync To-Do</title>
     <style>
         * {
             margin: 0;
@@ -14,114 +13,72 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             min-height: 100vh;
             padding: 20px;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
-        }
-        
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 20px 0;
-            color: white;
-            margin-bottom: 20px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
         
         h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-        
-        /* Main App */
-        .app {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        }
-        
-        /* Sync Status */
-        .sync-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: #f8f9ff;
-            border-radius: 10px;
-        }
-        
-        .sync-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #28a745;
-        }
-        
-        .sync-dot.syncing {
-            background: #ffc107;
-            animation: pulse 1s infinite;
-        }
-        
-        .sync-dot.error {
-            background: #dc3545;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        
-        /* Share Section */
-        .share-section {
-            background: #f8f9ff;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
             text-align: center;
-            border: 2px dashed #667eea;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
         }
         
-        .share-section h3 {
-            color: #667eea;
+        .sync-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .sync-info p {
             margin-bottom: 10px;
+            color: #333;
         }
         
-        .share-link {
+        .current-url {
             background: white;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
             font-family: monospace;
             word-break: break-all;
-            margin: 15px 0;
-            border: 1px solid #ddd;
+            margin: 10px 0;
         }
         
-        /* Task Form */
+        .copy-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
         .task-form {
             display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .task-input {
             flex: 1;
-            padding: 15px;
+            padding: 12px;
             border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 1rem;
+            border-radius: 5px;
+            font-size: 16px;
         }
         
         .task-input:focus {
@@ -130,84 +87,29 @@
         }
         
         .add-btn {
-            background: #667eea;
+            background: #28a745;
             color: white;
             border: none;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
+            padding: 12px 20px;
+            margin-left: 10px;
+            border-radius: 5px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 16px;
         }
         
-        /* Stats */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-box {
-            background: #f8f9ff;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .stat-label {
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 5px;
-        }
-        
-        /* Filters */
-        .filters {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .filter-btn {
-            padding: 10px 20px;
-            border: 2px solid #ddd;
-            background: white;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-        
-        .filter-btn.active {
-            background: #667eea;
-            color: white;
-            border-color: #667eea;
-        }
-        
-        /* Task List */
         .task-list {
             list-style: none;
-            max-height: 400px;
-            overflow-y: auto;
+            margin-top: 20px;
         }
         
         .task-item {
-            background: #f8f9ff;
+            background: #f8f9fa;
             padding: 15px;
             margin-bottom: 10px;
-            border-radius: 10px;
-            border-left: 5px solid #667eea;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
             display: flex;
             align-items: center;
-            gap: 15px;
         }
         
         .task-item.completed {
@@ -216,18 +118,14 @@
         }
         
         .task-checkbox {
+            margin-right: 15px;
             width: 20px;
             height: 20px;
             cursor: pointer;
         }
         
-        .task-content {
-            flex: 1;
-        }
-        
         .task-text {
-            font-size: 1rem;
-            margin-bottom: 5px;
+            flex: 1;
         }
         
         .task-text.completed {
@@ -235,401 +133,318 @@
             color: #666;
         }
         
-        .task-meta {
-            display: flex;
-            gap: 10px;
-            font-size: 0.85rem;
-            color: #666;
-        }
-        
-        .task-category {
-            padding: 2px 8px;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            background: #e9ecef;
-        }
-        
-        .task-actions {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .task-btn {
-            background: none;
+        .delete-btn {
+            background: #dc3545;
+            color: white;
             border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
             cursor: pointer;
-            font-size: 1rem;
-            color: #666;
+            font-size: 12px;
         }
         
-        .task-btn:hover {
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
             color: #667eea;
         }
         
-        /* Empty State */
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
         .empty-state {
             text-align: center;
             padding: 40px 20px;
             color: #666;
         }
         
-        .empty-icon {
-            font-size: 3rem;
-            color: #ddd;
-            margin-bottom: 15px;
-        }
-        
-        /* Buttons */
-        .buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-primary {
-            background: #667eea;
+        .sync-btn {
+            background: #17a2b8;
             color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
         }
         
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
+        .last-sync {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
         }
         
-        /* Notification */
-        .notification {
+        .alert {
             position: fixed;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
-            padding: 15px 25px;
+            padding: 15px;
             background: #28a745;
             color: white;
-            border-radius: 8px;
+            border-radius: 5px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             display: none;
             z-index: 1000;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .task-form {
-                flex-direction: column;
-            }
-            
-            .buttons {
-                flex-direction: column;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .app {
-                padding: 15px;
-            }
-            
-            .filters {
-                justify-content: center;
-            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>📝 Sync To-Do List</h1>
-            <p class="subtitle">Works between PC and mobile instantly</p>
+        <h1>📝 Simple Sync To-Do</h1>
+        
+        <div class="sync-info">
+            <p><strong>How to sync between devices:</strong></p>
+            <p>1. Copy this URL:</p>
+            <div class="current-url" id="currentUrl">Loading...</div>
+            <button class="copy-btn" onclick="copyUrl()">Copy URL</button>
+            <button class="sync-btn" onclick="forceRefresh()">↻ Refresh</button>
+            <p style="margin-top: 10px; font-size: 14px;">2. Open the <strong>exact same URL</strong> on another device</p>
+            <div class="last-sync" id="lastSync"></div>
         </div>
         
-        <div class="app">
-            <!-- Sync Status -->
-            <div class="sync-status">
-                <div class="sync-dot" id="syncDot"></div>
-                <span id="syncText">Ready to sync</span>
+        <form class="task-form" id="taskForm" onsubmit="return addTask()">
+            <input type="text" class="task-input" id="taskInput" placeholder="What needs to be done?" required>
+            <button type="submit" class="add-btn">Add Task</button>
+        </form>
+        
+        <ul class="task-list" id="taskList">
+            <!-- Tasks will appear here -->
+        </ul>
+        
+        <div class="empty-state" id="emptyState">
+            <p style="font-size: 18px; margin-bottom: 10px;">No tasks yet</p>
+            <p>Add your first task above!</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number" id="totalTasks">0</div>
+                <div class="stat-label">Total</div>
             </div>
-            
-            <!-- Share Section -->
-            <div class="share-section">
-                <h3>Share This List</h3>
-                <p>Copy this link and open it on another device:</p>
-                <div class="share-link" id="shareLink">Loading...</div>
-                
-                <div class="buttons">
-                    <button class="btn btn-primary" id="copyBtn">
-                        <i class="fas fa-copy"></i> Copy Link
-                    </button>
-                    <button class="btn btn-secondary" id="newListBtn">
-                        <i class="fas fa-plus"></i> New List
-                    </button>
-                </div>
-                
-                <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">
-                    <i class="fas fa-info-circle"></i> Changes appear on all devices with the same link
-                </p>
+            <div class="stat">
+                <div class="stat-number" id="completedTasks">0</div>
+                <div class="stat-label">Completed</div>
             </div>
-            
-            <!-- Task Form -->
-            <form class="task-form" id="taskForm">
-                <input type="text" class="task-input" id="taskInput" placeholder="Add a new task..." required>
-                <button type="submit" class="add-btn">
-                    <i class="fas fa-plus"></i> Add Task
-                </button>
-            </form>
-            
-            <!-- Statistics -->
-            <div class="stats">
-                <div class="stat-box">
-                    <div class="stat-number" id="totalTasks">0</div>
-                    <div class="stat-label">Total Tasks</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" id="completedTasks">0</div>
-                    <div class="stat-label">Completed</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" id="pendingTasks">0</div>
-                    <div class="stat-label">Pending</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-number" id="todayTasks">0</div>
-                    <div class="stat-label">Today</div>
-                </div>
-            </div>
-            
-            <!-- Filters -->
-            <div class="filters">
-                <button class="filter-btn active" data-filter="all">All Tasks</button>
-                <button class="filter-btn" data-filter="pending">Pending</button>
-                <button class="filter-btn" data-filter="completed">Completed</button>
-                <button class="filter-btn" data-filter="today">Today</button>
-            </div>
-            
-            <!-- Task List -->
-            <ul class="task-list" id="taskList">
-                <!-- Tasks will be added here -->
-            </ul>
-            
-            <!-- Empty State -->
-            <div class="empty-state" id="emptyState">
-                <div class="empty-icon">
-                    <i class="fas fa-clipboard-list"></i>
-                </div>
-                <h3>No tasks yet</h3>
-                <p>Add your first task above!</p>
+            <div class="stat">
+                <div class="stat-number" id="pendingTasks">0</div>
+                <div class="stat-label">Pending</div>
             </div>
         </div>
     </div>
     
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <span id="notificationText">Notification message</span>
+    <div class="alert" id="alert">
+        <span id="alertText">Alert message</span>
     </div>
 
     <script>
-        // ====================
-        // SIMPLE SYNC SOLUTION
-        // ====================
+        // ============================================
+        // SIMPLE SYNC SYSTEM
+        // ============================================
         
-        // App State
+        // Get list ID from URL or create new
+        const urlParams = new URLSearchParams(window.location.search);
+        let listId = urlParams.get('list');
+        
+        if (!listId) {
+            // Create a simple list ID
+            listId = 'list_' + Math.floor(Math.random() * 1000000);
+            updateUrl();
+        }
+        
+        // Tasks array
         let tasks = [];
-        let currentFilter = 'all';
-        let listId = '';
         
-        // Initialize when page loads
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('App starting...');
-            initApp();
-        });
-        
-        function initApp() {
-            // Get list ID from URL or create new
-            const urlParams = new URLSearchParams(window.location.search);
-            listId = urlParams.get('list');
+            console.log('App starting with list:', listId);
             
-            if (!listId) {
-                listId = 'list_' + Date.now();
-                updateUrl();
-            }
-            
-            console.log('List ID:', listId);
-            
-            // Update share link
-            updateShareLink();
+            // Show current URL
+            document.getElementById('currentUrl').textContent = window.location.href;
             
             // Load tasks
             loadTasks();
             
-            // Setup event listeners
-            setupEventListeners();
+            // Update last sync time
+            updateLastSync();
             
-            // Setup cross-tab communication
-            setupCrossTabSync();
-            
-            // Show welcome message
-            showNotification('Welcome! Share the link to sync across devices.', 'info');
-        }
+            // Auto-refresh every 5 seconds
+            setInterval(checkForUpdates, 5000);
+        });
         
         function updateUrl() {
             const newUrl = window.location.origin + window.location.pathname + '?list=' + listId;
             window.history.replaceState({}, '', newUrl);
-            updateShareLink();
+            document.getElementById('currentUrl').textContent = window.location.href;
         }
         
-        function updateShareLink() {
-            document.getElementById('shareLink').textContent = window.location.href;
-        }
-        
-        function setupEventListeners() {
-            // Task form
-            document.getElementById('taskForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const input = document.getElementById('taskInput');
-                const text = input.value.trim();
-                
-                if (text) {
-                    addTask(text);
-                    input.value = '';
-                    input.focus();
-                }
-            });
-            
-            // Copy button
-            document.getElementById('copyBtn').addEventListener('click', function() {
-                const link = window.location.href;
-                navigator.clipboard.writeText(link).then(() => {
-                    showNotification('Link copied! Share it with your other device.');
-                }).catch(() => {
-                    // Fallback for older browsers
-                    const shareLink = document.getElementById('shareLink');
-                    const range = document.createRange();
-                    range.selectNode(shareLink);
-                    window.getSelection().removeAllRanges();
-                    window.getSelection().addRange(range);
-                    document.execCommand('copy');
-                    showNotification('Link copied!');
-                });
-            });
-            
-            // New list button
-            document.getElementById('newListBtn').addEventListener('click', function() {
-                if (confirm('Create a new list? Current list will be saved.')) {
-                    listId = 'list_' + Date.now();
-                    tasks = [];
-                    updateUrl();
-                    saveTasks();
-                    renderTasks();
-                    showNotification('New list created');
-                }
-            });
-            
-            // Filter buttons
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    currentFilter = this.dataset.filter;
-                    renderTasks();
-                });
+        function copyUrl() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                showAlert('URL copied! Share this with other devices.');
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showAlert('URL copied!');
             });
         }
         
-        // ====================
+        function forceRefresh() {
+            showAlert('Checking for updates...');
+            loadTasks();
+        }
+        
+        // ============================================
         // TASK MANAGEMENT
-        // ====================
+        // ============================================
         
         function loadTasks() {
             console.log('Loading tasks...');
             
-            // First try to load from localStorage
-            const saved = localStorage.getItem(listId);
+            // Try to load from localStorage
+            const saved = localStorage.getItem('todo_' + listId);
             
             if (saved) {
                 try {
                     tasks = JSON.parse(saved);
-                    console.log('Loaded tasks:', tasks.length);
+                    console.log('Loaded', tasks.length, 'tasks');
                 } catch (e) {
                     console.error('Error loading tasks:', e);
                     tasks = [];
                 }
             } else {
-                // Add sample tasks for first-time users
-                addSampleTasks();
+                // First time user - add sample tasks
+                tasks = [
+                    { id: 1, text: 'Welcome to Simple Sync To-Do!', completed: false, date: new Date().toISOString() },
+                    { id: 2, text: 'Add your own tasks above', completed: false, date: new Date().toISOString() },
+                    { id: 3, text: 'Copy the URL and open on another device', completed: true, date: new Date().toISOString() }
+                ];
+                saveTasks();
             }
             
             updateStats();
             renderTasks();
+            updateLastSync();
         }
         
         function saveTasks() {
             console.log('Saving tasks...');
             
             // Save to localStorage
-            localStorage.setItem(listId, JSON.stringify(tasks));
+            localStorage.setItem('todo_' + listId, JSON.stringify(tasks));
             
-            // Update statistics
+            // Update stats
             updateStats();
             
-            // Broadcast to other tabs
-            broadcastToOtherTabs();
+            // Update last sync time
+            updateLastSync();
             
-            // Update sync status
-            updateSyncStatus();
-        }
-        
-        function addSampleTasks() {
-            tasks = [
-                { id: Date.now(), text: 'Welcome to your to-do list!', completed: false, date: new Date().toISOString() },
-                { id: Date.now() + 1, text: 'Click the checkbox to mark complete', completed: false, date: new Date().toISOString() },
-                { id: Date.now() + 2, text: 'Copy the link and open on another device', completed: true, date: new Date().toISOString() }
-            ];
-            saveTasks();
-        }
-        
-        function addTask(text) {
-            const newTask = {
-                id: Date.now(),
-                text: text,
-                completed: false,
-                date: new Date().toISOString()
-            };
+            // Broadcast to other tabs (same browser)
+            broadcastUpdate();
             
-            tasks.unshift(newTask);
-            saveTasks();
-            renderTasks();
-            showNotification('Task added!');
+            // Save to URL hash for sharing
+            saveToUrlHash();
         }
         
-        function updateTask(taskId, updates) {
-            const taskIndex = tasks.findIndex(t => t.id === taskId);
-            if (taskIndex !== -1) {
-                tasks[taskIndex] = { ...tasks[taskIndex], ...updates };
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const text = input.value.trim();
+            
+            if (text) {
+                const newTask = {
+                    id: Date.now(),
+                    text: text,
+                    completed: false,
+                    date: new Date().toISOString()
+                };
+                
+                tasks.push(newTask);
                 saveTasks();
                 renderTasks();
-                showNotification('Task updated!');
+                input.value = '';
+                input.focus();
+                showAlert('Task added!');
+            }
+            
+            return false; // Prevent form submission
+        }
+        
+        function toggleTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                saveTasks();
+                renderTasks();
+                showAlert('Task updated!');
             }
         }
         
-        function deleteTask(taskId) {
+        function deleteTask(id) {
             if (confirm('Delete this task?')) {
-                tasks = tasks.filter(t => t.id !== taskId);
+                tasks = tasks.filter(t => t.id !== id);
                 saveTasks();
                 renderTasks();
-                showNotification('Task deleted');
+                showAlert('Task deleted');
             }
+        }
+        
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            const emptyState = document.getElementById('emptyState');
+            
+            taskList.innerHTML = '';
+            
+            if (tasks.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            // Sort tasks: pending first, then by date
+            const sortedTasks = [...tasks].sort((a, b) => {
+                if (a.completed !== b.completed) {
+                    return a.completed ? 1 : -1;
+                }
+                return new Date(b.date) - new Date(a.date);
+            });
+            
+            sortedTasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = 'task-item' + (task.completed ? ' completed' : '');
+                
+                // Format date
+                const date = new Date(task.date);
+                const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                li.innerHTML = `
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
+                           onclick="toggleTask(${task.id})">
+                    <span class="task-text ${task.completed ? 'completed' : ''}">${task.text}</span>
+                    <small style="color: #666; margin-left: 10px;">${timeStr}</small>
+                    <button class="delete-btn" onclick="deleteTask(${task.id})" style="margin-left: 10px;">×</button>
+                `;
+                
+                taskList.appendChild(li);
+            });
         }
         
         function updateStats() {
@@ -637,223 +452,122 @@
             const completed = tasks.filter(t => t.completed).length;
             const pending = total - completed;
             
-            const today = new Date().toDateString();
-            const todayTasks = tasks.filter(task => {
-                const taskDate = new Date(task.date).toDateString();
-                return taskDate === today;
-            }).length;
-            
             document.getElementById('totalTasks').textContent = total;
             document.getElementById('completedTasks').textContent = completed;
             document.getElementById('pendingTasks').textContent = pending;
-            document.getElementById('todayTasks').textContent = todayTasks;
         }
         
-        function renderTasks() {
-            console.log('Rendering tasks...');
-            
-            const taskList = document.getElementById('taskList');
-            const emptyState = document.getElementById('emptyState');
-            
-            taskList.innerHTML = '';
-            
-            // Filter tasks
-            let filteredTasks = [...tasks];
-            
-            if (currentFilter === 'pending') {
-                filteredTasks = tasks.filter(t => !t.completed);
-            } else if (currentFilter === 'completed') {
-                filteredTasks = tasks.filter(t => t.completed);
-            } else if (currentFilter === 'today') {
-                const today = new Date().toDateString();
-                filteredTasks = tasks.filter(task => {
-                    const taskDate = new Date(task.date).toDateString();
-                    return taskDate === today;
-                });
-            }
-            
-            // Show empty state if no tasks
-            if (tasks.length === 0) {
-                emptyState.style.display = 'block';
-                return;
-            } else {
-                emptyState.style.display = 'none';
-            }
-            
-            // Update empty state for filters
-            if (filteredTasks.length === 0) {
-                emptyState.style.display = 'block';
-                const emptyTitle = document.querySelector('#emptyState h3');
-                if (emptyTitle) {
-                    if (currentFilter === 'today') {
-                        emptyTitle.textContent = 'No tasks for today';
-                    } else if (currentFilter === 'completed') {
-                        emptyTitle.textContent = 'No completed tasks';
-                    } else if (currentFilter === 'pending') {
-                        emptyTitle.textContent = 'No pending tasks';
-                    }
-                }
-                return;
-            } else {
-                emptyState.style.display = 'none';
-            }
-            
-            // Render each task
-            filteredTasks.forEach(task => {
-                const li = document.createElement('li');
-                li.className = `task-item ${task.completed ? 'completed' : ''}`;
-                li.dataset.id = task.id;
-                
-                // Format date
-                const taskDate = new Date(task.date);
-                const dateStr = taskDate.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                li.innerHTML = `
-                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
-                    <div class="task-content">
-                        <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
-                        <div class="task-meta">
-                            <span class="task-category">${dateStr}</span>
-                        </div>
-                    </div>
-                    <div class="task-actions">
-                        <button class="task-btn edit-btn">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="task-btn delete-btn">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-                
-                taskList.appendChild(li);
-                
-                // Add event listeners for this task
-                const checkbox = li.querySelector('.task-checkbox');
-                const editBtn = li.querySelector('.edit-btn');
-                const deleteBtn = li.querySelector('.delete-btn');
-                
-                checkbox.addEventListener('change', () => {
-                    updateTask(task.id, { completed: checkbox.checked });
-                });
-                
-                editBtn.addEventListener('click', () => {
-                    const newText = prompt('Edit task:', task.text);
-                    if (newText && newText.trim()) {
-                        updateTask(task.id, { 
-                            text: newText.trim(),
-                            date: new Date().toISOString()
-                        });
-                    }
-                });
-                
-                deleteBtn.addEventListener('click', () => {
-                    deleteTask(task.id);
-                });
-            });
+        // ============================================
+        // SYNC FUNCTIONS
+        // ============================================
+        
+        function updateLastSync() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('lastSync').textContent = 'Last updated: ' + timeStr;
         }
         
-        // ====================
-        // CROSS-TAB SYNC
-        // ====================
+        function checkForUpdates() {
+            // This is where we would check a server for updates
+            // For now, we'll just update the last sync time
+            updateLastSync();
+        }
         
-        function setupCrossTabSync() {
-            // Listen for storage events from other tabs
-            window.addEventListener('storage', function(e) {
-                if (e.key === listId && e.newValue) {
-                    console.log('Storage updated from another tab');
-                    try {
-                        const newTasks = JSON.parse(e.newValue);
-                        if (JSON.stringify(tasks) !== JSON.stringify(newTasks)) {
-                            tasks = newTasks;
-                            updateStats();
-                            renderTasks();
-                            showNotification('List updated from another tab', 'info');
-                        }
-                    } catch (error) {
-                        console.error('Error processing storage update:', error);
-                    }
+        function broadcastUpdate() {
+            // Broadcast to other tabs in same browser using localStorage event
+            localStorage.setItem('todo_broadcast_' + listId, Date.now().toString());
+        }
+        
+        function saveToUrlHash() {
+            // Save tasks to URL hash for easy sharing
+            try {
+                const tasksJson = JSON.stringify(tasks);
+                const compressed = btoa(encodeURIComponent(tasksJson));
+                
+                // Only update hash if it's different
+                if (window.location.hash !== '#tasks=' + compressed) {
+                    window.location.hash = 'tasks=' + compressed;
                 }
-            });
+            } catch (e) {
+                console.log('Could not save to URL hash:', e);
+            }
+        }
+        
+        function loadFromUrlHash() {
+            // Load tasks from URL hash if present
+            const hash = window.location.hash.substring(1);
+            if (hash.startsWith('tasks=')) {
+                try {
+                    const compressed = hash.substring(6);
+                    const tasksJson = decodeURIComponent(atob(compressed));
+                    const hashTasks = JSON.parse(tasksJson);
+                    
+                    if (hashTasks.length > 0) {
+                        tasks = hashTasks;
+                        saveTasks(); // Save to localStorage
+                        showAlert('Tasks loaded from shared link!');
+                    }
+                } catch (e) {
+                    console.log('Could not load from URL hash:', e);
+                }
+            }
+        }
+        
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        
+        // Listen for hash changes (when someone shares a link)
+        window.addEventListener('hashchange', loadFromUrlHash);
+        
+        // Listen for storage events (other tabs in same browser)
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'todo_broadcast_' + listId) {
+                console.log('Received broadcast from another tab');
+                loadTasks();
+                showAlert('Updated from another tab/window');
+            }
             
-            // Also listen for broadcast messages
-            window.addEventListener('message', function(e) {
-                if (e.data.type === 'TODO_UPDATE' && e.data.listId === listId) {
-                    console.log('Received broadcast update');
-                    tasks = e.data.tasks;
+            if (e.key === 'todo_' + listId && e.newValue) {
+                try {
+                    const newTasks = JSON.parse(e.newValue);
+                    tasks = newTasks;
                     updateStats();
                     renderTasks();
-                }
-            });
-        }
-        
-        function broadcastToOtherTabs() {
-            // Broadcast to other tabs in same browser
-            localStorage.setItem(listId + '_sync', Date.now().toString());
-            
-            // Also try BroadcastChannel API if available
-            if (typeof BroadcastChannel !== 'undefined') {
-                try {
-                    const channel = new BroadcastChannel('todo_channel');
-                    channel.postMessage({
-                        type: 'TODO_UPDATE',
-                        listId: listId,
-                        tasks: tasks
-                    });
-                    channel.close();
-                } catch (e) {
-                    console.log('BroadcastChannel not supported');
+                    showAlert('Synced from another tab');
+                } catch (error) {
+                    console.error('Error syncing:', error);
                 }
             }
-        }
+        });
         
-        // ====================
-        // UTILITY FUNCTIONS
-        // ====================
-        
-        function updateSyncStatus() {
-            const dot = document.getElementById('syncDot');
-            const text = document.getElementById('syncText');
-            
-            dot.className = 'sync-dot syncing';
-            text.textContent = 'Syncing...';
-            
-            setTimeout(() => {
-                dot.className = 'sync-dot';
-                text.textContent = 'Synced';
-            }, 500);
-        }
-        
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            const text = document.getElementById('notificationText');
-            
-            text.textContent = message;
-            notification.style.display = 'block';
-            
-            // Remove any existing timeout
-            if (notification.timeoutId) {
-                clearTimeout(notification.timeoutId);
+        // Listen for page visibility changes (when user switches tabs)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                // Page became visible, check for updates
+                loadTasks();
             }
+        });
+        
+        // ============================================
+        // UI FUNCTIONS
+        // ============================================
+        
+        function showAlert(message) {
+            const alert = document.getElementById('alert');
+            const alertText = document.getElementById('alertText');
+            
+            alertText.textContent = message;
+            alert.style.display = 'block';
             
             // Hide after 3 seconds
-            notification.timeoutId = setTimeout(() => {
-                notification.style.display = 'none';
+            setTimeout(() => {
+                alert.style.display = 'none';
             }, 3000);
         }
         
-        // Auto-save every 30 seconds
-        setInterval(() => {
-            if (tasks.length > 0) {
-                saveTasks();
-                console.log('Auto-saved tasks');
-            }
-        }, 30000);
+        // Check for hash on initial load
+        loadFromUrlHash();
     </script>
 </body>
 </html>
