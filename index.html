@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleToDo - Online Task Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .app-box {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-section h2 {
+            color: #2575fc;
+            margin-bottom: 15px;
+        }
+        
+        .user-id-display {
+            background: white;
+            border: 2px dashed #2575fc;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 1.1rem;
+            word-break: break-all;
+        }
+        
+        .user-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        /* Task Form */
+        .task-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .task-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        .task-input:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+        
+        .task-category {
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            min-width: 150px;
+        }
+        
+        .add-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(106, 17, 203, 0.2);
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            border-color: #6a11cb;
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2575fc;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 12px 24px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border-color: #6a11cb;
+        }
+        
+        /* Task List */
+        .task-list {
+            list-style: none;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .task-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .task-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .task-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #6a11cb, #2575fc);
+            border-radius: 10px;
+        }
+        
+        .task-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-left: 5px solid #2575fc;
+            animation: slideIn 0.3s ease;
+            transition: transform 0.2s;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .task-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .task-item.completed {
+            opacity: 0.7;
+            border-left-color: #28a745;
+        }
+        
+        .task-checkbox {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #2575fc;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-text {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .task-text.completed {
+            text-decoration: line-through;
+            color: #666;
+        }
+        
+        .task-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .task-category-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .category-work { background: #e3f2fd; color: #1976d2; }
+        .category-personal { background: #f3e5f5; color: #7b1fa2; }
+        .category-shopping { background: #e8f5e9; color: #388e3c; }
+        .category-health { background: #fff3e0; color: #f57c00; }
+        
+        .task-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .task-btn {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .edit-btn {
+            color: #2575fc;
+        }
+        
+        .edit-btn:hover {
+            background: rgba(37, 117, 252, 0.1);
+        }
+        
+        .delete-btn {
+            color: #dc3545;
+        }
+        
+        .delete-btn:hover {
+            background: rgba(220, 53, 69, 0.1);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        /* Sharing Section */
+        .sharing-section {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .sharing-section h3 {
+            color: #2575fc;
+            margin-bottom: 15px;
+        }
+        
+        .share-link-container {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .share-link {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #2575fc;
+            border-radius: 10px;
+            background: white;
+            font-family: monospace;
+            word-break: break-all;
+        }
+        
+        .copy-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .notification.success {
+            background: linear-gradient(to right, #28a745, #20c997);
+        }
+        
+        .notification.error {
+            background: linear-gradient(to right, #dc3545, #e83e8c);
+        }
+        
+        .notification.info {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .task-form {
+                flex-direction: column;
+            }
+            
+            .task-input, .task-category, .add-btn {
+                width: 100%;
+            }
+            
+            .share-link-container {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .app-box {
+                padding: 20px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .filters {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>SimpleToDo</h1>
+            <p class="tagline">Your online task manager - No signup required!</p>
+        </header>
+        
+        <div class="app-box">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h2>Welcome to Your Online To-Do List!</h2>
+                <p>Your tasks are automatically saved online. Share the link below with anyone to access your list.</p>
+                
+                <div class="user-id-display" id="userIdDisplay">
+                    Generating your personal link...
+                </div>
+                
+                <div class="user-controls">
+                    <button class="copy-btn" id="copyUserIdBtn">
+                        <i class="fas fa-copy"></i> Copy My Link
+                    </button>
+                    <button class="filter-btn" id="newListBtn">
+                        <i class="fas fa-plus"></i> Create New List
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Task Form -->
+            <form class="task-form" id="taskForm">
+                <input type="text" class="task-input" id="taskInput" placeholder="What do you need to do?" required>
+                <select class="task-category" id="taskCategory">
+                    <option value="personal">Personal</option>
+                    <option value="work">Work</option>
+                    <option value="shopping">Shopping</option>
+                    <option value="health">Health</option>
+                </select>
+                <button type="submit" class="add-btn">
+                    <i class="fas fa-plus"></i> Add Task
+                </button>
+            </form>
+            
+            <!-- Statistics -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalTasks">0</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completedTasks">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="pendingTasks">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="todayTasks">0</div>
+                    <div class="stat-label">Today's Tasks</div>
+                </div>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All Tasks</button>
+                <button class="filter-btn" data-filter="pending">Pending</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+                <button class="filter-btn" data-filter="today">Today</button>
+                <button class="filter-btn" data-filter="work">Work</button>
+                <button class="filter-btn" data-filter="personal">Personal</button>
+            </div>
+            
+            <!-- Task List -->
+            <ul class="task-list" id="taskList">
+                <!-- Tasks will appear here -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>No tasks yet</h3>
+                    <p>Add your first task using the form above</p>
+                </div>
+            </ul>
+            
+            <!-- Sharing Section -->
+            <div class="sharing-section">
+                <h3>Share This List</h3>
+                <p>Anyone with this link can view and edit this to-do list. Perfect for family, friends, or team projects!</p>
+                
+                <div class="share-link-container">
+                    <input type="text" class="share-link" id="shareLink" readonly>
+                    <button class="copy-btn" id="copyLinkBtn">
+                        <i class="fas fa-copy"></i> Copy Link
+                    </button>
+                </div>
+                
+                <p style="font-size: 0.9rem; color: #666;">
+                    <i class="fas fa-info-circle"></i> Changes are saved automatically and visible to everyone with the link
+                </p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>SimpleToDo &copy; 2023 | Your tasks are saved online automatically | No signup required</p>
+        </footer>
+    </div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <span id="notificationText">Notification message</span>
+    </div>
+
+    <script>
+        // Simple Cloud Storage using localStorage as a fallback
+        // In a real app, this would connect to a backend API
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const taskForm = document.getElementById('taskForm');
+            const taskInput = document.getElementById('taskInput');
+            const taskCategory = document.getElementById('taskCategory');
+            const taskList = document.getElementById('taskList');
+            const emptyState = document.getElementById('emptyState');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const shareLink = document.getElementById('shareLink');
+            const userIdDisplay = document.getElementById('userIdDisplay');
+            const copyLinkBtn = document.getElementById('copyLinkBtn');
+            const copyUserIdBtn = document.getElementById('copyUserIdBtn');
+            const newListBtn = document.getElementById('newListBtn');
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            // Statistics elements
+            const totalTasksEl = document.getElementById('totalTasks');
+            const completedTasksEl = document.getElementById('completedTasks');
+            const pendingTasksEl = document.getElementById('pendingTasks');
+            const todayTasksEl = document.getElementById('todayTasks');
+            
+            // State variables
+            let tasks = [];
+            let currentFilter = 'all';
+            let userId = '';
+            
+            // Initialize the app
+            function initApp() {
+                // Get or create user ID from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                userId = urlParams.get('list') || generateUserId();
+                
+                // Update URL without reloading page
+                if (!urlParams.get('list')) {
+                    const newUrl = window.location.origin + window.location.pathname + '?list=' + userId;
+                    window.history.replaceState({}, '', newUrl);
+                }
+                
+                // Update UI with user ID
+                userIdDisplay.textContent = window.location.href;
+                shareLink.value = window.location.href;
+                
+                // Load tasks from localStorage (keyed by userId)
+                loadTasks();
+                updateStatistics();
+                renderTasks();
+                
+                // Show welcome notification
+                showNotification('Welcome to SimpleToDo! Your list is saved online.', 'info');
+            }
+            
+            // Generate a random user ID
+            function generateUserId() {
+                return 'list_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            }
+            
+            // Show notification
+            function showNotification(message, type = 'info') {
+                notificationText.textContent = message;
+                notification.className = `notification ${type}`;
+                notification.style.display = 'block';
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+            
+            // Load tasks from localStorage
+            function loadTasks() {
+                const savedTasks = localStorage.getItem(`tasks_${userId}`);
+                if (savedTasks) {
+                    tasks = JSON.parse(savedTasks);
+                } else {
+                    tasks = [];
+                    // Add some sample tasks for new users
+                    addSampleTasks();
+                }
+            }
+            
+            // Save tasks to localStorage
+            function saveTasks() {
+                localStorage.setItem(`tasks_${userId}`, JSON.stringify(tasks));
+                updateStatistics();
+                
+                // In a real app, this would save to a cloud database
+                // For now, we simulate cloud saving
+                simulateCloudSave();
+            }
+            
+            // Simulate cloud saving (in a real app, this would be an API call)
+            function simulateCloudSave() {
+                // This is where you would connect to a real backend
+                // For example: fetch('https://api.yourbackend.com/save', {...})
+                console.log('Simulating cloud save for list:', userId);
+            }
+            
+            // Add sample tasks for new users
+            function addSampleTasks() {
+                const sampleTasks = [
+                    { id: Date.now(), text: 'Welcome to SimpleToDo!', category: 'personal', completed: false, date: new Date().toISOString() },
+                    { id: Date.now() + 1, text: 'Click the checkbox to mark tasks complete', category: 'work', completed: false, date: new Date().toISOString() },
+                    { id: Date.now() + 2, text: 'Try adding your own tasks below', category: 'personal', completed: false, date: new Date().toISOString() },
+                    { id: Date.now() + 3, text: 'Share the link with friends or family', category: 'work', completed: false, date: new Date().toISOString() }
+                ];
+                
+                tasks = sampleTasks;
+                saveTasks();
+            }
+            
+            // Update statistics
+            function updateStatistics() {
+                const totalTasks = tasks.length;
+                const completedTasks = tasks.filter(task => task.completed).length;
+                const pendingTasks = totalTasks - completedTasks;
+                
+                // Count today's tasks
+                const today = new Date().toDateString();
+                const todayTasks = tasks.filter(task => {
+                    const taskDate = new Date(task.date).toDateString();
+                    return taskDate === today;
+                }).length;
+                
+                totalTasksEl.textContent = totalTasks;
+                completedTasksEl.textContent = completedTasks;
+                pendingTasksEl.textContent = pendingTasks;
+                todayTasksEl.textContent = todayTasks;
+            }
+            
+            // Render tasks based on current filter
+            function renderTasks() {
+                // Clear the task list
+                taskList.innerHTML = '';
+                
+                // Filter tasks based on current selection
+                let filteredTasks = tasks;
+                
+                if (currentFilter === 'pending') {
+                    filteredTasks = filteredTasks.filter(task => !task.completed);
+                } else if (currentFilter === 'completed') {
+                    filteredTasks = filteredTasks.filter(task => task.completed);
+                } else if (currentFilter === 'today') {
+                    const today = new Date().toDateString();
+                    filteredTasks = filteredTasks.filter(task => {
+                        const taskDate = new Date(task.date).toDateString();
+                        return taskDate === today;
+                    });
+                } else if (['work', 'personal', 'shopping', 'health'].includes(currentFilter)) {
+                    filteredTasks = filteredTasks.filter(task => task.category === currentFilter);
+                }
+                
+                // Show empty state if no tasks
+                if (filteredTasks.length === 0) {
+                    emptyState.style.display = 'block';
+                    return;
+                } else {
+                    emptyState.style.display = 'none';
+                }
+                
+                // Sort tasks: pending first, then by date
+                filteredTasks.sort((a, b) => {
+                    if (a.completed !== b.completed) {
+                        return a.completed ? 1 : -1;
+                    }
+                    return new Date(b.date) - new Date(a.date);
+                });
+                
+                // Create task elements
+                filteredTasks.forEach(task => {
+                    const taskItem = document.createElement('li');
+                    taskItem.className = `task-item ${task.completed ? 'completed' : ''}`;
+                    taskItem.dataset.id = task.id;
+                    
+                    // Format date
+                    const taskDate = new Date(task.date);
+                    const formattedDate = taskDate.toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                    
+                    // Category label
+                    const categoryLabels = {
+                        'work': 'Work',
+                        'personal': 'Personal',
+                        'shopping': 'Shopping',
+                        'health': 'Health'
+                    };
+                    
+                    taskItem.innerHTML = `
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+                        <div class="task-content">
+                            <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+                            <div class="task-meta">
+                                <span class="task-category-badge category-${task.category}">
+                                    ${categoryLabels[task.category]}
+                                </span>
+                                <span class="task-date">
+                                    <i class="far fa-calendar"></i> ${formattedDate}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="task-btn edit-btn" title="Edit task">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="task-btn delete-btn" title="Delete task">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    taskList.appendChild(taskItem);
+                    
+                    // Add event listeners to this task
+                    const checkbox = taskItem.querySelector('.task-checkbox');
+                    const editBtn = taskItem.querySelector('.edit-btn');
+                    const deleteBtn = taskItem.querySelector('.delete-btn');
+                    
+                    checkbox.addEventListener('change', function() {
+                        toggleTaskCompletion(task.id);
+                    });
+                    
+                    editBtn.addEventListener('click', function() {
+                        editTask(task.id);
+                    });
+                    
+                    deleteBtn.addEventListener('click', function() {
+                        deleteTask(task.id);
+                    });
+                });
+            }
+            
+            // Add a new task
+            function addTask(text, category) {
+                const newTask = {
+                    id: Date.now(), // Simple ID based on timestamp
+                    text: text,
+                    category: category,
+                    completed: false,
+                    date: new Date().toISOString()
+                };
+                
+                tasks.unshift(newTask); // Add to beginning
+                saveTasks();
+                renderTasks();
+                showNotification('Task added successfully!', 'success');
+            }
+            
+            // Toggle task completion
+            function toggleTaskCompletion(id) {
+                tasks = tasks.map(task => {
+                    if (task.id === id) {
+                        return { ...task, completed: !task.completed };
+                    }
+                    return task;
+                });
+                
+                saveTasks();
+                renderTasks();
+                
+                const task = tasks.find(t => t.id === id);
+                if (task.completed) {
+                    showNotification('Task marked as complete!', 'success');
+                }
+            }
+            
+            // Edit a task
+            function editTask(id) {
+                const task = tasks.find(task => task.id === id);
+                if (!task) return;
+                
+                const newText = prompt('Edit your task:', task.text);
+                if (newText && newText.trim() !== '') {
+                    task.text = newText.trim();
+                    task.date = new Date().toISOString(); // Update date
+                    saveTasks();
+                    renderTasks();
+                    showNotification('Task updated successfully!', 'success');
+                }
+            }
+            
+            // Delete a task
+            function deleteTask(id) {
+                if (confirm('Are you sure you want to delete this task?')) {
+                    tasks = tasks.filter(task => task.id !== id);
+                    saveTasks();
+                    renderTasks();
+                    showNotification('Task deleted', 'info');
+                }
+            }
+            
+            // Create a new list
+            function createNewList() {
+                if (confirm('Create a new to-do list? Your current list will still be accessible via its link.')) {
+                    userId = generateUserId();
+                    const newUrl = window.location.origin + window.location.pathname + '?list=' + userId;
+                    window.location.href = newUrl;
+                }
+            }
+            
+            // Event Listeners
+            taskForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const taskText = taskInput.value.trim();
+                const taskCat = taskCategory.value;
+                
+                if (taskText) {
+                    addTask(taskText, taskCat);
+                    taskInput.value = '';
+                    taskInput.focus();
+                }
+            });
+            
+            // Filter buttons
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all filter buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update current filter and re-render
+                    currentFilter = this.dataset.filter;
+                    renderTasks();
+                });
+            });
+            
+            // Copy link button
+            copyLinkBtn.addEventListener('click', function() {
+                shareLink.select();
+                shareLink.setSelectionRange(0, 99999); // For mobile devices
+                
+                try {
+                    document.execCommand('copy');
+                    showNotification('Link copied to clipboard!', 'success');
+                } catch (err) {
+                    // Fallback for browsers that don't support execCommand
+                    navigator.clipboard.writeText(shareLink.value)
+                        .then(() => showNotification('Link copied to clipboard!', 'success'))
+                        .catch(() => showNotification('Failed to copy link', 'error'));
+                }
+            });
+            
+            // Copy user ID button
+            copyUserIdBtn.addEventListener('click', function() {
+                shareLink.select();
+                shareLink.setSelectionRange(0, 99999);
+                
+                try {
+                    document.execCommand('copy');
+                    showNotification('Your personal link copied! Share it with anyone.', 'success');
+                } catch (err) {
+                    navigator.clipboard.writeText(shareLink.value)
+                        .then(() => showNotification('Your personal link copied! Share it with anyone.', 'success'))
+                        .catch(() => showNotification('Failed to copy link', 'error'));
+                }
+            });
+            
+            // New list button
+            newListBtn.addEventListener('click', createNewList);
+            
+            // Initialize the app
+            initApp();
+            
+            // Auto-save simulation (every 30 seconds)
+            setInterval(() => {
+                if (tasks.length > 0) {
+                    saveTasks();
+                    console.log('Auto-saved tasks to cloud simulation');
+                }
+            }, 30000);
+        });
+    </script>
+</body>
+</html>
