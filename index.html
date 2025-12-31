@@ -1,1194 +1,697 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SyncToDo - Online To-Do List</title>
+    <title>قائمة المهام المشتركة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #2575fc;
-            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            --success-color: #4CAF50;
-            --warning-color: #FF9800;
-            --danger-color: #f44336;
-            --bg-color: #ffffff;
-            --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            --border-radius: 12px;
-            --transition-speed: 0.3s;
-            --font-primary: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --border-radius: 10px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
         body {
-            font-family: var(--font-primary);
-            background: var(--primary-gradient);
-            color: #333;
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #f0f2f5;
+            color: var(--dark-color);
             line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
         }
-        
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        
+
         .container {
-            width: 100%;
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
         }
-        
-        .todo-app {
-            background-color: var(--bg-color);
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(to left, var(--primary-color), var(--secondary-color));
+            color: white;
             border-radius: var(--border-radius);
-            box-shadow: var(--card-shadow);
-            overflow: hidden;
-            padding: 30px;
-            position: relative;
+            box-shadow: var(--box-shadow);
         }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            flex-wrap: wrap;
-            gap: 15px;
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
-        
-        .header h1 {
-            color: var(--primary-color);
-            font-weight: 700;
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-        }
-        
-        .sync-status {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            background-color: #f5f9ff;
-            padding: 8px 15px;
-            border-radius: 50px;
-            color: #555;
-            transition: all var(--transition-speed);
-        }
-        
-        .sync-status.synced {
-            background-color: #e8f5e9;
-        }
-        
-        .sync-status.syncing {
-            background-color: #fff3e0;
-        }
-        
-        .sync-status.error {
-            background-color: #ffebee;
-            color: var(--danger-color);
-        }
-        
-        .sync-status i {
+
+        .subtitle {
             font-size: 1.2rem;
+            opacity: 0.9;
         }
-        
-        .synced {
-            color: var(--success-color);
-        }
-        
-        .syncing {
-            color: var(--warning-color);
-            animation: pulse 1.5s infinite;
-        }
-        
-        .error {
-            color: var(--danger-color);
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
-        
-        .input-section {
-            display: flex;
-            gap: 10px;
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
             margin-bottom: 30px;
         }
-        
-        #todo-input {
-            flex: 1;
-            padding: 15px 20px;
-            border: 2px solid #e0e0e0;
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .panel h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
             border-radius: var(--border-radius);
             font-size: 1rem;
-            transition: all var(--transition-speed);
-            min-width: 0;
+            transition: border-color 0.3s;
+            background-color: white;
         }
-        
-        #todo-input:focus {
+
+        input:focus, select:focus, textarea:focus {
             border-color: var(--primary-color);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.1);
         }
-        
-        #add-btn {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            padding: 15px 25px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            min-width: 120px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        #add-btn:active {
-            transform: translateY(1px);
-        }
-        
-        #add-btn:hover::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .filters {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: var(--border-radius);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .filter-btn {
-            padding: 8px 20px;
-            border: none;
-            background: none;
-            color: #666;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all var(--transition-speed);
-            flex: 1;
-            min-width: 80px;
-        }
-        
-        .filter-btn.active {
+
+        button {
             background-color: var(--primary-color);
             color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        
-        .filter-btn:hover:not(.active) {
-            background-color: #e9e9e9;
+
+        button:hover {
+            background-color: var(--secondary-color);
         }
-        
+
+        button.secondary {
+            background-color: #6c757d;
+        }
+
+        button.secondary:hover {
+            background-color: #545b62;
+        }
+
+        button.success {
+            background-color: var(--success-color);
+        }
+
+        button.success:hover {
+            background-color: #3d8b40;
+        }
+
+        button.danger {
+            background-color: var(--danger-color);
+        }
+
+        button.danger:hover {
+            background-color: #d32f2f;
+        }
+
+        .buttons-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
         .todo-list {
-            list-style-type: none;
-            margin-bottom: 30px;
+            list-style: none;
             max-height: 400px;
             overflow-y: auto;
-            padding-right: 10px;
+            padding: 5px;
         }
-        
-        .todo-list::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .todo-list::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        .todo-list::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 10px;
-        }
-        
+
         .todo-item {
             display: flex;
             align-items: center;
-            padding: 18px 20px;
-            margin-bottom: 15px;
-            background-color: #f9f9f9;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
             border-radius: var(--border-radius);
             border-left: 5px solid var(--primary-color);
-            transition: all var(--transition-speed);
-            animation: fadeIn 0.5s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
+
         .todo-item:hover {
-            background-color: #f0f5ff;
+            transform: translateY(-3px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         .todo-item.completed {
-            opacity: 0.8;
+            opacity: 0.7;
             border-left-color: var(--success-color);
         }
-        
-        .todo-checkbox {
-            margin-right: 15px;
-            width: 22px;
-            height: 22px;
-            cursor: pointer;
-            accent-color: var(--primary-color);
-        }
-        
-        .todo-text {
-            flex: 1;
-            font-size: 1rem;
-            word-break: break-word;
-            padding-right: 10px;
-            cursor: text;
-        }
-        
+
         .todo-item.completed .todo-text {
             text-decoration: line-through;
-            color: #888;
+            color: #6c757d;
         }
-        
+
+        .todo-checkbox {
+            margin-left: 15px;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+
+        .todo-content {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .todo-text {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .todo-meta {
+            display: flex;
+            font-size: 0.85rem;
+            color: #6c757d;
+            gap: 15px;
+        }
+
         .todo-actions {
             display: flex;
             gap: 8px;
         }
-        
-        .todo-action-btn {
-            background: none;
-            border: none;
-            font-size: 1.1rem;
-            cursor: pointer;
-            color: #888;
-            transition: color var(--transition-speed), background-color var(--transition-speed);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+
+        .todo-actions button {
+            padding: 6px 10px;
+            font-size: 0.8rem;
         }
-        
-        .edit-btn:hover {
-            color: var(--warning-color);
-            background-color: rgba(255, 152, 0, 0.1);
+
+        .person-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background-color: #e0e0e0;
+            margin-top: 5px;
         }
-        
-        .delete-btn:hover {
-            color: var(--danger-color);
-            background-color: rgba(244, 67, 54, 0.1);
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            background-color: #f0f5ff;
-            padding: 15px 20px;
-            border-radius: var(--border-radius);
-            margin-top: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .stats > div {
-            text-align: center;
-            flex: 1;
-            min-width: 120px;
-        }
-        
-        .data-transfer-section {
-            margin-top: 30px;
+
+        .share-section {
+            background-color: #e3f2fd;
             padding: 20px;
-            background-color: #f9f9f9;
             border-radius: var(--border-radius);
+            margin-top: 25px;
+            text-align: center;
         }
-        
-        .transfer-controls {
+
+        .share-link {
             display: flex;
-            justify-content: space-between;
-            gap: 15px;
             margin-top: 15px;
         }
-        
-        .transfer-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
+
+        .share-link input {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            border-right: none;
+        }
+
+        .share-link button {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            white-space: nowrap;
+        }
+
+        .stats {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all var(--transition-speed);
-            font-size: 0.9rem;
+            justify-content: space-around;
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
         }
-        
-        .save-local {
-            background-color: #e3f2fd;
-            color: #1976D2;
+
+        .stat-item h3 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 5px;
         }
-        
-        .save-local:hover {
-            background-color: #bbdefb;
-        }
-        
-        .simulate-sync {
-            background: var(--primary-gradient);
-            color: white;
-        }
-        
-        .simulate-sync:hover {
-            opacity: 0.9;
-        }
-        
-        .clear-all {
-            background-color: #ffebee;
-            color: var(--danger-color);
-        }
-        
-        .clear-all:hover {
-            background-color: #ffcdd2;
-        }
-        
-        .notification {
-            position: fixed;
+
+        .language-switch {
+            position: absolute;
             top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 10px;
-            color: white;
-            font-weight: 600;
-            box-shadow: var(--card-shadow);
-            z-index: 1000;
-            transform: translateX(120%);
-            transition: transform 0.5s;
-            max-width: 350px;
+            left: 20px;
         }
-        
-        .notification.show {
-            transform: translateX(0);
+
+        .language-switch button {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 8px 15px;
         }
-        
-        .notification.success {
-            background-color: var(--success-color);
-        }
-        
-        .notification.info {
+
+        .language-switch button:hover {
             background-color: var(--primary-color);
+            color: white;
         }
-        
-        .notification.warning {
-            background-color: var(--warning-color);
-        }
-        
-        .notification.error {
-            background-color: var(--danger-color);
-        }
-        
-        .empty-state {
+
+        .empty-list {
             text-align: center;
             padding: 40px 20px;
-            color: #888;
+            color: #6c757d;
+            font-size: 1.1rem;
         }
-        
-        .empty-state i {
+
+        .empty-list i {
             font-size: 3rem;
             margin-bottom: 15px;
-            opacity: 0.5;
+            color: #bdbdbd;
         }
-        
-        .loading {
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .user-color {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        @media (max-width: 768px) {
-            .todo-app {
-                padding: 20px 15px;
-            }
-            
-            .input-section {
-                flex-direction: column;
-            }
-            
-            #add-btn {
-                width: 100%;
-            }
-            
-            .transfer-controls {
-                flex-direction: column;
-            }
-            
-            .stats > div {
-                min-width: 100px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            
-            .todo-app {
-                padding: 15px 10px;
-            }
-            
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .sync-status {
-                align-self: stretch;
-            }
-            
-            .filters {
-                flex-direction: column;
-            }
-            
-            .todo-actions {
-                flex-direction: column;
-                gap: 5px;
-            }
+            margin-left: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="todo-app">
-            <header class="header">
-                <h1><i class="fas fa-tasks" aria-hidden="true"></i> SyncToDo</h1>
-                <div class="sync-status" id="sync-status" role="status" aria-live="polite">
-                    <i class="fas fa-cloud" id="sync-icon" aria-hidden="true"></i>
-                    <span id="sync-text">Connecting...</span>
+        <header>
+            <h1><i class="fas fa-tasks"></i> قائمة المهام المشتركة</h1>
+            <p class="subtitle">أنشئ قائمة مهام يمكن مشاركتها مع عدة أشخاص باللغة العربية</p>
+        </header>
+
+        <div class="app-container">
+            <div class="panel">
+                <h2><i class="fas fa-user-plus"></i> إضافة مهمة جديدة</h2>
+                <div class="form-group">
+                    <label for="taskText">نص المهمة</label>
+                    <textarea id="taskText" rows="3" placeholder="أدخل وصف المهمة هنا..."></textarea>
                 </div>
-            </header>
-            
-            <section class="input-section" aria-label="Add new task">
-                <label for="todo-input" class="sr-only">New task</label>
-                <input type="text" id="todo-input" placeholder="Add a new task..." maxlength="200" autocomplete="off">
-                <button id="add-btn" aria-label="Add task">
-                    <span id="add-btn-text">Add Task</span>
-                    <span id="add-btn-loader" class="loading" style="display: none;"></span>
-                </button>
-            </section>
-            
-            <nav class="filters" aria-label="Task filters">
-                <button class="filter-btn active" data-filter="all" aria-pressed="true">All Tasks</button>
-                <button class="filter-btn" data-filter="active" aria-pressed="false">Active</button>
-                <button class="filter-btn" data-filter="completed" aria-pressed="false">Completed</button>
-            </nav>
-            
-            <section aria-label="Task list">
-                <ul class="todo-list" id="todo-list" role="list">
-                    <!-- Todo items will be added here dynamically -->
-                </ul>
-            </section>
-            
-            <div class="stats" aria-label="Task statistics">
-                <div>
-                    <strong id="total-tasks">0</strong> total tasks
+                
+                <div class="form-group">
+                    <label for="personName">اسم الشخص</label>
+                    <select id="personName">
+                        <option value="أحمد">أحمد</option>
+                        <option value="سارة">سارة</option>
+                        <option value="محمد">محمد</option>
+                        <option value="فاطمة">فاطمة</option>
+                        <option value="خالد">خالد</option>
+                        <option value="نورة">نورة</option>
+                    </select>
                 </div>
-                <div>
-                    <strong id="completed-tasks">0</strong> completed
+
+                <div class="buttons-row">
+                    <button id="addTaskBtn" class="success">
+                        <i class="fas fa-plus"></i> إضافة مهمة
+                    </button>
+                    <button id="clearCompletedBtn" class="secondary">
+                        <i class="fas fa-check-double"></i> حذف المهام المكتملة
+                    </button>
                 </div>
-                <div>
-                    <strong id="pending-tasks">0</strong> pending
+
+                <div class="share-section">
+                    <h3><i class="fas fa-share-alt"></i> مشاركة القائمة</h3>
+                    <p>انسخ الرابط أدناه لمشاركة هذه القائمة مع الآخرين:</p>
+                    <div class="share-link">
+                        <input type="text" id="shareUrl" readonly>
+                        <button id="copyUrlBtn">
+                            <i class="fas fa-copy"></i> نسخ
+                        </button>
+                    </div>
                 </div>
             </div>
-            
-            <section class="data-transfer-section" aria-label="Data management">
-                <h2><i class="fas fa-sync-alt" aria-hidden="true"></i> Data Management</h2>
-                <p>Your tasks are automatically saved locally. Use the buttons below to manage your data.</p>
-                
-                <div class="transfer-controls">
-                    <button class="transfer-btn save-local" id="save-local" aria-label="Save to local storage">
-                        <i class="fas fa-save" aria-hidden="true"></i> Save Locally
-                    </button>
-                    <button class="transfer-btn simulate-sync" id="simulate-sync" aria-label="Simulate cloud synchronization">
-                        <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i> Sync to Cloud
-                    </button>
-                    <button class="transfer-btn clear-all" id="clear-all" aria-label="Clear all tasks">
-                        <i class="fas fa-trash-alt" aria-hidden="true"></i> Clear All
-                    </button>
+
+            <div class="panel">
+                <h2><i class="fas fa-list-check"></i> قائمة المهام (<span id="tasksCount">0</span>)</h2>
+                <ul id="todoList" class="todo-list">
+                    <!-- Tasks will be added here dynamically -->
+                    <li class="empty-list">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>لا توجد مهام حالياً. أضف مهمة جديدة!</p>
+                    </li>
+                </ul>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <h3 id="totalTasks">0</h3>
+                        <p>إجمالي المهام</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 id="completedTasks">0</h3>
+                        <p>مكتملة</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 id="pendingTasks">0</h3>
+                        <p>قيد التنفيذ</p>
+                    </div>
                 </div>
-            </section>
+            </div>
         </div>
-    </div>
-    
-    <div class="notification" id="notification" role="alert" aria-live="assertive">
-        Notification message
+
+        <footer>
+            <p>تم التطوير باستخدام HTML و JavaScript - يدعم اللغة العربية والمشاركة بين عدة أشخاص</p>
+            <p>يتم حفظ البيانات محلياً في المتصفح</p>
+        </footer>
     </div>
 
     <script>
-        // TodoList Application - Improved Version
-        (function() {
-            'use strict';
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const taskText = document.getElementById('taskText');
+            const personName = document.getElementById('personName');
+            const addTaskBtn = document.getElementById('addTaskBtn');
+            const clearCompletedBtn = document.getElementById('clearCompletedBtn');
+            const todoList = document.getElementById('todoList');
+            const shareUrl = document.getElementById('shareUrl');
+            const copyUrlBtn = document.getElementById('copyUrlBtn');
+            const tasksCount = document.getElementById('tasksCount');
+            const totalTasks = document.getElementById('totalTasks');
+            const completedTasks = document.getElementById('completedTasks');
+            const pendingTasks = document.getElementById('pendingTasks');
             
-            // Configuration constants
-            const CONFIG = {
-                STORAGE_KEY: 'sync-todo-tasks',
-                SYNC_INTERVAL: 30000, // 30 seconds
-                MAX_INPUT_LENGTH: 200,
-                SAMPLE_TASKS: [
-                    { id: Date.now() - 3, text: 'Complete project proposal', completed: false, createdAt: Date.now() - 86400000 },
-                    { id: Date.now() - 2, text: 'Buy groceries', completed: true, createdAt: Date.now() - 43200000 },
-                    { id: Date.now() - 1, text: 'Call the dentist', completed: false, createdAt: Date.now() - 21600000 },
-                    { id: Date.now(), text: 'Schedule team meeting', completed: false, createdAt: Date.now() }
-                ],
-                SYNC_SUCCESS_RATE: 0.9 // 90% success rate for simulation
+            // Generate unique ID for this list
+            let listId = localStorage.getItem('sharedTodoListId');
+            if (!listId) {
+                listId = 'list_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('sharedTodoListId', listId);
+            }
+            
+            // Set up sharing URL
+            const currentUrl = window.location.href.split('?')[0];
+            const shareableUrl = currentUrl + '?list=' + listId;
+            shareUrl.value = shareableUrl;
+            
+            // Person colors for visual identification
+            const personColors = {
+                'أحمد': '#4361ee',
+                'سارة': '#f72585',
+                'محمد': '#4cc9f0',
+                'فاطمة': '#7209b7',
+                'خالد': '#2ec4b6',
+                'نورة': '#ff9e00'
             };
             
-            // DOM Elements
-            const DOM = {
-                todoInput: document.getElementById('todo-input'),
-                addBtn: document.getElementById('add-btn'),
-                addBtnText: document.getElementById('add-btn-text'),
-                addBtnLoader: document.getElementById('add-btn-loader'),
-                todoList: document.getElementById('todo-list'),
-                filterBtns: document.querySelectorAll('.filter-btn'),
-                totalTasksEl: document.getElementById('total-tasks'),
-                completedTasksEl: document.getElementById('completed-tasks'),
-                pendingTasksEl: document.getElementById('pending-tasks'),
-                saveLocalBtn: document.getElementById('save-local'),
-                simulateSyncBtn: document.getElementById('simulate-sync'),
-                clearAllBtn: document.getElementById('clear-all'),
-                syncStatus: document.getElementById('sync-status'),
-                syncIcon: document.getElementById('sync-icon'),
-                syncText: document.getElementById('sync-text'),
-                notification: document.getElementById('notification')
-            };
+            // Load tasks from localStorage
+            let tasks = JSON.parse(localStorage.getItem(listId)) || [];
             
-            // Application State
-            const state = {
-                todos: [],
-                currentFilter: 'all',
-                isSyncing: false,
-                syncInterval: null,
-                nextId: 1
-            };
-            
-            // Initialize the application
+            // Initialize the app
             function init() {
-                loadTodos();
-                renderTodos();
-                setupEventListeners();
+                renderTasks();
                 updateStats();
-                startAutoSync();
-                updateSyncStatus('idle');
                 
-                // Set focus to input for better UX
-                DOM.todoInput.focus();
-            }
-            
-            // Load todos from local storage
-            function loadTodos() {
-                try {
-                    const storedTodos = localStorage.getItem(CONFIG.STORAGE_KEY);
-                    if (storedTodos) {
-                        state.todos = JSON.parse(storedTodos);
-                        // Validate loaded data
-                        if (!Array.isArray(state.todos)) {
-                            throw new Error('Invalid data format');
+                // Check if we're loading a shared list
+                const urlParams = new URLSearchParams(window.location.search);
+                const sharedListId = urlParams.get('list');
+                
+                if (sharedListId && sharedListId !== listId) {
+                    // Load shared list
+                    const sharedTasks = JSON.parse(localStorage.getItem(sharedListId));
+                    if (sharedTasks && sharedTasks.length > 0) {
+                        if (confirm('هل تريد تحميل قائمة المهام المشتركة؟ سيتم استبدال قائمتك الحالية.')) {
+                            tasks = sharedTasks;
+                            listId = sharedListId;
+                            localStorage.setItem('sharedTodoListId', listId);
+                            shareUrl.value = currentUrl + '?list=' + listId;
+                            saveTasks();
+                            renderTasks();
+                            updateStats();
                         }
-                        showNotification('Tasks loaded from local storage', 'success');
-                    } else {
-                        // Add sample tasks
-                        state.todos = [...CONFIG.SAMPLE_TASKS];
-                        saveTodos();
-                        showNotification('Welcome! Sample tasks added', 'info');
                     }
-                    
-                    // Calculate next ID
-                    if (state.todos.length > 0) {
-                        state.nextId = Math.max(...state.todos.map(t => t.id)) + 1;
-                    }
-                } catch (error) {
-                    console.error('Error loading todos:', error);
-                    state.todos = [];
-                    saveTodos();
-                    showNotification('Error loading tasks. Starting fresh.', 'error');
                 }
             }
             
-            // Save todos to local storage
-            function saveTodos() {
-                try {
-                    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(state.todos));
-                    return true;
-                } catch (error) {
-                    console.error('Error saving todos:', error);
-                    showNotification('Error saving tasks to local storage', 'error');
-                    return false;
-                }
+            // Save tasks to localStorage
+            function saveTasks() {
+                localStorage.setItem(listId, JSON.stringify(tasks));
             }
             
-            // Render todos based on current filter
-            function renderTodos() {
-                // Clear the list
-                DOM.todoList.innerHTML = '';
-                
-                // Filter todos based on current filter
-                const filteredTodos = filterTodos();
-                
-                if (filteredTodos.length === 0) {
-                    showEmptyState();
+            // Render tasks to the DOM
+            function renderTasks() {
+                if (tasks.length === 0) {
+                    todoList.innerHTML = `
+                        <li class="empty-list">
+                            <i class="fas fa-clipboard-list"></i>
+                            <p>لا توجد مهام حالياً. أضف مهمة جديدة!</p>
+                        </li>
+                    `;
+                    tasksCount.textContent = '0';
                     return;
                 }
                 
-                // Render each todo
-                filteredTodos.forEach(todo => {
-                    const todoItem = createTodoElement(todo);
-                    DOM.todoList.appendChild(todoItem);
+                todoList.innerHTML = '';
+                tasksCount.textContent = tasks.length;
+                
+                tasks.forEach((task, index) => {
+                    const taskItem = document.createElement('li');
+                    taskItem.className = `todo-item ${task.completed ? 'completed' : ''}`;
+                    
+                    taskItem.innerHTML = `
+                        <input type="checkbox" class="todo-checkbox" ${task.completed ? 'checked' : ''} data-index="${index}">
+                        <div class="todo-content">
+                            <div class="todo-text">${task.text}</div>
+                            <div class="todo-meta">
+                                <span>بواسطة: ${task.person}</span>
+                                <span>${formatDate(task.createdAt)}</span>
+                            </div>
+                            <div class="person-badge" style="background-color: ${personColors[task.person] || '#e0e0e0'}; color: ${getContrastColor(personColors[task.person] || '#e0e0e0')}">
+                                ${task.person}
+                                <span class="user-color" style="background-color: ${personColors[task.person] || '#e0e0e0'}"></span>
+                            </div>
+                        </div>
+                        <div class="todo-actions">
+                            <button class="${task.completed ? 'secondary' : 'success'}" data-index="${index}" data-action="toggle">
+                                <i class="fas ${task.completed ? 'fa-undo' : 'fa-check'}"></i>
+                            </button>
+                            <button class="danger" data-index="${index}" data-action="delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    todoList.appendChild(taskItem);
                 });
                 
-                updateStats();
+                // Add event listeners to checkboxes and buttons
+                document.querySelectorAll('.todo-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        toggleTask(this.dataset.index);
+                    });
+                });
+                
+                document.querySelectorAll('.todo-actions button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = this.dataset.index;
+                        const action = this.dataset.action;
+                        
+                        if (action === 'toggle') {
+                            toggleTask(index);
+                        } else if (action === 'delete') {
+                            deleteTask(index);
+                        }
+                    });
+                });
             }
             
-            // Filter todos based on current filter
-            function filterTodos() {
-                switch(state.currentFilter) {
-                    case 'active':
-                        return state.todos.filter(todo => !todo.completed);
-                    case 'completed':
-                        return state.todos.filter(todo => todo.completed);
-                    default:
-                        return [...state.todos];
+            // Format date for display
+            function formatDate(timestamp) {
+                const date = new Date(timestamp);
+                const now = new Date();
+                const diffTime = Math.abs(now - date);
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 0) {
+                    return 'اليوم';
+                } else if (diffDays === 1) {
+                    return 'أمس';
+                } else if (diffDays < 7) {
+                    return `قبل ${diffDays} أيام`;
+                } else {
+                    return date.toLocaleDateString('ar-EG');
                 }
             }
             
-            // Create todo element
-            function createTodoElement(todo) {
-                const todoItem = document.createElement('li');
-                todoItem.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-                todoItem.dataset.id = todo.id;
-                todoItem.setAttribute('role', 'listitem');
+            // Get contrast color for text based on background
+            function getContrastColor(hexColor) {
+                // Convert hex to RGB
+                const r = parseInt(hexColor.substr(1, 2), 16);
+                const g = parseInt(hexColor.substr(3, 2), 16);
+                const b = parseInt(hexColor.substr(5, 2), 16);
                 
-                const formattedDate = todo.createdAt ? 
-                    new Date(todo.createdAt).toLocaleDateString() : 'Today';
+                // Calculate luminance
+                const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
                 
-                todoItem.innerHTML = `
-                    <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''}
-                           aria-label="Mark task as ${todo.completed ? 'incomplete' : 'complete'}">
-                    <div class="todo-content">
-                        <span class="todo-text" contenteditable="false">${escapeHtml(todo.text)}</span>
-                        <small class="todo-date" style="display: block; font-size: 0.8rem; color: #888; margin-top: 5px;">
-                            Added: ${formattedDate}
-                        </small>
-                    </div>
-                    <div class="todo-actions">
-                        <button class="todo-action-btn edit-btn" aria-label="Edit task">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="todo-action-btn delete-btn" aria-label="Delete task">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-                
-                return todoItem;
-            }
-            
-            // Show empty state message
-            function showEmptyState() {
-                const emptyState = document.createElement('li');
-                emptyState.className = 'empty-state';
-                
-                let message = '';
-                switch(state.currentFilter) {
-                    case 'all':
-                        message = 'No tasks yet. Add a new task to get started!';
-                        break;
-                    case 'active':
-                        message = 'No active tasks. Great job!';
-                        break;
-                    case 'completed':
-                        message = 'No completed tasks yet.';
-                        break;
-                }
-                
-                emptyState.innerHTML = `
-                    <i class="fas fa-clipboard-list"></i>
-                    <h3>No tasks found</h3>
-                    <p>${message}</p>
-                `;
-                
-                DOM.todoList.appendChild(emptyState);
-                updateStats();
+                // Return black or white based on luminance
+                return luminance > 0.5 ? '#000000' : '#FFFFFF';
             }
             
             // Update statistics
             function updateStats() {
-                const total = state.todos.length;
-                const completed = state.todos.filter(todo => todo.completed).length;
+                const total = tasks.length;
+                const completed = tasks.filter(task => task.completed).length;
                 const pending = total - completed;
                 
-                DOM.totalTasksEl.textContent = total;
-                DOM.completedTasksEl.textContent = completed;
-                DOM.pendingTasksEl.textContent = pending;
+                totalTasks.textContent = total;
+                completedTasks.textContent = completed;
+                pendingTasks.textContent = pending;
             }
             
-            // Add a new todo
-            async function addTodo() {
-                const text = DOM.todoInput.value.trim();
+            // Add a new task
+            function addTask() {
+                const text = taskText.value.trim();
+                const person = personName.value;
                 
-                if (!validateInput(text)) {
-                    return;
-                }
-                
-                // Show loading state
-                showAddButtonLoading(true);
-                
-                // Simulate network delay
-                await delay(300);
-                
-                const newTodo = {
-                    id: state.nextId++,
-                    text: text,
-                    completed: false,
-                    createdAt: Date.now(),
-                    updatedAt: Date.now()
-                };
-                
-                state.todos.push(newTodo);
-                DOM.todoInput.value = '';
-                
-                saveTodos();
-                renderTodos();
-                showNotification('Task added successfully', 'success');
-                
-                // Simulate cloud sync
-                simulateCloudSync();
-                
-                showAddButtonLoading(false);
-            }
-            
-            // Validate input
-            function validateInput(text) {
                 if (text === '') {
-                    showNotification('Please enter a task', 'warning');
-                    DOM.todoInput.focus();
-                    return false;
+                    alert('يرجى إدخال نص المهمة!');
+                    taskText.focus();
+                    return;
                 }
                 
-                if (text.length > CONFIG.MAX_INPUT_LENGTH) {
-                    showNotification(`Task is too long (max ${CONFIG.MAX_INPUT_LENGTH} characters)`, 'warning');
-                    return false;
-                }
-                
-                return true;
-            }
-            
-            // Show/hide add button loading state
-            function showAddButtonLoading(show) {
-                if (show) {
-                    DOM.addBtnText.style.display = 'none';
-                    DOM.addBtnLoader.style.display = 'inline-block';
-                    DOM.addBtn.disabled = true;
-                } else {
-                    DOM.addBtnText.style.display = 'inline';
-                    DOM.addBtnLoader.style.display = 'none';
-                    DOM.addBtn.disabled = false;
-                }
-            }
-            
-            // Toggle todo completion status
-            function toggleTodo(id) {
-                const todo = state.todos.find(todo => todo.id === id);
-                if (todo) {
-                    todo.completed = !todo.completed;
-                    todo.updatedAt = Date.now();
-                    
-                    saveTodos();
-                    renderTodos();
-                    simulateCloudSync();
-                    
-                    const status = todo.completed ? 'completed' : 'marked as active';
-                    showNotification(`Task ${status}`, 'info');
-                }
-            }
-            
-            // Edit todo inline
-            function editTodo(id, element) {
-                const todo = state.todos.find(todo => todo.id === id);
-                if (!todo) return;
-                
-                const textElement = element.querySelector('.todo-text');
-                const isEditable = textElement.getAttribute('contenteditable') === 'true';
-                
-                if (isEditable) {
-                    // Save the edit
-                    const newText = textElement.textContent.trim();
-                    if (newText && newText !== todo.text) {
-                        if (validateInput(newText)) {
-                            todo.text = newText;
-                            todo.updatedAt = Date.now();
-                            saveTodos();
-                            simulateCloudSync();
-                            showNotification('Task updated', 'success');
-                        } else {
-                            // Restore original text
-                            textElement.textContent = todo.text;
-                        }
-                    }
-                    textElement.setAttribute('contenteditable', 'false');
-                    element.querySelector('.edit-btn i').className = 'fas fa-edit';
-                } else {
-                    // Enable editing
-                    textElement.setAttribute('contenteditable', 'true');
-                    textElement.focus();
-                    selectText(textElement);
-                    element.querySelector('.edit-btn i').className = 'fas fa-check';
-                }
-            }
-            
-            // Delete todo
-            function deleteTodo(id) {
-                const todoIndex = state.todos.findIndex(todo => todo.id === id);
-                if (todoIndex === -1) return;
-                
-                const deletedTask = state.todos[todoIndex];
-                state.todos.splice(todoIndex, 1);
-                
-                saveTodos();
-                renderTodos();
-                simulateCloudSync();
-                
-                showNotification('Task deleted', 'info');
-                
-                // Show undo option
-                showUndoOption(deletedTask, todoIndex);
-            }
-            
-            // Show undo option for deleted task
-            function showUndoOption(todo, originalIndex) {
-                const undoBtn = document.createElement('button');
-                undoBtn.textContent = 'Undo';
-                undoBtn.style.marginLeft = '10px';
-                undoBtn.style.background = 'transparent';
-                undoBtn.style.border = 'none';
-                undoBtn.style.color = 'white';
-                undoBtn.style.textDecoration = 'underline';
-                undoBtn.style.cursor = 'pointer';
-                
-                undoBtn.onclick = () => {
-                    state.todos.splice(originalIndex, 0, todo);
-                    saveTodos();
-                    renderTodos();
-                    showNotification('Task restored', 'success');
+                const newTask = {
+                    text,
+                    person,
+                    completed: false,
+                    createdAt: new Date().getTime(),
+                    id: Date.now() + Math.random().toString(36).substr(2, 9)
                 };
                 
-                showNotification('Task deleted', 'info', undoBtn);
+                tasks.unshift(newTask);
+                saveTasks();
+                renderTasks();
+                updateStats();
                 
-                // Auto-remove undo option after 5 seconds
-                setTimeout(() => {
-                    undoBtn.remove();
-                }, 5000);
+                // Clear input
+                taskText.value = '';
+                taskText.focus();
             }
             
-            // Filter todos
-            function filterTodosByType(filter) {
-                state.currentFilter = filter;
-                
-                // Update active filter button
-                DOM.filterBtns.forEach(btn => {
-                    const isActive = btn.dataset.filter === filter;
-                    btn.classList.toggle('active', isActive);
-                    btn.setAttribute('aria-pressed', isActive);
-                });
-                
-                renderTodos();
+            // Toggle task completion status
+            function toggleTask(index) {
+                tasks[index].completed = !tasks[index].completed;
+                saveTasks();
+                renderTasks();
+                updateStats();
             }
             
-            // Clear all todos
-            function clearAllTodos() {
-                if (state.todos.length === 0) {
-                    showNotification('No tasks to clear', 'warning');
+            // Delete a task
+            function deleteTask(index) {
+                if (confirm('هل أنت متأكد من حذف هذه المهمة؟')) {
+                    tasks.splice(index, 1);
+                    saveTasks();
+                    renderTasks();
+                    updateStats();
+                }
+            }
+            
+            // Clear all completed tasks
+            function clearCompletedTasks() {
+                const completedCount = tasks.filter(task => task.completed).length;
+                
+                if (completedCount === 0) {
+                    alert('لا توجد مهام مكتملة لحذفها!');
                     return;
                 }
                 
-                if (confirm('Are you sure you want to delete all tasks? This action cannot be undone.')) {
-                    const backup = [...state.todos];
-                    state.todos = [];
-                    saveTodos();
-                    renderTodos();
-                    simulateCloudSync();
-                    
-                    showNotification('All tasks cleared', 'info');
-                    
-                    // Show restore option
-                    const restoreBtn = document.createElement('button');
-                    restoreBtn.textContent = 'Restore All';
-                    restoreBtn.style.marginLeft = '10px';
-                    restoreBtn.style.background = 'transparent';
-                    restoreBtn.style.border = 'none';
-                    restoreBtn.style.color = 'white';
-                    restoreBtn.style.textDecoration = 'underline';
-                    restoreBtn.style.cursor = 'pointer';
-                    
-                    restoreBtn.onclick = () => {
-                        state.todos = backup;
-                        saveTodos();
-                        renderTodos();
-                        showNotification('All tasks restored', 'success');
-                    };
-                    
-                    showNotification('All tasks cleared', 'info', restoreBtn);
-                    
-                    setTimeout(() => {
-                        restoreBtn.remove();
-                    }, 5000);
+                if (confirm(`هل أنت متأكد من حذف جميع المهام المكتملة (${completedCount} مهمة)?`)) {
+                    tasks = tasks.filter(task => !task.completed);
+                    saveTasks();
+                    renderTasks();
+                    updateStats();
                 }
             }
             
-            // Simulate cloud synchronization
-            async function simulateCloudSync() {
-                if (state.isSyncing) return;
+            // Copy share URL to clipboard
+            function copyShareUrl() {
+                shareUrl.select();
+                shareUrl.setSelectionRange(0, 99999); // For mobile devices
                 
-                state.isSyncing = true;
-                updateSyncStatus('syncing');
-                
-                try {
-                    // Simulate network delay with random success/failure
-                    await delay(1500);
-                    
-                    const isSuccess = Math.random() < CONFIG.SYNC_SUCCESS_RATE;
-                    
-                    if (isSuccess) {
-                        updateSyncStatus('success');
-                        showNotification('Tasks synchronized with cloud', 'success');
-                    } else {
-                        throw new Error('Sync failed');
-                    }
-                } catch (error) {
-                    updateSyncStatus('error');
-                    showNotification('Sync failed. Retrying...', 'error');
-                    
-                    // Retry after 3 seconds
-                    setTimeout(() => {
-                        if (state.isSyncing) {
-                            simulateCloudSync();
-                        }
-                    }, 3000);
-                    return;
-                } finally {
-                    // Reset syncing state after delay
-                    setTimeout(() => {
-                        state.isSyncing = false;
-                        if (DOM.syncStatus.classList.contains('success')) {
-                            updateSyncStatus('idle');
-                        }
-                    }, 3000);
-                }
-            }
-            
-            // Update sync status UI
-            function updateSyncStatus(status) {
-                DOM.syncStatus.className = 'sync-status';
-                DOM.syncIcon.className = 'fas';
-                
-                switch(status) {
-                    case 'syncing':
-                        DOM.syncStatus.classList.add('syncing');
-                        DOM.syncIcon.classList.add('fa-sync-alt', 'syncing');
-                        DOM.syncText.textContent = 'Syncing to cloud...';
-                        break;
-                    case 'success':
-                        DOM.syncStatus.classList.add('synced');
-                        DOM.syncIcon.classList.add('fa-cloud-check-circle', 'synced');
-                        DOM.syncText.textContent = 'Synced to cloud';
-                        break;
-                    case 'error':
-                        DOM.syncStatus.classList.add('error');
-                        DOM.syncIcon.classList.add('fa-exclamation-triangle', 'error');
-                        DOM.syncText.textContent = 'Sync failed';
-                        break;
-                    default:
-                        DOM.syncIcon.classList.add('fa-cloud');
-                        DOM.syncText.textContent = 'Online - Auto sync enabled';
-                }
-            }
-            
-            // Start auto sync interval
-            function startAutoSync() {
-                // Clear any existing interval
-                if (state.syncInterval) {
-                    clearInterval(state.syncInterval);
-                }
-                
-                // Start new interval
-                state.syncInterval = setInterval(() => {
-                    if (state.todos.length > 0 && !state.isSyncing) {
-                        simulateCloudSync();
-                    }
-                }, CONFIG.SYNC_INTERVAL);
-            }
-            
-            // Show notification
-            function showNotification(message, type = 'info', extraElement = null) {
-                DOM.notification.textContent = message;
-                DOM.notification.className = `notification ${type}`;
-                DOM.notification.innerHTML = message;
-                
-                if (extraElement) {
-                    DOM.notification.appendChild(extraElement);
-                }
-                
-                DOM.notification.classList.add('show');
-                
-                setTimeout(() => {
-                    DOM.notification.classList.remove('show');
-                }, 3000);
-            }
-            
-            // Set up event listeners
-            function setupEventListeners() {
-                // Add todo
-                DOM.addBtn.addEventListener('click', addTodo);
-                DOM.todoInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        addTodo();
-                    }
-                });
-                
-                // Filter buttons
-                DOM.filterBtns.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        filterTodosByType(btn.dataset.filter);
+                navigator.clipboard.writeText(shareUrl.value)
+                    .then(() => {
+                        const originalText = copyUrlBtn.innerHTML;
+                        copyUrlBtn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+                        copyUrlBtn.classList.add('success');
+                        
+                        setTimeout(() => {
+                            copyUrlBtn.innerHTML = originalText;
+                            copyUrlBtn.classList.remove('success');
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
+                        alert('فشل نسخ الرابط. يرجى المحاولة مرة أخرى.');
                     });
-                });
-                
-                // Event delegation for todo items
-                DOM.todoList.addEventListener('click', (e) => {
-                    const todoItem = e.target.closest('.todo-item');
-                    if (!todoItem) return;
-                    
-                    const id = parseInt(todoItem.dataset.id);
-                    
-                    // Checkbox toggle
-                    if (e.target.classList.contains('todo-checkbox')) {
-                        toggleTodo(id);
-                    }
-                    
-                    // Edit button
-                    if (e.target.closest('.edit-btn')) {
-                        editTodo(id, todoItem);
-                    }
-                    
-                    // Delete button
-                    if (e.target.closest('.delete-btn')) {
-                        deleteTodo(id);
-                    }
-                });
-                
-                // Save inline edits on blur
-                DOM.todoList.addEventListener('blur', (e) => {
-                    if (e.target.classList.contains('todo-text') && 
-                        e.target.getAttribute('contenteditable') === 'true') {
-                        const todoItem = e.target.closest('.todo-item');
-                        const id = parseInt(todoItem.dataset.id);
-                        editTodo(id, todoItem);
-                    }
-                }, true);
-                
-                // Save to local storage button
-                DOM.saveLocalBtn.addEventListener('click', () => {
-                    if (saveTodos()) {
-                        showNotification('Tasks saved to local storage', 'success');
-                    }
-                });
-                
-                // Simulate cloud sync button
-                DOM.simulateSyncBtn.addEventListener('click', simulateCloudSync);
-                
-                // Clear all button
-                DOM.clearAllBtn.addEventListener('click', clearAllTodos);
-                
-                // Prevent XSS in contenteditable
-                DOM.todoList.addEventListener('input', (e) => {
-                    if (e.target.classList.contains('todo-text')) {
-                        // Basic sanitization
-                        e.target.textContent = e.target.textContent.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                    }
-                });
             }
             
-            // Utility functions
-            function delay(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
+            // Event listeners
+            addTaskBtn.addEventListener('click', addTask);
             
-            function escapeHtml(text) {
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            }
+            taskText.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    addTask();
+                }
+            });
             
-            function selectText(element) {
-                const range = document.createRange();
-                range.selectNodeContents(element);
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
+            clearCompletedBtn.addEventListener('click', clearCompletedTasks);
+            copyUrlBtn.addEventListener('click', copyShareUrl);
             
             // Initialize the app
-            document.addEventListener('DOMContentLoaded', init);
-            
-            // Expose app for debugging (optional)
-            window.todoApp = {
-                state,
-                DOM,
-                addTodo,
-                simulateCloudSync,
-                clearAllTodos
-            };
-        })();
+            init();
+        });
     </script>
 </body>
 </html>
