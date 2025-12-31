@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قائمة مهام تزامنية</title>
+    <title>قائمة مهام</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -19,8 +19,6 @@
             --border-radius: 12px;
             --shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
-            --online: #2ecc71;
-            --offline: #e74c3c;
         }
 
         * {
@@ -74,18 +72,15 @@
         .header-content {
             position: relative;
             z-index: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
         }
 
         .header h1 {
-            font-size: 2.8rem;
+            font-size: 3.2rem;
             margin-bottom: 15px;
             font-weight: 800;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 20px;
         }
 
@@ -93,40 +88,7 @@
             font-size: 1.4rem;
             opacity: 0.9;
             max-width: 800px;
-        }
-
-        /* Connection Status */
-        .connection-status {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 12px 25px;
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-        }
-
-        .status-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--offline);
-        }
-
-        .status-indicator.connected {
-            background: var(--online);
-            box-shadow: 0 0 10px var(--online);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .status-text {
-            font-weight: 600;
-            font-size: 1.1rem;
+            margin: 0 auto;
         }
 
         /* Main Layout */
@@ -147,10 +109,6 @@
         @media (max-width: 768px) {
             .main-layout {
                 grid-template-columns: 1fr;
-            }
-            .header-content {
-                flex-direction: column;
-                gap: 20px;
             }
         }
 
@@ -212,7 +170,7 @@
             flex: 1;
         }
 
-        input, textarea, select {
+        input, textarea {
             width: 100%;
             padding: 16px;
             border: 2px solid #dfe6e9;
@@ -222,7 +180,7 @@
             background: white;
         }
 
-        input:focus, textarea:focus, select:focus {
+        input:focus, textarea:focus {
             border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
@@ -312,41 +270,19 @@
             border-radius: 50%;
         }
 
-        /* Connection Management */
-        .connection-section {
-            background: linear-gradient(to left, #e8f4fc, #c5e3fc);
-            padding: 25px;
-            border-radius: var(--border-radius);
-            border: 2px solid #90cdf4;
-            margin-bottom: 25px;
-        }
-
-        .connection-controls {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        @media (max-width: 768px) {
-            .connection-controls {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Online Users */
-        .online-users {
+        /* Users Management */
+        .users-management {
             margin-top: 20px;
         }
 
-        .online-users-header {
+        .users-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
 
-        .online-users-list {
+        .users-list {
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -355,7 +291,7 @@
             padding: 10px;
         }
 
-        .online-user-item {
+        .user-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -366,19 +302,19 @@
             transition: var(--transition);
         }
 
-        .online-user-item:hover {
+        .user-item:hover {
             border-color: var(--primary);
             transform: translateX(-5px);
         }
 
-        .online-user-info {
+        .user-info {
             display: flex;
             align-items: center;
             gap: 15px;
             flex: 1;
         }
 
-        .online-user-avatar {
+        .user-avatar {
             width: 45px;
             height: 45px;
             border-radius: 50%;
@@ -389,44 +325,27 @@
             font-size: 1.3rem;
             color: white;
             flex-shrink: 0;
-            position: relative;
         }
 
-        .online-user-avatar::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--offline);
-            border: 2px solid white;
-        }
-
-        .online-user-avatar.online::after {
-            background: var(--online);
-        }
-
-        .online-user-details {
+        .user-details {
             flex: 1;
         }
 
-        .online-user-name {
+        .user-name {
             font-weight: 700;
             font-size: 1.2rem;
             color: var(--dark);
             margin-bottom: 5px;
         }
 
-        .online-user-stats {
+        .user-stats {
             font-size: 0.9rem;
             color: var(--gray);
             display: flex;
             gap: 15px;
         }
 
-        .online-user-actions {
+        .user-actions {
             display: flex;
             gap: 8px;
         }
@@ -538,57 +457,6 @@
             gap: 8px;
         }
 
-        .task-editing {
-            background: #fff9e6;
-            border-color: var(--warning);
-        }
-
-        /* Chat Section */
-        .chat-section {
-            margin-top: 30px;
-        }
-
-        .chat-container {
-            height: 300px;
-            overflow-y: auto;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            border: 2px solid #dfe6e9;
-            margin-bottom: 15px;
-        }
-
-        .chat-message {
-            margin-bottom: 15px;
-            padding: 12px 18px;
-            border-radius: 15px;
-            max-width: 80%;
-            word-wrap: break-word;
-        }
-
-        .chat-message.sent {
-            background: var(--primary);
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 5px;
-        }
-
-        .chat-message.received {
-            background: #f1f2f6;
-            color: var(--dark);
-            margin-right: auto;
-            border-bottom-left-radius: 5px;
-        }
-
-        .chat-message-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 0.85rem;
-            opacity: 0.8;
-        }
-
-        /* Empty States */
         .empty-state {
             text-align: center;
             padding: 50px 30px;
@@ -610,6 +478,72 @@
         .empty-state p {
             font-size: 1.1rem;
             line-height: 1.6;
+        }
+
+        /* Sharing Section */
+        .sharing-section {
+            background: linear-gradient(to left, #e8f4fc, #c5e3fc);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            border: 2px solid #90cdf4;
+            margin-top: 20px;
+        }
+
+        .sharing-title {
+            color: var(--dark);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .qr-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid #dfe6e9;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #dfe6e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .share-link-container {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .share-link-container input {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            background: #f8f9fa;
+        }
+
+        .share-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 25px;
         }
 
         /* Statistics */
@@ -788,59 +722,43 @@
             background: var(--warning);
         }
 
-        .notification.info {
-            background: var(--primary);
-        }
-
-        /* Typing Indicator */
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 10px 15px;
-            background: #f1f2f6;
-            border-radius: 20px;
-            width: fit-content;
-            margin-bottom: 10px;
-        }
-
-        .typing-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--gray);
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typing {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* Activity Log */
-        .activity-log {
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
-            background: #f8f9fa;
+        /* User input section */
+        .current-user-section {
+            background: #f0f7ff;
+            padding: 20px;
             border-radius: 10px;
-            margin-top: 15px;
-            font-size: 0.9rem;
+            border: 2px solid #c5e3fc;
+            margin-bottom: 25px;
         }
 
-        .activity-item {
-            padding: 8px 12px;
-            border-bottom: 1px solid #e8ecee;
+        .current-user-display {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e8ecee;
         }
 
-        .activity-item:last-child {
-            border-bottom: none;
+        .current-user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .current-user-name {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--dark);
+            flex: 1;
         }
     </style>
 </head>
@@ -849,114 +767,73 @@
         <!-- Header -->
         <div class="header">
             <div class="header-content">
-                <div>
-                    <h1><i class="fas fa-tasks"></i> قائمة مهام تزامنية</h1>
-                    <p>قم بالاتصال بقائمة مهام وتعديلها مع الآخرين مباشرةً!</p>
-                </div>
-                <div class="connection-status">
-                    <div class="status-indicator" id="status-indicator"></div>
-                    <div class="status-text" id="status-text">غير متصل</div>
-                </div>
+                <h1><i class="fas fa-tasks"></i> قائمة المهام</h1>
+                <p>اكتب اسمك وأضف مهامك. شارك القائمة مع الآخرين!</p>
             </div>
         </div>
 
         <!-- Main Layout -->
         <div class="main-layout">
-            <!-- Left Column: Connection & Online Users -->
+            <!-- Left Column: Add Task & User Management -->
             <div class="card">
-                <h2 class="card-title"><i class="fas fa-plug"></i> الاتصال</h2>
+                <h2 class="card-title"><i class="fas fa-plus-circle"></i> مهمة جديدة</h2>
                 
-                <div class="connection-section">
+                <!-- Current User Section -->
+                <div class="current-user-section">
                     <div class="form-group">
-                        <label class="form-label"><i class="fas fa-user"></i> اسمك:</label>
+                        <label class="form-label"><i class="fas fa-user"></i> اسمك الحالي:</label>
                         <div class="input-with-button">
-                            <input type="text" id="username-input" placeholder="اكتب اسمك...">
-                            <button id="set-username-btn" class="btn btn-success">
+                            <input type="text" id="current-user-input" placeholder="اكتب اسمك هنا...">
+                            <button id="set-user-btn" class="btn btn-success">
                                 <i class="fas fa-check"></i> تعيين
                             </button>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label class="form-label"><i class="fas fa-link"></i> ID الغرفة:</label>
-                        <div class="connection-controls">
-                            <input type="text" id="room-id-input" placeholder="أدخل ID الغرفة...">
-                            <button id="join-room-btn" class="btn btn-success">
-                                <i class="fas fa-sign-in-alt"></i> انضم
-                            </button>
-                        </div>
-                        <div style="display: flex; gap: 10px; margin-top: 10px;">
-                            <button id="create-room-btn" class="btn btn-small" style="flex: 1;">
-                                <i class="fas fa-plus"></i> إنشاء غرفة
-                            </button>
-                            <button id="copy-room-id-btn" class="btn btn-small btn-secondary">
-                                <i class="fas fa-copy"></i> نسخ ID
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Online Users -->
-                <div class="online-users">
-                    <div class="online-users-header">
-                        <h3 class="card-title" style="font-size: 1.5rem; margin: 0;">
-                            <i class="fas fa-users"></i> الأعضاء المتصلين
-                        </h3>
-                        <span class="user-count" id="user-count">(0)</span>
-                    </div>
-                    
-                    <div class="online-users-list" id="online-users-list">
-                        <div class="empty-state" style="padding: 20px;">
-                            <i class="fas fa-users-slash"></i>
-                            <p>لا يوجد أعضاء متصلين</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Chat -->
-                <div class="chat-section">
-                    <h3 class="card-title" style="font-size: 1.5rem; margin-bottom: 15px;">
-                        <i class="fas fa-comments"></i> محادثة
-                    </h3>
-                    
-                    <div class="chat-container" id="chat-container">
-                        <!-- Chat messages will appear here -->
-                        <div class="empty-state" style="padding: 20px;">
-                            <i class="fas fa-comment-slash"></i>
-                            <p>ابدأ المحادثة مع فريقك</p>
-                        </div>
-                    </div>
-                    
-                    <div class="input-with-button">
-                        <input type="text" id="chat-input" placeholder="اكتب رسالة...">
-                        <button id="send-chat-btn" class="btn btn-success">
-                            <i class="fas fa-paper-plane"></i>
+                    <div id="current-user-display" class="current-user-display" style="display: none;">
+                        <div id="current-user-avatar" class="current-user-avatar"></div>
+                        <div id="current-user-name" class="current-user-name"></div>
+                        <button id="change-user-btn" class="btn btn-small">
+                            <i class="fas fa-edit"></i> تغيير
                         </button>
+                    </div>
+                </div>
+                
+                <!-- Task Input -->
+                <div class="form-group">
+                    <label class="form-label"><i class="fas fa-edit"></i> اكتب المهمة:</label>
+                    <textarea id="task-input" placeholder="ما الذي تريد إنجازه؟..."></textarea>
+                </div>
+                
+                <button id="add-task-btn" class="btn btn-success" style="width: 100%; margin-top: 10px;">
+                    <i class="fas fa-plus"></i> إضافة المهمة
+                </button>
+                
+                <!-- User Management -->
+                <div class="users-management">
+                    <div class="users-header">
+                        <h3 class="card-title" style="font-size: 1.5rem; margin: 0;"><i class="fas fa-users"></i> الأشخاص </h3>
+                        <button id="open-user-modal" class="btn btn-small">
+                            <i class="fas fa-user-plus"></i> إضافة شخص
+                        </button>
+                    </div>
+                    
+                    <div class="users-list" id="users-list">
+                        <!-- Users will be added here -->
                     </div>
                 </div>
             </div>
             
-            <!-- Middle Column: Tasks -->
+            <!-- Middle Column: Tasks List -->
             <div class="card">
-                <h2 class="card-title"><i class="fas fa-list-check"></i> المهام</h2>
+                <h2 class="card-title"><i class="fas fa-list-check"></i> المهام الحالية</h2>
                 
-                <!-- Task Input -->
-                <div class="form-group">
-                    <label class="form-label"><i class="fas fa-plus"></i> مهمة جديدة:</label>
-                    <div class="input-with-button">
-                        <input type="text" id="task-input" placeholder="اكتب مهمة جديدة...">
-                        <button id="add-task-btn" class="btn btn-success">
-                            <i class="fas fa-plus"></i> إضافة
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Tasks List -->
                 <div class="tasks-container" id="tasks-container">
+                    <!-- Tasks will be loaded here -->
                     <div class="empty-state">
                         <i class="fas fa-clipboard-list"></i>
-                        <h3>لا توجد مهام</h3>
-                        <p>ابدأ بإضافة أول مهمة</p>
+                        <h3>لا توجد مهام بعد</h3>
+                        <p>ابدأ بإضافة أول مهمة لتراها هنا</p>
                     </div>
                 </div>
                 
@@ -971,59 +848,71 @@
                         <span class="stat-label">مكتملة</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-number" id="active-users">0</span>
-                        <span class="stat-label">نشيطون</span>
+                        <span class="stat-number" id="pending-tasks">0</span>
+                        <span class="stat-label">معلقة</span>
                     </div>
                     <div class="stat-card">
-                        <span class="stat-number" id="today-tasks">0</span>
-                        <span class="stat-label">اليوم</span>
+                        <span class="stat-number" id="team-size">0</span>
+                        <span class="stat-label">الأشخاص</span>
                     </div>
                 </div>
             </div>
             
-            <!-- Right Column: Actions & Info -->
+            <!-- Right Column: Sharing & Actions -->
             <div class="card">
-                <h2 class="card-title"><i class="fas fa-cogs"></i> الإجراءات</h2>
+                <h2 class="card-title"><i class="fas fa-share-alt"></i> المشاركة</h2>
+                
+                <div class="sharing-section">
+                    <h3 class="sharing-title"><i class="fas fa-qrcode"></i> مشاركة سريعة</h3>
+                    
+                    <div class="qr-container">
+                        <div class="qr-code" id="qr-code">
+                            <!-- QR Code will be generated here -->
+                            <div style="color: #95a5a6; font-size: 0.9rem;">
+                                <i class="fas fa-qrcode fa-3x"></i>
+                                <p style="margin-top: 10px;">سيظهر رمز QR هنا</p>
+                            </div>
+                        </div>
+                        <p style="color: #2c3e50; font-weight: 600; margin: 10px 0;">مسح الكود لمشاركة القائمة</p>
+                    </div>
+                    
+                    <div class="share-link-container">
+                        <input type="text" id="share-link" readonly placeholder="رابط المشاركة">
+                        <button id="copy-link-btn" class="btn btn-success">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="share-actions">
+                        <button id="refresh-qr" class="btn btn-small">
+                            <i class="fas fa-sync-alt"></i> تحديث
+                        </button>
+                        <button id="whatsapp-share" class="btn btn-success btn-small" style="background: #25D366;">
+                            <i class="fab fa-whatsapp"></i> واتساب
+                        </button>
+                        
+                        <button id="export-data" class="btn btn-secondary btn-small">
+                            <i class="fas fa-download"></i> حفظ
+                        </button>
+                    </div>
+                </div>
                 
                 <!-- Quick Actions -->
-                <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px;">
-                    <button id="mark-all-complete" class="btn btn-success">
-                        <i class="fas fa-check-double"></i> إكمال الكل
-                    </button>
-                    <button id="clear-completed" class="btn btn-warning">
-                        <i class="fas fa-broom"></i> تنظيف المكتملة
-                    </button>
-                    <button id="export-tasks" class="btn btn-secondary">
-                        <i class="fas fa-download"></i> تصدير المهام
-                    </button>
-                </div>
-                
-                <!-- Room Info -->
-                <div style="background: #f0f7ff; padding: 20px; border-radius: 10px; margin-bottom: 25px;">
-                    <h3 class="card-title" style="font-size: 1.5rem; margin-bottom: 15px;">
-                        <i class="fas fa-info-circle"></i> معلومات الغرفة
-                    </h3>
-                    <div style="margin-bottom: 10px;">
-                        <strong>ID:</strong> <span id="current-room-id" style="font-family: monospace;">-</span>
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <strong>المنشئ:</strong> <span id="room-creator">-</span>
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <strong>تاريخ الإنشاء:</strong> <span id="room-created">-</span>
-                    </div>
-                </div>
-                
-                <!-- Activity Log -->
-                <div>
-                    <h3 class="card-title" style="font-size: 1.5rem; margin-bottom: 15px;">
-                        <i class="fas fa-history"></i> النشاطات
-                    </h3>
-                    <div class="activity-log" id="activity-log">
-                        <div class="activity-item">
-                            <i class="fas fa-info-circle" style="color: var(--primary);"></i>
-                            <span>مرحباً! أنشئ أو انضم لغرفة لتبدأ.</span>
-                        </div>
+                <div style="margin-top: 30px;">
+                    <h3 class="card-title" style="font-size: 1.5rem; margin-bottom: 20px;"><i class="fas fa-bolt"></i> إجراءات سريعة</h3>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button id="mark-all-complete" class="btn btn-success btn-small">
+                            <i class="fas fa-check-double"></i> إكمال الكل
+                        </button>
+                        <button id="import-data" class="btn btn-small">
+                            <i class="fas fa-upload"></i> استيراد
+                        </button>
+                        <button id="reset-list" class="btn btn-danger btn-small">
+                            <i class="fas fa-trash"></i> مسح الكل
+                        </button>
+                        <button id="clear-completed" class="btn btn-warning btn-small">
+                            <i class="fas fa-broom"></i> مسح المكتمل
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1031,9 +920,44 @@
         
         <!-- Footer -->
         <div class="footer">
-            <p><strong>قائمة مهام تزامنية</strong> - تعاون مباشر في الوقت الحقيقي</p>
-            <p>جميع التغييرات تظهر مباشرةً للمستخدمين المتصلين</p>
-            <p>© 2024 - باستخدام WebSocket للاتصال المباشر</p>
+            <p><strong>مهامي</strong> - موقع عربي مجاني لمشاركة المهام مع الآخرين</p>
+            <p>يعمل على جميع الأجهزة • لا يحتاج تسجيل دخول • بياناتك آمنة</p>
+            <p>© 2024 - صمم بحب للمستخدم العربي</p>
+        </div>
+    </div>
+    
+    <!-- User Management Modal -->
+    <div id="user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-cog"></i> إضافة شخص جديد</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">اسم الشخص الجديد:</label>
+                <input type="text" id="modal-user-name" placeholder="أدخل الاسم الكامل">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">اختر لونًا:</label>
+                <div class="color-palette" id="color-palette">
+                    <!-- Colors will be added here -->
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button id="add-user-modal" class="btn btn-success" style="flex: 1;">
+                    <i class="fas fa-user-plus"></i> إضافة الشخص
+                </button>
+                <button id="close-modal-btn" class="btn btn-secondary">
+                    إغلاق
+                </button>
+            </div>
+            
+            <div id="modal-users-list" style="margin-top: 25px;">
+                <!-- Users list for editing -->
+            </div>
         </div>
     </div>
 
@@ -1046,21 +970,13 @@
     <script>
         // Application State
         const state = {
-            username: null,
-            userId: null,
-            roomId: null,
-            roomCreator: null,
-            roomCreated: null,
-            users: new Map(),
-            tasks: [],
-            chatMessages: [],
-            activityLog: [],
-            color: '#4361ee',
-            isConnected: false,
-            socket: null
+            todos: [],
+            users: [],
+            currentUser: null,
+            selectedColor: '#4361ee'
         };
 
-        // Color options
+        // Color options with better contrast
         const colorOptions = [
             '#4361ee', '#3a0ca3', '#4cc9f0', '#2ecc71',
             '#e74c3c', '#f39c12', '#9b59b6', '#1abc9c',
@@ -1068,595 +984,445 @@
             '#8e44ad', '#16a085', '#c0392b', '#7f8c8d'
         ];
 
-        // WebSocket server URL (Replace with your server URL)
-        const WS_SERVER_URL = 'wss://socketsbay.com/wss/v2/1/demo/';
-        // Note: For production, you need to set up your own WebSocket server
-        // or use services like: Socket.io, Pusher, Firebase, or Supabase Realtime
-
         // DOM Elements
         const elements = {
-            // Status
-            statusIndicator: document.getElementById('status-indicator'),
-            statusText: document.getElementById('status-text'),
-            
             // Inputs
-            usernameInput: document.getElementById('username-input'),
-            roomIdInput: document.getElementById('room-id-input'),
             taskInput: document.getElementById('task-input'),
-            chatInput: document.getElementById('chat-input'),
+            currentUserInput: document.getElementById('current-user-input'),
+            modalUserName: document.getElementById('modal-user-name'),
             
             // Buttons
-            setUsernameBtn: document.getElementById('set-username-btn'),
-            createRoomBtn: document.getElementById('create-room-btn'),
-            joinRoomBtn: document.getElementById('join-room-btn'),
-            copyRoomIdBtn: document.getElementById('copy-room-id-btn'),
+            setUserBtn: document.getElementById('set-user-btn'),
+            changeUserBtn: document.getElementById('change-user-btn'),
             addTaskBtn: document.getElementById('add-task-btn'),
-            sendChatBtn: document.getElementById('send-chat-btn'),
-            markAllComplete: document.getElementById('mark-all-complete'),
+            openUserModal: document.getElementById('open-user-modal'),
+            copyLinkBtn: document.getElementById('copy-link-btn'),
+            refreshQr: document.getElementById('refresh-qr'),
+            whatsappShare: document.getElementById('whatsapp-share'),
             clearCompleted: document.getElementById('clear-completed'),
-            exportTasks: document.getElementById('export-tasks'),
+            exportData: document.getElementById('export-data'),
+            markAllComplete: document.getElementById('mark-all-complete'),
+            importData: document.getElementById('import-data'),
+            resetList: document.getElementById('reset-list'),
+            addUserModal: document.getElementById('add-user-modal'),
+            closeModalBtn: document.getElementById('close-modal-btn'),
             
             // Containers
-            onlineUsersList: document.getElementById('online-users-list'),
-            userCount: document.getElementById('user-count'),
+            currentUserDisplay: document.getElementById('current-user-display'),
+            currentUserAvatar: document.getElementById('current-user-avatar'),
+            currentUserName: document.getElementById('current-user-name'),
+            usersList: document.getElementById('users-list'),
             tasksContainer: document.getElementById('tasks-container'),
-            chatContainer: document.getElementById('chat-container'),
-            activityLog: document.getElementById('activity-log'),
-            
-            // Info
-            currentRoomId: document.getElementById('current-room-id'),
-            roomCreator: document.getElementById('room-creator'),
-            roomCreated: document.getElementById('room-created'),
+            modalUsersList: document.getElementById('modal-users-list'),
+            qrCode: document.getElementById('qr-code'),
+            shareLink: document.getElementById('share-link'),
+            colorPalette: document.getElementById('color-palette'),
             
             // Stats
             totalTasks: document.getElementById('total-tasks'),
             completedTasks: document.getElementById('completed-tasks'),
-            activeUsers: document.getElementById('active-users'),
-            todayTasks: document.getElementById('today-tasks'),
+            pendingTasks: document.getElementById('pending-tasks'),
+            teamSize: document.getElementById('team-size'),
             
-            // Notification
+            // Modals & Notifications
+            userModal: document.getElementById('user-modal'),
+            closeModalBtns: document.querySelectorAll('.close-modal'),
             notification: document.getElementById('notification'),
             notificationText: document.getElementById('notification-text')
         };
 
         // Initialize the app
         function init() {
-            loadLocalData();
+            loadData();
+            renderUsers();
+            renderTasks();
+            updateStats();
+            updateShareLink();
+            generateQRCode();
             setupEventListeners();
-            generateUserId();
-            updateUI();
             
-            showNotification('مرحباً! ابدأ بكتابة اسمك ثم إنشاء أو الانضمام لغرفة.', 'info');
-        }
-
-        // Generate unique user ID
-        function generateUserId() {
-            state.userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        }
-
-        // Load local data
-        function loadLocalData() {
-            const savedUsername = localStorage.getItem('todoUsername');
-            const savedColor = localStorage.getItem('todoColor');
-            
-            if (savedUsername) {
-                state.username = savedUsername;
-                elements.usernameInput.value = savedUsername;
+            // Load current user from localStorage
+            const savedCurrentUser = localStorage.getItem('currentUser');
+            if (savedCurrentUser) {
+                try {
+                    state.currentUser = JSON.parse(savedCurrentUser);
+                    updateCurrentUserDisplay();
+                } catch (error) {
+                    console.error('Error loading current user:', error);
+                }
             }
             
-            if (savedColor) {
-                state.color = savedColor;
-            }
+            showNotification('مرحباً! ابدأ بكتابة اسمك ثم أضف مهامك.', 'success');
         }
 
-        // Save local data
-        function saveLocalData() {
-            if (state.username) {
-                localStorage.setItem('todoUsername', state.username);
-            }
-            localStorage.setItem('todoColor', state.color);
-        }
-
-        // WebSocket Connection Management
-        function connectWebSocket() {
-            try {
-                // For demo purposes, we'll simulate WebSocket with polling
-                // In production, replace with actual WebSocket connection
-                
-                state.socket = {
-                    send: function(data) {
-                        console.log('Sending:', data);
-                        // Simulate receiving data
-                        setTimeout(() => simulateIncomingData(data), 100);
-                    },
-                    close: function() {
-                        state.isConnected = false;
-                        updateConnectionStatus();
+        // Load data from localStorage or URL
+        function loadData() {
+            // Try to load from URL first
+            const urlParams = new URLSearchParams(window.location.search);
+            const dataParam = urlParams.get('data');
+            
+            if (dataParam) {
+                try {
+                    const decodedData = decodeURIComponent(atob(dataParam));
+                    const savedState = JSON.parse(decodedData);
+                    
+                    state.todos = savedState.todos || [];
+                    state.users = savedState.users || [];
+                    
+                    // Update current user from loaded data if exists
+                    if (savedState.currentUser) {
+                        state.currentUser = savedState.currentUser;
+                        localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
                     }
-                };
-                
-                state.isConnected = true;
-                updateConnectionStatus();
-                showNotification('تم الاتصال بالخادم', 'success');
-                
-                // Join room if roomId exists
-                if (state.roomId) {
-                    joinRoom(state.roomId);
+                    
+                    showNotification('تم تحميل القائمة المشتركة بنجاح!', 'success');
+                } catch (error) {
+                    console.error('Error loading from URL:', error);
+                    loadFromLocalStorage();
                 }
-                
-            } catch (error) {
-                console.error('Connection error:', error);
-                showNotification('خطأ في الاتصال بالخادم', 'error');
+            } else {
+                loadFromLocalStorage();
             }
         }
 
-        // Simulate WebSocket messages (Replace with actual WebSocket)
-        function simulateIncomingData(data) {
-            try {
-                const message = typeof data === 'string' ? JSON.parse(data) : data;
-                
-                switch (message.type) {
-                    case 'join':
-                        handleUserJoin(message);
-                        break;
-                    case 'leave':
-                        handleUserLeave(message);
-                        break;
-                    case 'task_add':
-                        handleTaskAdd(message);
-                        break;
-                    case 'task_update':
-                        handleTaskUpdate(message);
-                        break;
-                    case 'task_delete':
-                        handleTaskDelete(message);
-                        break;
-                    case 'chat':
-                        handleChatMessage(message);
-                        break;
-                    case 'room_info':
-                        handleRoomInfo(message);
-                        break;
-                    case 'sync':
-                        handleSyncData(message);
-                        break;
-                }
-            } catch (error) {
-                console.error('Error processing message:', error);
+        function loadFromLocalStorage() {
+            const savedTodos = localStorage.getItem('mymaaTodos');
+            const savedUsers = localStorage.getItem('mymaaUsers');
+            
+            if (savedTodos) state.todos = JSON.parse(savedTodos);
+            if (savedUsers) state.users = JSON.parse(savedUsers);
+        }
+
+        function saveData() {
+            localStorage.setItem('mymaaTodos', JSON.stringify(state.todos));
+            localStorage.setItem('mymaaUsers', JSON.stringify(state.users));
+            if (state.currentUser) {
+                localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
             }
         }
 
-        // Send message via WebSocket
-        function sendMessage(type, data) {
-            if (!state.isConnected) {
-                showNotification('غير متصل بالخادم', 'error');
+        // Set current user
+        function setCurrentUser() {
+            const userName = elements.currentUserInput.value.trim();
+            
+            if (!userName) {
+                showNotification('يرجى كتابة اسمك أولاً', 'error');
                 return;
             }
             
-            const message = {
-                type,
-                userId: state.userId,
-                username: state.username,
-                roomId: state.roomId,
-                timestamp: Date.now(),
-                data
+            // Check if user exists in users list
+            let user = state.users.find(u => u.name.toLowerCase() === userName.toLowerCase());
+            
+            if (!user) {
+                // Create new user
+                user = {
+                    id: Date.now(),
+                    name: userName,
+                    color: colorOptions[Math.floor(Math.random() * colorOptions.length)]
+                };
+                state.users.push(user);
+                saveData();
+                renderUsers();
+                renderModalUsers();
+            }
+            
+            state.currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            updateCurrentUserDisplay();
+            
+            showNotification(`مرحباً ${userName}! يمكنك الآن إضافة المهام.`, 'success');
+            elements.taskInput.focus();
+        }
+
+        function updateCurrentUserDisplay() {
+            if (state.currentUser) {
+                elements.currentUserDisplay.style.display = 'flex';
+                elements.currentUserAvatar.style.backgroundColor = state.currentUser.color;
+                elements.currentUserAvatar.textContent = state.currentUser.name.charAt(0);
+                elements.currentUserName.textContent = state.currentUser.name;
+                elements.currentUserInput.style.display = 'none';
+                elements.setUserBtn.style.display = 'none';
+                elements.changeUserBtn.style.display = 'block';
+            } else {
+                elements.currentUserDisplay.style.display = 'none';
+                elements.currentUserInput.style.display = 'block';
+                elements.setUserBtn.style.display = 'block';
+                elements.changeUserBtn.style.display = 'none';
+            }
+        }
+
+        function changeCurrentUser() {
+            state.currentUser = null;
+            localStorage.removeItem('currentUser');
+            elements.currentUserInput.value = '';
+            updateCurrentUserDisplay();
+            showNotification('يمكنك الآن إدخال اسم جديد', 'success');
+            elements.currentUserInput.focus();
+        }
+
+        // Generate share URL
+        function generateShareURL() {
+            const stateToSave = {
+                todos: state.todos,
+                users: state.users,
+                currentUser: state.currentUser,
+                timestamp: Date.now()
             };
             
-            if (state.socket && state.socket.send) {
-                state.socket.send(JSON.stringify(message));
-            }
+            const jsonString = JSON.stringify(stateToSave);
+            const encodedData = btoa(encodeURIComponent(jsonString));
             
-            // For demo, also process locally
-            if (type !== 'join' && type !== 'leave') {
-                setTimeout(() => simulateIncomingData(message), 50);
-            }
+            const baseUrl = window.location.origin + window.location.pathname;
+            return `${baseUrl}?data=${encodedData}`;
         }
 
-        // Message Handlers
-        function handleUserJoin(message) {
-            if (message.userId !== state.userId) {
-                state.users.set(message.userId, {
-                    id: message.userId,
-                    username: message.username,
-                    color: message.data?.color || '#4361ee',
-                    joinedAt: message.timestamp,
-                    isTyping: false
-                });
+        function updateShareLink() {
+            const shareUrl = generateShareURL();
+            elements.shareLink.value = shareUrl;
+            document.title = `مهامي (${state.todos.length})`;
+        }
+
+        // Generate QR Code using QR Server API
+        function generateQRCode() {
+            const shareUrl = generateShareURL();
+            elements.qrCode.innerHTML = '';
+            
+            // Create QR code image with better contrast and larger size
+            const qrImage = document.createElement('img');
+            qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(shareUrl)}&bgcolor=ffffff&color=2c3e50&margin=15&qzone=2`;
+            qrImage.alt = 'QR Code للمشاركة';
+            qrImage.style.width = '100%';
+            qrImage.style.height = 'auto';
+            qrImage.style.borderRadius = '8px';
+            qrImage.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+            
+            elements.qrCode.appendChild(qrImage);
+        }
+
+        // User Management Functions
+        function renderUsers() {
+            elements.usersList.innerHTML = '';
+            
+            if (state.users.length === 0) {
+                elements.usersList.innerHTML = `
+                    <div class="empty-state" style="padding: 20px;">
+                        <i class="fas fa-users"></i>
+                        <p>لا يوجد أشخاص بعد</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            state.users.forEach(user => {
+                const userTasks = state.todos.filter(t => t.userId === user.id);
+                const completedTasks = userTasks.filter(t => t.completed).length;
                 
-                addActivity(`${message.username} انضم للغرفة`, 'join');
-                updateOnlineUsers();
-                showNotification(`${message.username} انضم للغرفة`, 'info');
-            }
-        }
-
-        function handleUserLeave(message) {
-            if (state.users.has(message.userId)) {
-                const user = state.users.get(message.userId);
-                addActivity(`${user.username} غادر الغرفة`, 'leave');
-                state.users.delete(message.userId);
-                updateOnlineUsers();
-            }
-        }
-
-        function handleTaskAdd(message) {
-            if (message.userId !== state.userId) {
-                const task = message.data;
-                state.tasks.push(task);
-                renderTasks();
-                updateStats();
-                addActivity(`${message.username} أضاف مهمة جديدة`, 'task');
-                showNotification(`${message.username} أضاف مهمة`, 'info');
-            }
-        }
-
-        function handleTaskUpdate(message) {
-            if (message.userId !== state.userId) {
-                const taskId = message.data.taskId;
-                const updates = message.data.updates;
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                    <div class="user-info">
+                        <div class="user-avatar" style="background-color: ${user.color}">
+                            ${user.name.charAt(0)}
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name">${user.name} ${user.id === state.currentUser?.id ? '<span style="color: #4361ee; font-size: 0.9rem;">(أنت)</span>' : ''}</div>
+                            <div class="user-stats">
+                                <span>${userTasks.length} مهمة</span>
+                                <span>${completedTasks} مكتملة</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn btn-danger btn-icon delete-user" data-id="${user.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
                 
-                const taskIndex = state.tasks.findIndex(t => t.id === taskId);
-                if (taskIndex !== -1) {
-                    state.tasks[taskIndex] = { ...state.tasks[taskIndex], ...updates };
-                    renderTasks();
-                    updateStats();
-                    
-                    if (updates.completed) {
-                        addActivity(`${message.username} أكمل مهمة`, 'complete');
-                    }
-                }
-            }
-        }
-
-        function handleTaskDelete(message) {
-            if (message.userId !== state.userId) {
-                const taskId = message.data.taskId;
-                state.tasks = state.tasks.filter(t => t.id !== taskId);
-                renderTasks();
-                updateStats();
-                addActivity(`${message.username} حذف مهمة`, 'delete');
-            }
-        }
-
-        function handleChatMessage(message) {
-            if (message.userId !== state.userId) {
-                state.chatMessages.push(message.data);
-                renderChat();
-                showNotification(`رسالة جديدة من ${message.username}`, 'info');
-            }
-        }
-
-        function handleRoomInfo(message) {
-            state.roomCreator = message.data.creator;
-            state.roomCreated = message.data.created;
-            updateRoomInfo();
-        }
-
-        function handleSyncData(message) {
-            if (message.data.tasks) state.tasks = message.data.tasks;
-            if (message.data.users) {
-                state.users.clear();
-                message.data.users.forEach(user => {
-                    if (user.id !== state.userId) {
-                        state.users.set(user.id, user);
-                    }
-                });
-            }
-            if (message.data.chatMessages) state.chatMessages = message.data.chatMessages;
-            
-            renderTasks();
-            updateOnlineUsers();
-            renderChat();
-            updateStats();
-            addActivity('تم مزامنة البيانات مع الخادم', 'sync');
-        }
-
-        // User Management
-        function setUsername() {
-            const username = elements.usernameInput.value.trim();
-            
-            if (!username) {
-                showNotification('يرجى إدخال اسم المستخدم', 'error');
-                return;
-            }
-            
-            state.username = username;
-            saveLocalData();
-            updateUI();
-            
-            showNotification(`مرحباً ${username}!`, 'success');
-            
-            // If already in a room, notify others
-            if (state.roomId && state.isConnected) {
-                sendMessage('user_update', { username, color: state.color });
-            }
-        }
-
-        // Room Management
-        function createRoom() {
-            if (!state.username) {
-                showNotification('يرجى إدخال اسم المستخدم أولاً', 'error');
-                elements.usernameInput.focus();
-                return;
-            }
-            
-            if (!state.isConnected) {
-                connectWebSocket();
-            }
-            
-            const roomId = 'room_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-            joinRoom(roomId);
-            
-            state.roomCreator = state.username;
-            state.roomCreated = new Date().toLocaleString('ar-EG');
-            
-            addActivity(`أنشأت الغرفة ${roomId}`, 'create');
-            showNotification(`تم إنشاء الغرفة: ${roomId}`, 'success');
-        }
-
-        function joinRoom(roomId) {
-            if (!roomId) {
-                roomId = elements.roomIdInput.value.trim();
-            }
-            
-            if (!roomId) {
-                showNotification('يرجى إدخال ID الغرفة', 'error');
-                return;
-            }
-            
-            if (!state.username) {
-                showNotification('يرجى إدخال اسم المستخدم أولاً', 'error');
-                elements.usernameInput.focus();
-                return;
-            }
-            
-            if (!state.isConnected) {
-                connectWebSocket();
-            }
-            
-            state.roomId = roomId;
-            elements.roomIdInput.value = roomId;
-            
-            // Clear previous data
-            state.users.clear();
-            state.tasks = [];
-            state.chatMessages = [];
-            
-            // Send join message
-            sendMessage('join', {
-                color: state.color,
-                roomId: state.roomId
+                elements.usersList.appendChild(userItem);
             });
             
-            // Request sync
-            sendMessage('sync_request', { roomId });
-            
-            updateUI();
-            addActivity(`انضممت للغرفة ${roomId}`, 'join');
-            showNotification(`تم الانضمام للغرفة: ${roomId}`, 'success');
+            // Add event listeners for delete buttons
+            document.querySelectorAll('.delete-user').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userId = parseInt(this.dataset.id);
+                    deleteUser(userId);
+                });
+            });
         }
 
-        // Task Management
+        function renderModalUsers() {
+            elements.modalUsersList.innerHTML = '';
+            
+            if (state.users.length === 0) {
+                elements.modalUsersList.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #95a5a6;">
+                        <i class="fas fa-users"></i>
+                        <p>لا يوجد أشخاص بعد</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            state.users.forEach(user => {
+                const userTasks = state.todos.filter(t => t.userId === user.id);
+                
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.style.marginBottom = '10px';
+                userItem.innerHTML = `
+                    <div class="user-info">
+                        <div class="user-avatar" style="background-color: ${user.color}">
+                            ${user.name.charAt(0)}
+                        </div>
+                        <div class="user-details">
+                            <div class="user-name">${user.name}</div>
+                            <div class="user-stats">
+                                <span>${userTasks.length} مهمة</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn btn-danger btn-small delete-user-modal" data-id="${user.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                elements.modalUsersList.appendChild(userItem);
+            });
+            
+            // Add event listeners for modal delete buttons
+            document.querySelectorAll('.delete-user-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userId = parseInt(this.dataset.id);
+                    deleteUser(userId);
+                });
+            });
+        }
+
+        function addUser(name, color) {
+            if (!name.trim()) {
+                showNotification('يرجى إدخال اسم الشخص', 'error');
+                return false;
+            }
+            
+            // Check if user already exists
+            if (state.users.some(user => user.name.toLowerCase() === name.toLowerCase())) {
+                showNotification('هذا الشخص موجود بالفعل', 'error');
+                return false;
+            }
+            
+            const newUser = {
+                id: Date.now(),
+                name: name.trim(),
+                color: color
+            };
+            
+            state.users.push(newUser);
+            saveData();
+            renderUsers();
+            renderModalUsers();
+            updateStats();
+            
+            showNotification(`تم إضافة الشخص: ${name}`, 'success');
+            return true;
+        }
+
+        function deleteUser(userId) {
+            const user = state.users.find(u => u.id === userId);
+            if (!user) return;
+            
+            // Check if this is the current user
+            if (state.currentUser && state.currentUser.id === userId) {
+                if (!confirm('أنت تحاول حذف نفسك! هذا سيحذف جميع مهامك. هل تريد المتابعة؟')) {
+                    return;
+                }
+                state.currentUser = null;
+                localStorage.removeItem('currentUser');
+                updateCurrentUserDisplay();
+            }
+            
+            // Check if user has tasks
+            const userTasks = state.todos.filter(t => t.userId === userId);
+            
+            if (userTasks.length > 0) {
+                if (!confirm(`هذا الشخص لديه ${userTasks.length} مهمة. حذفه سيحذف مهامه أيضاً. هل تريد المتابعة؟`)) {
+                    return;
+                }
+                
+                // Remove user's tasks
+                state.todos = state.todos.filter(t => t.userId !== userId);
+            }
+            
+            // Remove user
+            state.users = state.users.filter(u => u.id !== userId);
+            saveData();
+            renderUsers();
+            renderModalUsers();
+            renderTasks();
+            updateStats();
+            updateShareLink();
+            generateQRCode();
+            
+            showNotification('تم حذف الشخص', 'success');
+        }
+
+        // Task Management Functions
         function addTask() {
-            if (!state.roomId) {
-                showNotification('يرجى الانضمام أو إنشاء غرفة أولاً', 'error');
+            if (!state.currentUser) {
+                showNotification('يرجى كتابة اسمك أولاً', 'error');
+                elements.currentUserInput.focus();
                 return;
             }
             
             const taskText = elements.taskInput.value.trim();
             
             if (!taskText) {
-                showNotification('يرجى إدخال نص المهمة', 'error');
+                showNotification('يرجى كتابة نص المهمة', 'error');
                 elements.taskInput.focus();
                 return;
             }
             
-            const task = {
-                id: 'task_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            const newTask = {
+                id: Date.now(),
                 text: taskText,
                 completed: false,
-                userId: state.userId,
-                username: state.username,
-                userColor: state.color,
-                createdAt: Date.now(),
-                updatedAt: Date.now()
+                userId: state.currentUser.id,
+                userName: state.currentUser.name,
+                userColor: state.currentUser.color,
+                createdAt: Date.now()
             };
             
-            state.tasks.push(task);
-            sendMessage('task_add', task);
+            state.todos.unshift(newTask);
+            saveData();
+            renderTasks();
+            updateStats();
+            updateShareLink();
+            generateQRCode();
             
+            // Clear input
             elements.taskInput.value = '';
             elements.taskInput.focus();
             
-            renderTasks();
-            updateStats();
-            addActivity('أضفت مهمة جديدة', 'task');
-        }
-
-        function updateTask(taskId, updates) {
-            const taskIndex = state.tasks.findIndex(t => t.id === taskId);
-            if (taskIndex !== -1) {
-                state.tasks[taskIndex] = { ...state.tasks[taskIndex], ...updates, updatedAt: Date.now() };
-                renderTasks();
-                updateStats();
-                sendMessage('task_update', { taskId, updates });
-            }
-        }
-
-        function deleteTask(taskId) {
-            if (confirm('هل تريد حذف هذه المهمة؟')) {
-                state.tasks = state.tasks.filter(t => t.id !== taskId);
-                renderTasks();
-                updateStats();
-                sendMessage('task_delete', { taskId });
-                addActivity('حذفت مهمة', 'delete');
-            }
-        }
-
-        function markAllComplete() {
-            if (state.tasks.length === 0) {
-                showNotification('لا توجد مهام', 'warning');
-                return;
-            }
-            
-            const incompleteTasks = state.tasks.filter(t => !t.completed);
-            
-            if (incompleteTasks.length === 0) {
-                showNotification('جميع المهام مكتملة بالفعل', 'warning');
-                return;
-            }
-            
-            if (confirm(`هل تريد إكمال جميع المهام (${incompleteTasks.length} مهمة)؟`)) {
-                incompleteTasks.forEach(task => {
-                    updateTask(task.id, { completed: true });
-                });
-                addActivity('أكملت جميع المهام', 'complete');
-                showNotification(`تم إكمال ${incompleteTasks.length} مهمة`, 'success');
-            }
-        }
-
-        function clearCompletedTasks() {
-            const completedTasks = state.tasks.filter(t => t.completed);
-            
-            if (completedTasks.length === 0) {
-                showNotification('لا توجد مهام مكتملة', 'warning');
-                return;
-            }
-            
-            if (confirm(`هل تريد حذف ${completedTasks.length} مهمة مكتملة؟`)) {
-                completedTasks.forEach(task => {
-                    deleteTask(task.id);
-                });
-                addActivity('حذفت جميع المهام المكتملة', 'delete');
-                showNotification(`تم حذف ${completedTasks.length} مهمة مكتملة`, 'success');
-            }
-        }
-
-        // Chat Functions
-        function sendChatMessage() {
-            if (!state.roomId) {
-                showNotification('يرجى الانضمام أو إنشاء غرفة أولاً', 'error');
-                return;
-            }
-            
-            const text = elements.chatInput.value.trim();
-            
-            if (!text) {
-                showNotification('يرجى إدخال نص الرسالة', 'error');
-                elements.chatInput.focus();
-                return;
-            }
-            
-            const message = {
-                id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                text,
-                userId: state.userId,
-                username: state.username,
-                userColor: state.color,
-                timestamp: Date.now()
-            };
-            
-            state.chatMessages.push(message);
-            sendMessage('chat', message);
-            
-            elements.chatInput.value = '';
-            renderChat();
-        }
-
-        // UI Update Functions
-        function updateUI() {
-            updateConnectionStatus();
-            updateOnlineUsers();
-            updateRoomInfo();
-            updateStats();
-        }
-
-        function updateConnectionStatus() {
-            if (state.isConnected) {
-                elements.statusIndicator.className = 'status-indicator connected';
-                elements.statusText.textContent = `متصل ${state.roomId ? '| ' + state.roomId : ''}`;
-            } else {
-                elements.statusIndicator.className = 'status-indicator';
-                elements.statusText.textContent = 'غير متصل';
-            }
-        }
-
-        function updateOnlineUsers() {
-            elements.onlineUsersList.innerHTML = '';
-            elements.userCount.textContent = `(${state.users.size + 1})`;
-            
-            if (state.users.size === 0 && !state.username) {
-                elements.onlineUsersList.innerHTML = `
-                    <div class="empty-state" style="padding: 20px;">
-                        <i class="fas fa-users-slash"></i>
-                        <p>لا يوجد أعضاء متصلين</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Add current user
-            if (state.username) {
-                const currentUserItem = document.createElement('div');
-                currentUserItem.className = 'online-user-item';
-                currentUserItem.innerHTML = `
-                    <div class="online-user-info">
-                        <div class="online-user-avatar online" style="background-color: ${state.color}">
-                            ${state.username.charAt(0)}
-                        </div>
-                        <div class="online-user-details">
-                            <div class="online-user-name">${state.username} <span style="color: var(--primary);">(أنت)</span></div>
-                            <div class="online-user-stats">
-                                <span>${state.tasks.filter(t => t.userId === state.userId).length} مهام</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                elements.onlineUsersList.appendChild(currentUserItem);
-            }
-            
-            // Add other users
-            state.users.forEach(user => {
-                const userItem = document.createElement('div');
-                userItem.className = 'online-user-item';
-                userItem.innerHTML = `
-                    <div class="online-user-info">
-                        <div class="online-user-avatar online" style="background-color: ${user.color}">
-                            ${user.username.charAt(0)}
-                        </div>
-                        <div class="online-user-details">
-                            <div class="online-user-name">${user.username}</div>
-                            <div class="online-user-stats">
-                                <span>${state.tasks.filter(t => t.userId === user.id).length} مهام</span>
-                                <span>${user.isTyping ? 'يكتب...' : ''}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                elements.onlineUsersList.appendChild(userItem);
-            });
+            showNotification('تم إضافة المهمة بنجاح', 'success');
         }
 
         function renderTasks() {
             elements.tasksContainer.innerHTML = '';
             
-            if (state.tasks.length === 0) {
+            if (state.todos.length === 0) {
                 elements.tasksContainer.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-clipboard-list"></i>
-                        <h3>لا توجد مهام</h3>
-                        <p>ابدأ بإضافة أول مهمة</p>
+                        <h3>لا توجد مهام بعد</h3>
+                        <p>ابدأ بإضافة أول مهمة لتراها هنا</p>
                     </div>
                 `;
                 return;
             }
             
-            // Sort tasks: incomplete first, then by date
-            const sortedTasks = [...state.tasks].sort((a, b) => {
-                if (a.completed !== b.completed) return a.completed ? 1 : -1;
-                return b.createdAt - a.createdAt;
-            });
-            
-            sortedTasks.forEach(task => {
+            state.todos.forEach(task => {
                 const taskItem = document.createElement('div');
                 taskItem.className = `task-item ${task.completed ? 'completed' : ''}`;
                 taskItem.innerHTML = `
@@ -1668,7 +1434,7 @@
                         <div class="task-user">
                             <div class="user-tag" style="background-color: ${task.userColor}; color: white;">
                                 <i class="fas fa-user"></i>
-                                ${task.username}
+                                ${task.userName}
                             </div>
                         </div>
                         <div class="task-date">
@@ -1688,118 +1454,108 @@
             // Add event listeners
             document.querySelectorAll('.task-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
-                    const taskId = this.dataset.id;
-                    updateTask(taskId, { completed: this.checked });
+                    const taskId = parseInt(this.dataset.id);
+                    toggleTaskCompletion(taskId);
                 });
             });
             
             document.querySelectorAll('.delete-task').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const taskId = this.dataset.id;
+                    const taskId = parseInt(this.dataset.id);
                     deleteTask(taskId);
                 });
             });
         }
 
-        function renderChat() {
-            elements.chatContainer.innerHTML = '';
+        function toggleTaskCompletion(taskId) {
+            const task = state.todos.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                saveData();
+                renderTasks();
+                updateStats();
+                updateShareLink();
+                generateQRCode();
+            }
+        }
+
+        function deleteTask(taskId) {
+            if (confirm('هل تريد حذف هذه المهمة؟')) {
+                state.todos = state.todos.filter(t => t.id !== taskId);
+                saveData();
+                renderTasks();
+                updateStats();
+                updateShareLink();
+                generateQRCode();
+                showNotification('تم حذف المهمة', 'success');
+            }
+        }
+
+        function clearCompletedTasks() {
+            const completedCount = state.todos.filter(t => t.completed).length;
             
-            if (state.chatMessages.length === 0) {
-                elements.chatContainer.innerHTML = `
-                    <div class="empty-state" style="padding: 20px;">
-                        <i class="fas fa-comment-slash"></i>
-                        <p>ابدأ المحادثة مع فريقك</p>
-                    </div>
-                `;
+            if (completedCount === 0) {
+                showNotification('لا توجد مهام مكتملة', 'warning');
                 return;
             }
             
-            state.chatMessages.forEach(msg => {
-                const isCurrentUser = msg.userId === state.userId;
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `chat-message ${isCurrentUser ? 'sent' : 'received'}`;
-                messageDiv.style.backgroundColor = isCurrentUser ? state.color : msg.userColor + '20';
-                messageDiv.innerHTML = `
-                    <div class="chat-message-header">
-                        <span>${msg.username}</span>
-                        <span>${formatTime(msg.timestamp)}</span>
-                    </div>
-                    <div>${msg.text}</div>
-                `;
-                elements.chatContainer.appendChild(messageDiv);
-            });
-            
-            // Scroll to bottom
-            elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
+            if (confirm(`هل تريد حذف ${completedCount} مهمة مكتملة؟`)) {
+                state.todos = state.todos.filter(t => !t.completed);
+                saveData();
+                renderTasks();
+                updateStats();
+                updateShareLink();
+                generateQRCode();
+                showNotification(`تم حذف ${completedCount} مهمة مكتملة`, 'success');
+            }
         }
 
-        function updateRoomInfo() {
-            elements.currentRoomId.textContent = state.roomId || '-';
-            elements.roomCreator.textContent = state.roomCreator || '-';
-            elements.roomCreated.textContent = state.roomCreated || '-';
+        function markAllComplete() {
+            if (state.todos.length === 0) {
+                showNotification('لا توجد مهام', 'warning');
+                return;
+            }
+            
+            const incompleteTasks = state.todos.filter(t => !t.completed).length;
+            
+            if (incompleteTasks === 0) {
+                showNotification('جميع المهام مكتملة بالفعل', 'warning');
+                return;
+            }
+            
+            if (confirm(`هل تريد إكمال جميع المهام (${incompleteTasks} مهمة)؟`)) {
+                state.todos.forEach(task => task.completed = true);
+                saveData();
+                renderTasks();
+                updateStats();
+                updateShareLink();
+                generateQRCode();
+                showNotification(`تم إكمال ${incompleteTasks} مهمة`, 'success');
+            }
         }
 
-        function updateStats() {
-            const total = state.tasks.length;
-            const completed = state.tasks.filter(t => t.completed).length;
-            const today = new Date().toDateString();
-            const todayTasks = state.tasks.filter(t => 
-                new Date(t.createdAt).toDateString() === today
-            ).length;
+        function resetList() {
+            if (state.todos.length === 0 && state.users.length === 0) {
+                showNotification('القائمة فارغة بالفعل', 'warning');
+                return;
+            }
             
-            elements.totalTasks.textContent = total;
-            elements.completedTasks.textContent = completed;
-            elements.activeUsers.textContent = state.users.size + 1;
-            elements.todayTasks.textContent = todayTasks;
-        }
-
-        function addActivity(text, type = 'info') {
-            const activity = {
-                text,
-                type,
-                timestamp: Date.now()
-            };
-            
-            state.activityLog.unshift(activity);
-            if (state.activityLog.length > 50) state.activityLog.pop();
-            
-            renderActivityLog();
-        }
-
-        function renderActivityLog() {
-            elements.activityLog.innerHTML = '';
-            
-            state.activityLog.slice(0, 10).forEach(activity => {
-                const icon = {
-                    'join': 'fa-user-plus',
-                    'leave': 'fa-user-minus',
-                    'task': 'fa-tasks',
-                    'complete': 'fa-check-circle',
-                    'delete': 'fa-trash',
-                    'create': 'fa-plus-circle',
-                    'sync': 'fa-sync',
-                    'info': 'fa-info-circle'
-                }[activity.type] || 'fa-info-circle';
-                
-                const color = {
-                    'join': 'var(--success)',
-                    'leave': 'var(--danger)',
-                    'task': 'var(--primary)',
-                    'complete': 'var(--success)',
-                    'delete': 'var(--danger)',
-                    'create': 'var(--warning)',
-                    'sync': 'var(--info)',
-                    'info': 'var(--gray)'
-                }[activity.type] || 'var(--gray)';
-                
-                const item = document.createElement('div');
-                item.className = 'activity-item';
-                item.innerHTML = `
-                    <i class="fas ${icon}" style="color: ${color};"></i>
-                    <span>${activity.text} - ${formatTime(activity.timestamp)}</span>
-                `;
-                elements.activityLog.appendChild(item);
-            });
+            if (confirm('هل تريد مسح جميع المهام والأشخاص؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+                // Reset to empty state
+                state.todos = [];
+                state.users = [];
+                state.currentUser = null;
+                localStorage.removeItem('currentUser');
+                saveData();
+                updateCurrentUserDisplay();
+                renderUsers();
+                renderModalUsers();
+                renderTasks();
+                updateStats();
+                updateShareLink();
+                generateQRCode();
+                showNotification('تم إعادة ضبط القائمة', 'success');
+            }
         }
 
         // Utility Functions
@@ -1817,14 +1573,23 @@
             if (diffDays === 1) return 'أمس';
             if (diffDays < 7) return `قبل ${diffDays} يوم`;
             
-            return date.toLocaleDateString('ar-EG');
+            return date.toLocaleDateString('ar-EG', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
         }
 
-        function formatTime(timestamp) {
-            return new Date(timestamp).toLocaleTimeString('ar-EG', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+        function updateStats() {
+            const total = state.todos.length;
+            const completed = state.todos.filter(t => t.completed).length;
+            const pending = total - completed;
+            const members = state.users.length;
+            
+            elements.totalTasks.textContent = total;
+            elements.completedTasks.textContent = completed;
+            elements.pendingTasks.textContent = pending;
+            elements.teamSize.textContent = members;
         }
 
         function showNotification(message, type = 'success') {
@@ -1838,81 +1603,189 @@
             }, 3000);
         }
 
-        function copyRoomId() {
-            if (!state.roomId) {
-                showNotification('لا يوجد ID غرفة', 'error');
-                return;
-            }
+        function setupColorPalette() {
+            elements.colorPalette.innerHTML = '';
             
-            navigator.clipboard.writeText(state.roomId)
-                .then(() => {
-                    showNotification('تم نسخ ID الغرفة', 'success');
-                })
-                .catch(err => {
-                    showNotification('فشل نسخ ID الغرفة', 'error');
+            colorOptions.forEach(color => {
+                const colorOption = document.createElement('div');
+                colorOption.className = 'color-option';
+                if (color === state.selectedColor) colorOption.classList.add('selected');
+                colorOption.style.backgroundColor = color;
+                colorOption.dataset.color = color;
+                colorOption.title = color;
+                
+                colorOption.addEventListener('click', function() {
+                    document.querySelectorAll('.color-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    state.selectedColor = this.dataset.color;
                 });
+                
+                elements.colorPalette.appendChild(colorOption);
+            });
         }
 
-        function exportTasksToJSON() {
+        // Export/Import Functions
+        function exportData() {
             const dataToExport = {
-                tasks: state.tasks,
+                todos: state.todos,
+                users: state.users,
+                currentUser: state.currentUser,
                 exportedAt: new Date().toISOString(),
-                roomId: state.roomId,
-                totalTasks: state.tasks.length,
-                completedTasks: state.tasks.filter(t => t.completed).length
+                app: 'مهامي - قائمة المهام العربية'
             };
             
             const dataStr = JSON.stringify(dataToExport, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
-            const exportFileDefaultName = `مهام-${state.roomId || 'محلية'}-${new Date().toISOString().slice(0,10)}.json`;
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `مهامي-${new Date().toISOString().slice(0,10)}.json`;
             
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
             linkElement.setAttribute('download', exportFileDefaultName);
             linkElement.click();
             
-            showNotification('تم تصدير المهام', 'success');
+            showNotification('تم حفظ نسخة احتياطية', 'success');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        
+                        if (!confirm('استيراد البيانات سيحذف جميع البيانات الحالية. هل تريد المتابعة؟')) {
+                            return;
+                        }
+                        
+                        state.todos = importedData.todos || [];
+                        state.users = importedData.users || [];
+                        state.currentUser = importedData.currentUser || null;
+                        
+                        if (state.currentUser) {
+                            localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+                        }
+                        
+                        saveData();
+                        updateCurrentUserDisplay();
+                        renderUsers();
+                        renderModalUsers();
+                        renderTasks();
+                        updateStats();
+                        updateShareLink();
+                        generateQRCode();
+                        
+                        showNotification('تم استيراد البيانات بنجاح', 'success');
+                    } catch (error) {
+                        showNotification('خطأ في ملف البيانات', 'error');
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
         }
 
         // Event Listeners
         function setupEventListeners() {
-            // Username
-            elements.setUsernameBtn.addEventListener('click', setUsername);
-            elements.usernameInput.addEventListener('keypress', e => {
-                if (e.key === 'Enter') setUsername();
+            // Set current user
+            elements.setUserBtn.addEventListener('click', setCurrentUser);
+            elements.currentUserInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') setCurrentUser();
             });
             
-            // Room Management
-            elements.createRoomBtn.addEventListener('click', createRoom);
-            elements.joinRoomBtn.addEventListener('click', () => joinRoom());
-            elements.roomIdInput.addEventListener('keypress', e => {
-                if (e.key === 'Enter') joinRoom();
-            });
-            elements.copyRoomIdBtn.addEventListener('click', copyRoomId);
+            elements.changeUserBtn.addEventListener('click', changeCurrentUser);
             
-            // Tasks
+            // Add task
             elements.addTaskBtn.addEventListener('click', addTask);
-            elements.taskInput.addEventListener('keypress', e => {
-                if (e.key === 'Enter') addTask();
+            elements.taskInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    addTask();
+                }
             });
             
-            // Chat
-            elements.sendChatBtn.addEventListener('click', sendChatMessage);
-            elements.chatInput.addEventListener('keypress', e => {
-                if (e.key === 'Enter') sendChatMessage();
+            // User modal
+            elements.openUserModal.addEventListener('click', function() {
+                elements.userModal.style.display = 'flex';
+                elements.modalUserName.value = '';
+                renderModalUsers();
+                setupColorPalette();
+            });
+            
+            elements.addUserModal.addEventListener('click', function() {
+                const name = elements.modalUserName.value.trim();
+                if (name) {
+                    if (addUser(name, state.selectedColor)) {
+                        elements.modalUserName.value = '';
+                        state.selectedColor = '#4361ee';
+                    }
+                } else {
+                    showNotification('يرجى إدخال اسم', 'error');
+                }
+            });
+            
+            elements.closeModalBtn.addEventListener('click', function() {
+                elements.userModal.style.display = 'none';
+            });
+            
+            // Close modals
+            elements.closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    elements.userModal.style.display = 'none';
+                });
+            });
+            
+            window.addEventListener('click', function(e) {
+                if (e.target === elements.userModal) {
+                    elements.userModal.style.display = 'none';
+                }
+            });
+            
+            // Sharing
+            elements.copyLinkBtn.addEventListener('click', function() {
+                elements.shareLink.select();
+                elements.shareLink.setSelectionRange(0, 99999);
+                
+                navigator.clipboard.writeText(elements.shareLink.value)
+                    .then(() => {
+                        showNotification('تم نسخ الرابط', 'success');
+                    })
+                    .catch(err => {
+                        showNotification('فشل نسخ الرابط', 'error');
+                    });
+            });
+            
+            elements.refreshQr.addEventListener('click', function() {
+                generateQRCode();
+                showNotification('تم تحديث رمز QR', 'success');
+            });
+            
+            elements.whatsappShare.addEventListener('click', function() {
+                const shareUrl = generateShareURL();
+                const message = `قائمة المهام:\n${shareUrl}`;
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
             });
             
             // Actions
-            elements.markAllComplete.addEventListener('click', markAllComplete);
             elements.clearCompleted.addEventListener('click', clearCompletedTasks);
-            elements.exportTasks.addEventListener('click', exportTasksToJSON);
+            elements.markAllComplete.addEventListener('click', markAllComplete);
+            elements.exportData.addEventListener('click', exportData);
+            elements.importData.addEventListener('click', importData);
+            elements.resetList.addEventListener('click', resetList);
             
-            // Auto-connect on page load (for demo)
-            setTimeout(() => {
-                if (!state.isConnected) {
-                    connectWebSocket();
-                }
-            }, 1000);
+            // Auto-save
+            window.addEventListener('beforeunload', saveData);
         }
 
         // Initialize the app
