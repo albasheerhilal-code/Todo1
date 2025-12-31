@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قائمة المهام - تعاون مع فريقك</title>
+    <title>قائمة المهام - شارك مع فريقك</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -422,7 +423,7 @@
             color: #2b6cb0;
         }
 
-        .sharing-options {
+        .share-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
@@ -430,7 +431,7 @@
         }
 
         @media (max-width: 768px) {
-            .sharing-options {
+            .share-options {
                 grid-template-columns: 1fr;
             }
         }
@@ -613,6 +614,10 @@
             padding: 20px;
             background: #f7fafc;
             border-radius: 12px;
+            min-height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .share-qr canvas {
@@ -814,9 +819,7 @@
             
             <div class="form-group">
                 <label>اختر لوناً للعضو:</label>
-                <div class="color-palette" id="color-palette">
-                    <!-- Colors will be added by JavaScript -->
-                </div>
+                <div class="color-palette" id="color-palette"></div>
             </div>
             
             <button id="save-new-user-btn" class="btn btn-success" style="width: 100%; padding: 18px;">
@@ -831,9 +834,6 @@
         <span id="notification-text">تم النسخ بنجاح!</span>
     </div>
 
-    <!-- QR Code Library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    
     <script>
         // Application state
         const state = {
@@ -853,35 +853,33 @@
         ];
 
         // DOM elements
-        const dom = {
-            taskInput: document.getElementById('task-input'),
-            userNameInput: document.getElementById('user-name-input'),
-            saveUserBtn: document.getElementById('save-user-btn'),
-            addTaskBtn: document.getElementById('add-task-btn'),
-            usersGrid: document.getElementById('users-grid'),
-            todosList: document.getElementById('todos-list'),
-            shareLink: document.getElementById('share-link'),
-            copyLinkBtn: document.getElementById('copy-link-btn'),
-            refreshLinkBtn: document.getElementById('refresh-link-btn'),
-            whatsappShareBtn: document.getElementById('whatsapp-share-btn'),
-            emailShareBtn: document.getElementById('email-share-btn'),
-            clearCompletedBtn: document.getElementById('clear-completed-btn'),
-            exportDataBtn: document.getElementById('export-data-btn'),
-            importDataBtn: document.getElementById('import-data-btn'),
-            addNewUserBtn: document.getElementById('add-new-user-btn'),
-            userModal: document.getElementById('user-modal'),
-            newUserName: document.getElementById('new-user-name'),
-            colorPalette: document.getElementById('color-palette'),
-            saveNewUserBtn: document.getElementById('save-new-user-btn'),
-            closeModalBtns: document.querySelectorAll('.close-modal'),
-            qrCodeContainer: document.getElementById('qr-code-container'),
-            notification: document.getElementById('notification'),
-            notificationText: document.getElementById('notification-text'),
-            totalTasks: document.getElementById('total-tasks'),
-            completedTasks: document.getElementById('completed-tasks'),
-            pendingTasks: document.getElementById('pending-tasks'),
-            teamMembers: document.getElementById('team-members')
-        };
+        const taskInput = document.getElementById('task-input');
+        const userNameInput = document.getElementById('user-name-input');
+        const saveUserBtn = document.getElementById('save-user-btn');
+        const addTaskBtn = document.getElementById('add-task-btn');
+        const usersGrid = document.getElementById('users-grid');
+        const todosList = document.getElementById('todos-list');
+        const shareLink = document.getElementById('share-link');
+        const copyLinkBtn = document.getElementById('copy-link-btn');
+        const refreshLinkBtn = document.getElementById('refresh-link-btn');
+        const whatsappShareBtn = document.getElementById('whatsapp-share-btn');
+        const emailShareBtn = document.getElementById('email-share-btn');
+        const clearCompletedBtn = document.getElementById('clear-completed-btn');
+        const exportDataBtn = document.getElementById('export-data-btn');
+        const importDataBtn = document.getElementById('import-data-btn');
+        const addNewUserBtn = document.getElementById('add-new-user-btn');
+        const userModal = document.getElementById('user-modal');
+        const newUserName = document.getElementById('new-user-name');
+        const colorPalette = document.getElementById('color-palette');
+        const saveNewUserBtn = document.getElementById('save-new-user-btn');
+        const closeModalBtns = document.querySelectorAll('.close-modal');
+        const qrCodeContainer = document.getElementById('qr-code-container');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notification-text');
+        const totalTasks = document.getElementById('total-tasks');
+        const completedTasks = document.getElementById('completed-tasks');
+        const pendingTasks = document.getElementById('pending-tasks');
+        const teamMembers = document.getElementById('team-members');
 
         // Initialize the application
         function init() {
@@ -897,7 +895,7 @@
             const savedUser = localStorage.getItem('todoCurrentUser');
             if (savedUser) {
                 state.currentUserName = savedUser;
-                dom.userNameInput.value = savedUser;
+                userNameInput.value = savedUser;
             }
             
             // Show welcome notification
@@ -963,7 +961,7 @@
         // Update share link in UI
         function updateShareLink() {
             const shareUrl = generateShareURL();
-            dom.shareLink.value = shareUrl;
+            shareLink.value = shareUrl;
             document.title = `قائمة المهام (${state.todos.length} مهام)`;
         }
 
@@ -972,27 +970,31 @@
             const shareUrl = generateShareURL();
             
             // Clear previous QR code
-            dom.qrCodeContainer.innerHTML = '';
+            qrCodeContainer.innerHTML = '';
             
             // Generate new QR code
-            QRCode.toCanvas(dom.qrCodeContainer, shareUrl, {
-                width: 200,
-                height: 200,
-                margin: 2,
-                color: {
-                    dark: '#2d3748',
-                    light: '#ffffff'
-                }
-            }, function(error) {
-                if (error) {
-                    dom.qrCodeContainer.innerHTML = '<p>تعذر إنشاء رمز QR</p>';
-                }
-            });
+            try {
+                QRCode.toCanvas(qrCodeContainer, shareUrl, {
+                    width: 180,
+                    height: 180,
+                    margin: 2,
+                    color: {
+                        dark: '#2d3748',
+                        light: '#ffffff'
+                    }
+                }, function(error) {
+                    if (error) {
+                        qrCodeContainer.innerHTML = '<p>تعذر إنشاء رمز QR</p>';
+                    }
+                });
+            } catch (error) {
+                qrCodeContainer.innerHTML = '<p>تعذر إنشاء رمز QR</p>';
+            }
         }
 
         // Save current user
         function saveCurrentUser() {
-            const userName = dom.userNameInput.value.trim();
+            const userName = userNameInput.value.trim();
             
             if (!userName) {
                 showNotification('يرجى إدخال اسمك أولاً', 'error');
@@ -1020,22 +1022,22 @@
             }
             
             showNotification(`تم حفظ الاسم: ${userName}`, 'success');
-            dom.taskInput.focus();
+            taskInput.focus();
         }
 
         // Add a new task
         function addTask() {
-            const taskText = dom.taskInput.value.trim();
+            const taskText = taskInput.value.trim();
             
             if (!taskText) {
                 showNotification('يرجى كتابة نص المهمة', 'error');
-                dom.taskInput.focus();
+                taskInput.focus();
                 return;
             }
             
             if (!state.currentUserName) {
                 showNotification('يرجى إدخال اسمك أولاً', 'error');
-                dom.userNameInput.focus();
+                userNameInput.focus();
                 return;
             }
             
@@ -1057,8 +1059,8 @@
             generateQRCode();
             
             // Clear input
-            dom.taskInput.value = '';
-            dom.taskInput.focus();
+            taskInput.value = '';
+            taskInput.focus();
             
             showNotification('تم إضافة المهمة بنجاح', 'success');
         }
@@ -1111,11 +1113,11 @@
 
         // Add new user via modal
         function addNewUser() {
-            dom.userModal.style.display = 'flex';
-            dom.newUserName.focus();
+            userModal.style.display = 'flex';
+            newUserName.focus();
             
             // Generate color palette
-            dom.colorPalette.innerHTML = '';
+            colorPalette.innerHTML = '';
             colorOptions.forEach(color => {
                 const colorOption = document.createElement('div');
                 colorOption.className = 'color-option';
@@ -1132,13 +1134,13 @@
                     state.selectedColor = this.dataset.color;
                 });
                 
-                dom.colorPalette.appendChild(colorOption);
+                colorPalette.appendChild(colorOption);
             });
         }
 
         // Save new user from modal
         function saveNewUser() {
-            const userName = dom.newUserName.value.trim();
+            const userName = newUserName.value.trim();
             
             if (!userName) {
                 showNotification('يرجى إدخال اسم العضو', 'error');
@@ -1164,8 +1166,8 @@
             updateStats();
             
             // Close modal and reset
-            dom.userModal.style.display = 'none';
-            dom.newUserName.value = '';
+            userModal.style.display = 'none';
+            newUserName.value = '';
             state.selectedColor = '#4299e1';
             
             showNotification(`تم إضافة العضو: ${userName}`, 'success');
@@ -1174,7 +1176,9 @@
         // Remove a user
         function removeUser(userId) {
             const user = state.users.find(u => u.id === userId);
-            const userTasks = state.todos.filter(t => t.userName === user?.name);
+            if (!user) return;
+            
+            const userTasks = state.todos.filter(t => t.userName === user.name);
             
             if (userTasks.length > 0) {
                 if (!confirm(`هذا العضو لديه ${userTasks.length} مهمة. حذفه سيحذف مهامه أيضاً. هل تريد المتابعة؟`)) {
@@ -1260,10 +1264,10 @@
 
         // Copy share link to clipboard
         function copyShareLink() {
-            dom.shareLink.select();
-            dom.shareLink.setSelectionRange(0, 99999);
+            shareLink.select();
+            shareLink.setSelectionRange(0, 99999);
             
-            navigator.clipboard.writeText(dom.shareLink.value)
+            navigator.clipboard.writeText(shareLink.value)
                 .then(() => {
                     showNotification('تم نسخ الرابط إلى الحافظة', 'success');
                 })
@@ -1299,10 +1303,10 @@
 
         // Render users list
         function renderUsers() {
-            dom.usersGrid.innerHTML = '';
+            usersGrid.innerHTML = '';
             
             if (state.users.length === 0) {
-                dom.usersGrid.innerHTML = `
+                usersGrid.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: #718096;">
                         <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
                         <p>لا يوجد أعضاء بعد. ابدأ بإضافة اسمك.</p>
@@ -1331,7 +1335,7 @@
                     }
                 `;
                 
-                dom.usersGrid.appendChild(userCard);
+                usersGrid.appendChild(userCard);
             });
             
             // Add event listeners for remove buttons
@@ -1346,7 +1350,7 @@
         // Render todos list
         function renderTodos() {
             if (state.todos.length === 0) {
-                dom.todosList.innerHTML = `
+                todosList.innerHTML = `
                     <div class="empty-todos">
                         <i class="fas fa-clipboard-list"></i>
                         <h3>لا توجد مهام بعد</h3>
@@ -1356,10 +1360,9 @@
                 return;
             }
             
-            dom.todosList.innerHTML = '';
+            todosList.innerHTML = '';
             
             state.todos.forEach(task => {
-                const taskDate = new Date(task.createdAt);
                 const formattedDate = formatDate(task.createdAt);
                 
                 const taskCard = document.createElement('div');
@@ -1388,10 +1391,10 @@
                     </div>
                 `;
                 
-                dom.todosList.appendChild(taskCard);
+                todosList.appendChild(taskCard);
             });
             
-            // Add event listeners
+            // Add event listeners for checkboxes
             document.querySelectorAll('.todo-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const taskId = parseInt(this.dataset.id);
@@ -1399,6 +1402,7 @@
                 });
             });
             
+            // Add event listeners for delete buttons
             document.querySelectorAll('.delete-task').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const taskId = parseInt(this.dataset.id);
@@ -1436,39 +1440,39 @@
             const pending = total - completed;
             const members = state.users.length;
             
-            dom.totalTasks.textContent = total;
-            dom.completedTasks.textContent = completed;
-            dom.pendingTasks.textContent = pending;
-            dom.teamMembers.textContent = members;
+            totalTasks.textContent = total;
+            completedTasks.textContent = completed;
+            pendingTasks.textContent = pending;
+            teamMembers.textContent = members;
         }
 
         // Show notification
         function showNotification(message, type = 'success') {
-            dom.notificationText.textContent = message;
-            dom.notification.className = 'notification';
+            notificationText.textContent = message;
+            notification.className = 'notification';
             
             if (type === 'error') {
-                dom.notification.classList.add('error');
+                notification.classList.add('error');
             }
             
-            dom.notification.classList.add('show');
+            notification.classList.add('show');
             
             setTimeout(() => {
-                dom.notification.classList.remove('show');
+                notification.classList.remove('show');
             }, 3000);
         }
 
         // Set up event listeners
         function setupEventListeners() {
             // Save current user
-            dom.saveUserBtn.addEventListener('click', saveCurrentUser);
-            dom.userNameInput.addEventListener('keypress', function(e) {
+            saveUserBtn.addEventListener('click', saveCurrentUser);
+            userNameInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') saveCurrentUser();
             });
             
             // Add task
-            dom.addTaskBtn.addEventListener('click', addTask);
-            dom.taskInput.addEventListener('keypress', function(e) {
+            addTaskBtn.addEventListener('click', addTask);
+            taskInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     addTask();
@@ -1476,31 +1480,31 @@
             });
             
             // Sharing
-            dom.copyLinkBtn.addEventListener('click', copyShareLink);
-            dom.refreshLinkBtn.addEventListener('click', refreshShareLink);
-            dom.whatsappShareBtn.addEventListener('click', shareViaWhatsApp);
-            dom.emailShareBtn.addEventListener('click', shareViaEmail);
+            copyLinkBtn.addEventListener('click', copyShareLink);
+            refreshLinkBtn.addEventListener('click', refreshShareLink);
+            whatsappShareBtn.addEventListener('click', shareViaWhatsApp);
+            emailShareBtn.addEventListener('click', shareViaEmail);
             
             // Task management
-            dom.clearCompletedBtn.addEventListener('click', clearCompletedTasks);
-            dom.exportDataBtn.addEventListener('click', exportData);
-            dom.importDataBtn.addEventListener('click', importData);
+            clearCompletedBtn.addEventListener('click', clearCompletedTasks);
+            exportDataBtn.addEventListener('click', exportData);
+            importDataBtn.addEventListener('click', importData);
             
             // User management
-            dom.addNewUserBtn.addEventListener('click', addNewUser);
-            dom.saveNewUserBtn.addEventListener('click', saveNewUser);
+            addNewUserBtn.addEventListener('click', addNewUser);
+            saveNewUserBtn.addEventListener('click', saveNewUser);
             
             // Close modals
-            dom.closeModalBtns.forEach(btn => {
+            closeModalBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    dom.userModal.style.display = 'none';
+                    userModal.style.display = 'none';
                 });
             });
             
             // Close modal when clicking outside
             window.addEventListener('click', function(e) {
-                if (e.target === dom.userModal) {
-                    dom.userModal.style.display = 'none';
+                if (e.target === userModal) {
+                    userModal.style.display = 'none';
                 }
             });
             
@@ -1508,14 +1512,6 @@
             window.addEventListener('beforeunload', function() {
                 saveToLocalStorage();
             });
-            
-            // Auto-refresh every 30 seconds to sync changes
-            setInterval(() => {
-                // In a real app, this would check for updates from other users
-                // For now, just update the display
-                renderTodos();
-                updateStats();
-            }, 30000);
         }
 
         // Initialize the app
