@@ -3,91 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قائمة المهام المشتركة</title>
+    <title>قائمة المهام - شارك مع فريقك</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3a0ca3;
-            --accent-color: #4cc9f0;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --success-color: #4caf50;
-            --warning-color: #ff9800;
-            --danger-color: #f44336;
-            --border-radius: 10px;
-            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f0f2f5;
-            color: var(--dark-color);
-            line-height: 1.6;
-            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
             min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
         }
 
         .container {
             max-width: 1000px;
             margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(to left, var(--primary-color), var(--secondary-color));
+        .header {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
             color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 5px solid #3498db;
         }
 
-        h1 {
-            font-size: 2.5rem;
+        .header h1 {
+            font-size: 2.8rem;
             margin-bottom: 10px;
+            font-weight: 700;
         }
 
-        .subtitle {
+        .header p {
             font-size: 1.2rem;
             opacity: 0.9;
         }
 
-        .app-container {
+        .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
-            margin-bottom: 30px;
+            padding: 30px;
         }
 
         @media (max-width: 768px) {
-            .app-container {
+            .main-content {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
         }
 
-        .panel {
-            background-color: white;
-            border-radius: var(--border-radius);
+        .section {
+            background: #f8f9fa;
             padding: 25px;
-            box-shadow: var(--box-shadow);
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
         }
 
-        .panel h2 {
-            color: var(--secondary-color);
+        .section-title {
+            color: #2c3e50;
+            font-size: 1.8rem;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-            font-size: 1.8rem;
+            border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .form-group {
+        .section-title i {
+            color: #3498db;
+        }
+
+        .input-group {
             margin-bottom: 20px;
         }
 
@@ -95,128 +93,224 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--dark-color);
+            color: #2c3e50;
+            font-size: 1.1rem;
         }
 
-        input, select, textarea {
+        input, textarea, select {
             width: 100%;
-            padding: 12px 15px;
+            padding: 14px;
             border: 2px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            transition: border-color 0.3s;
-            background-color: white;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            background: white;
         }
 
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary-color);
+        input:focus, textarea:focus, select:focus {
+            border-color: #3498db;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
 
-        button {
-            background-color: var(--primary-color);
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: #3498db;
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: var(--border-radius);
+            padding: 14px 24px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            margin-top: 10px;
         }
 
-        button:hover {
-            background-color: var(--secondary-color);
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
         }
 
-        button.secondary {
-            background-color: #6c757d;
+        .btn-success {
+            background: #27ae60;
         }
 
-        button.secondary:hover {
-            background-color: #545b62;
+        .btn-success:hover {
+            background: #219653;
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
         }
 
-        button.success {
-            background-color: var(--success-color);
+        .btn-danger {
+            background: #e74c3c;
         }
 
-        button.success:hover {
-            background-color: #3d8b40;
+        .btn-danger:hover {
+            background: #c0392b;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
         }
 
-        button.danger {
-            background-color: var(--danger-color);
+        .btn-secondary {
+            background: #7f8c8d;
         }
 
-        button.danger:hover {
-            background-color: #d32f2f;
+        .btn-secondary:hover {
+            background: #636e72;
         }
 
-        .buttons-row {
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .users-management {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #ddd;
+        }
+
+        .users-list {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 15px;
         }
 
-        .todo-list {
-            list-style: none;
-            max-height: 400px;
+        .user-tag {
+            background: #e3f2fd;
+            padding: 8px 15px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            border: 2px solid #bbdefb;
+        }
+
+        .user-tag .remove-user {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .user-tag .remove-user:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .user-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .todos-container {
+            max-height: 500px;
             overflow-y: auto;
-            padding: 5px;
+            padding-right: 10px;
+        }
+
+        .todos-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .todos-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .todos-container::-webkit-scrollbar-thumb {
+            background: #bdc3c7;
+            border-radius: 10px;
         }
 
         .todo-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            background-color: #f8f9fa;
-            border-radius: var(--border-radius);
-            border-left: 5px solid var(--primary-color);
-            transition: transform 0.2s, box-shadow 0.2s;
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-right: 5px solid #3498db;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            position: relative;
         }
 
         .todo-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .todo-item.completed {
-            opacity: 0.7;
-            border-left-color: var(--success-color);
+            opacity: 0.8;
+            border-right-color: #27ae60;
+            background: #f8fff9;
         }
 
         .todo-item.completed .todo-text {
             text-decoration: line-through;
-            color: #6c757d;
+            color: #7f8c8d;
         }
 
-        .todo-checkbox {
-            margin-left: 15px;
-            transform: scale(1.3);
-            cursor: pointer;
-        }
-
-        .todo-content {
-            flex: 1;
-            margin-right: 15px;
+        .todo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
         }
 
         .todo-text {
+            font-size: 1.2rem;
             font-weight: 500;
-            margin-bottom: 5px;
+            color: #2c3e50;
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .todo-checkbox {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
         }
 
         .todo-meta {
             display: flex;
-            font-size: 0.85rem;
-            color: #6c757d;
-            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .todo-person {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .todo-date {
+            color: #7f8c8d;
+            font-size: 0.9rem;
         }
 
         .todo-actions {
@@ -224,474 +318,933 @@
             gap: 8px;
         }
 
-        .todo-actions button {
-            padding: 6px 10px;
-            font-size: 0.8rem;
-        }
-
-        .person-badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            background-color: #e0e0e0;
-            margin-top: 5px;
-        }
-
-        .share-section {
-            background-color: #e3f2fd;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-top: 25px;
+        .empty-todos {
             text-align: center;
+            padding: 40px 20px;
+            color: #7f8c8d;
         }
 
-        .share-link {
+        .empty-todos i {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: #bdc3c7;
+        }
+
+        .empty-todos p {
+            font-size: 1.2rem;
+        }
+
+        .sharing-section {
+            background: #e8f4fc;
+            padding: 25px;
+            margin: 30px;
+            border-radius: 12px;
+            border: 2px dashed #3498db;
+        }
+
+        .sharing-title {
+            color: #2c3e50;
+            font-size: 1.6rem;
+            margin-bottom: 15px;
             display: flex;
-            margin-top: 15px;
+            align-items: center;
+            gap: 10px;
         }
 
-        .share-link input {
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-            border-right: none;
+        .sharing-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
         }
 
-        .share-link button {
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-            white-space: nowrap;
+        @media (max-width: 768px) {
+            .sharing-options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .share-link-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .share-link-container input {
+            flex: 1;
+            font-family: monospace;
+            background: white;
+        }
+
+        .share-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         .stats {
             display: flex;
             justify-content: space-around;
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
         }
 
-        .stat-item h3 {
-            color: var(--primary-color);
-            font-size: 2rem;
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
             margin-bottom: 5px;
         }
 
-        .language-switch {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
         }
 
-        .language-switch button {
-            background-color: white;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            padding: 8px 15px;
+        .current-users {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fffde7;
+            border-radius: 8px;
+            border: 1px solid #ffeb3b;
         }
 
-        .language-switch button:hover {
-            background-color: var(--primary-color);
-            color: white;
+        .current-users h4 {
+            color: #f57c00;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .empty-list {
+        .footer {
             text-align: center;
-            padding: 40px 20px;
-            color: #6c757d;
-            font-size: 1.1rem;
+            padding: 20px;
+            color: #7f8c8d;
+            border-top: 1px solid #eee;
+            background: #f8f9fa;
         }
 
-        .empty-list i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #bdbdbd;
+        /* Modal for adding new users */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #6c757d;
-            font-size: 0.9rem;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
         }
 
-        .user-color {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #7f8c8d;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #e74c3c;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            margin-left: 5px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .color-option.selected {
+            border-color: #2c3e50;
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><i class="fas fa-tasks"></i> قائمة المهام المشتركة</h1>
-            <p class="subtitle">أنشئ قائمة مهام يمكن مشاركتها مع عدة أشخاص باللغة العربية</p>
-        </header>
+        <div class="header">
+            <h1>📝 قائمة المهام المشتركة</h1>
+            <p>نظم مهامك وشاركها مع فريقك باللغة العربية</p>
+        </div>
 
-        <div class="app-container">
-            <div class="panel">
-                <h2><i class="fas fa-user-plus"></i> إضافة مهمة جديدة</h2>
-                <div class="form-group">
-                    <label for="taskText">نص المهمة</label>
-                    <textarea id="taskText" rows="3" placeholder="أدخل وصف المهمة هنا..."></textarea>
+        <div class="main-content">
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-plus-circle"></i> إضافة مهمة جديدة</h2>
+                
+                <div class="input-group">
+                    <label for="task-input">اكتب المهمة هنا:</label>
+                    <textarea id="task-input" placeholder="مثال: إعداد عرض التقديم للاجتماع القادم..."></textarea>
                 </div>
                 
-                <div class="form-group">
-                    <label for="personName">اسم الشخص</label>
-                    <select id="personName">
-                        <option value="أحمد">أحمد</option>
-                        <option value="سارة">سارة</option>
-                        <option value="محمد">محمد</option>
-                        <option value="فاطمة">فاطمة</option>
-                        <option value="خالد">خالد</option>
-                        <option value="نورة">نورة</option>
+                <div class="input-group">
+                    <label for="person-select">اختر الشخص المسؤول:</label>
+                    <select id="person-select">
+                        <option value="">-- اختر شخص --</option>
                     </select>
                 </div>
-
-                <div class="buttons-row">
-                    <button id="addTaskBtn" class="success">
-                        <i class="fas fa-plus"></i> إضافة مهمة
+                
+                <div class="input-group">
+                    <button id="add-task-btn" class="btn btn-success">
+                        <i class="fas fa-plus"></i> أضف المهمة
                     </button>
-                    <button id="clearCompletedBtn" class="secondary">
-                        <i class="fas fa-check-double"></i> حذف المهام المكتملة
+                    <button id="add-user-btn" class="btn btn-secondary">
+                        <i class="fas fa-user-plus"></i> أضف شخص جديد
                     </button>
                 </div>
-
-                <div class="share-section">
-                    <h3><i class="fas fa-share-alt"></i> مشاركة القائمة</h3>
-                    <p>انسخ الرابط أدناه لمشاركة هذه القائمة مع الآخرين:</p>
-                    <div class="share-link">
-                        <input type="text" id="shareUrl" readonly>
-                        <button id="copyUrlBtn">
-                            <i class="fas fa-copy"></i> نسخ
-                        </button>
+                
+                <div class="users-management">
+                    <h3 class="section-title"><i class="fas fa-users"></i> فريق العمل</h3>
+                    <div class="users-list" id="users-list">
+                        <!-- Users will be added here dynamically -->
                     </div>
                 </div>
             </div>
-
-            <div class="panel">
-                <h2><i class="fas fa-list-check"></i> قائمة المهام (<span id="tasksCount">0</span>)</h2>
-                <ul id="todoList" class="todo-list">
-                    <!-- Tasks will be added here dynamically -->
-                    <li class="empty-list">
+            
+            <div class="section">
+                <h2 class="section-title"><i class="fas fa-tasks"></i> المهام الحالية</h2>
+                
+                <div class="todos-container" id="todos-container">
+                    <!-- Todos will be added here dynamically -->
+                    <div class="empty-todos">
                         <i class="fas fa-clipboard-list"></i>
-                        <p>لا توجد مهام حالياً. أضف مهمة جديدة!</p>
-                    </li>
-                </ul>
-
-                <div class="stats">
-                    <div class="stat-item">
-                        <h3 id="totalTasks">0</h3>
-                        <p>إجمالي المهام</p>
+                        <p>لا توجد مهام حالياً. ابدأ بإضافة مهمة جديدة!</p>
                     </div>
-                    <div class="stat-item">
-                        <h3 id="completedTasks">0</h3>
-                        <p>مكتملة</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3 id="pendingTasks">0</h3>
-                        <p>قيد التنفيذ</p>
-                    </div>
+                </div>
+                
+                <div class="current-users" id="current-users-section">
+                    <h4><i class="fas fa-user-check"></i> الأعضاء المشاركين حالياً:</h4>
+                    <div id="current-users-list">لا يوجد أعضاء بعد</div>
+                </div>
+                
+                <div class="share-actions">
+                    <button id="clear-completed-btn" class="btn btn-secondary">
+                        <i class="fas fa-check-double"></i> حذف المهام المكتملة
+                    </button>
+                    <button id="clear-all-btn" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> حذف جميع المهام
+                    </button>
                 </div>
             </div>
         </div>
+        
+        <div class="sharing-section">
+            <h2 class="sharing-title"><i class="fas fa-share-alt"></i> شارك قائمة المهام</h2>
+            <p>انسخ الرابط أدناه وأرسله لأعضاء فريقك ليتمكنوا من الوصول إلى قائمة المهام نفسها:</p>
+            
+            <div class="share-link-container">
+                <input type="text" id="share-link" readonly>
+                <button id="copy-link-btn" class="btn btn-success">
+                    <i class="fas fa-copy"></i> نسخ
+                </button>
+            </div>
+            
+            <div class="share-actions">
+                <button id="generate-new-link" class="btn">
+                    <i class="fas fa-link"></i> إنشاء رابط جديد
+                </button>
+                <button id="import-link-btn" class="btn btn-secondary">
+                    <i class="fas fa-download"></i> استيراد من رابط
+                </button>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number" id="total-tasks">0</span>
+                <span class="stat-label">المهام الإجمالية</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="completed-tasks">0</span>
+                <span class="stat-label">مكتملة</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="pending-tasks">0</span>
+                <span class="stat-label">قيد التنفيذ</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="team-count">0</span>
+                <span class="stat-label">أعضاء الفريق</span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>تطبيق قائمة المهام المشتركة | يدعم اللغة العربية والمشاركة بين عدة أشخاص</p>
+            <p>يتم حفظ البيانات محلياً في متصفحك وتحديثها تلقائياً مع المشاركين</p>
+        </div>
+    </div>
+    
+    <!-- Modal for adding new users -->
+    <div id="user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة عضو جديد للفريق</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="input-group">
+                <label for="new-user-name">اسم العضو:</label>
+                <input type="text" id="new-user-name" placeholder="أدخل اسم العضو الجديد">
+            </div>
+            
+            <div class="input-group">
+                <label>اختر لوناً للعضو:</label>
+                <div class="color-options" id="color-options">
+                    <!-- Color options will be generated by JS -->
+                </div>
+            </div>
+            
+            <button id="save-user-btn" class="btn btn-success">
+                <i class="fas fa-save"></i> حفظ العضو
+            </button>
+        </div>
+    </div>
 
-        <footer>
-            <p>تم التطوير باستخدام HTML و JavaScript - يدعم اللغة العربية والمشاركة بين عدة أشخاص</p>
-            <p>يتم حفظ البيانات محلياً في المتصفح</p>
-        </footer>
+    <!-- Modal for importing shared list -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>استيراد قائمة مشتركة</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div class="input-group">
+                <label for="import-link-input">أدخل رابط القائمة المشتركة:</label>
+                <input type="text" id="import-link-input" placeholder="https://example.com?list=...">
+            </div>
+            
+            <p style="margin: 15px 0; color: #e74c3c; font-weight: bold;">
+                ⚠️ تحذير: استيراد قائمة جديدة سيحذف جميع المهام الحالية!
+            </p>
+            
+            <button id="confirm-import-btn" class="btn btn-success">
+                <i class="fas fa-download"></i> استيراد القائمة
+            </button>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM elements
-            const taskText = document.getElementById('taskText');
-            const personName = document.getElementById('personName');
-            const addTaskBtn = document.getElementById('addTaskBtn');
-            const clearCompletedBtn = document.getElementById('clearCompletedBtn');
-            const todoList = document.getElementById('todoList');
-            const shareUrl = document.getElementById('shareUrl');
-            const copyUrlBtn = document.getElementById('copyUrlBtn');
-            const tasksCount = document.getElementById('tasksCount');
-            const totalTasks = document.getElementById('totalTasks');
-            const completedTasks = document.getElementById('completedTasks');
-            const pendingTasks = document.getElementById('pendingTasks');
+        // Application state
+        const state = {
+            todos: [],
+            users: [],
+            currentListId: null,
+            selectedColor: '#3498db'
+        };
+
+        // Color options for users
+        const colorOptions = [
+            '#3498db', '#e74c3c', '#2ecc71', '#f39c12', 
+            '#9b59b6', '#1abc9c', '#d35400', '#34495e',
+            '#e67e22', '#27ae60', '#8e44ad', '#16a085'
+        ];
+
+        // DOM elements
+        const dom = {
+            taskInput: document.getElementById('task-input'),
+            personSelect: document.getElementById('person-select'),
+            addTaskBtn: document.getElementById('add-task-btn'),
+            addUserBtn: document.getElementById('add-user-btn'),
+            usersList: document.getElementById('users-list'),
+            todosContainer: document.getElementById('todos-container'),
+            currentUsersList: document.getElementById('current-users-list'),
+            currentUsersSection: document.getElementById('current-users-section'),
+            clearCompletedBtn: document.getElementById('clear-completed-btn'),
+            clearAllBtn: document.getElementById('clear-all-btn'),
+            shareLink: document.getElementById('share-link'),
+            copyLinkBtn: document.getElementById('copy-link-btn'),
+            generateNewLinkBtn: document.getElementById('generate-new-link'),
+            importLinkBtn: document.getElementById('import-link-btn'),
+            totalTasks: document.getElementById('total-tasks'),
+            completedTasks: document.getElementById('completed-tasks'),
+            pendingTasks: document.getElementById('pending-tasks'),
+            teamCount: document.getElementById('team-count'),
+            userModal: document.getElementById('user-modal'),
+            importModal: document.getElementById('import-modal'),
+            newUserName: document.getElementById('new-user-name'),
+            colorOptions: document.getElementById('color-options'),
+            saveUserBtn: document.getElementById('save-user-btn'),
+            closeModalBtns: document.querySelectorAll('.close-modal'),
+            importLinkInput: document.getElementById('import-link-input'),
+            confirmImportBtn: document.getElementById('confirm-import-btn')
+        };
+
+        // Initialize the application
+        function init() {
+            // Load data from localStorage
+            loadData();
             
-            // Generate unique ID for this list
-            let listId = localStorage.getItem('sharedTodoListId');
-            if (!listId) {
-                listId = 'list_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('sharedTodoListId', listId);
+            // Generate initial list ID if not exists
+            if (!state.currentListId) {
+                state.currentListId = generateListId();
+                saveData();
             }
             
-            // Set up sharing URL
-            const currentUrl = window.location.href.split('?')[0];
-            const shareableUrl = currentUrl + '?list=' + listId;
-            shareUrl.value = shareableUrl;
+            // Update UI
+            updateShareLink();
+            renderUsers();
+            renderTodos();
+            updateStats();
             
-            // Person colors for visual identification
-            const personColors = {
-                'أحمد': '#4361ee',
-                'سارة': '#f72585',
-                'محمد': '#4cc9f0',
-                'فاطمة': '#7209b7',
-                'خالد': '#2ec4b6',
-                'نورة': '#ff9e00'
-            };
+            // Set up event listeners
+            setupEventListeners();
             
-            // Load tasks from localStorage
-            let tasks = JSON.parse(localStorage.getItem(listId)) || [];
+            // Simulate real-time updates (in a real app, this would be WebSockets)
+            simulateRealtimeUpdates();
+        }
+
+        // Generate a unique list ID
+        function generateListId() {
+            return 'list_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            // Try to get list ID from URL first
+            const urlParams = new URLSearchParams(window.location.search);
+            const listIdFromUrl = urlParams.get('list');
             
-            // Initialize the app
-            function init() {
-                renderTasks();
-                updateStats();
-                
-                // Check if we're loading a shared list
-                const urlParams = new URLSearchParams(window.location.search);
-                const sharedListId = urlParams.get('list');
-                
-                if (sharedListId && sharedListId !== listId) {
-                    // Load shared list
-                    const sharedTasks = JSON.parse(localStorage.getItem(sharedListId));
-                    if (sharedTasks && sharedTasks.length > 0) {
-                        if (confirm('هل تريد تحميل قائمة المهام المشتركة؟ سيتم استبدال قائمتك الحالية.')) {
-                            tasks = sharedTasks;
-                            listId = sharedListId;
-                            localStorage.setItem('sharedTodoListId', listId);
-                            shareUrl.value = currentUrl + '?list=' + listId;
-                            saveTasks();
-                            renderTasks();
-                            updateStats();
-                        }
-                    }
-                }
+            if (listIdFromUrl) {
+                state.currentListId = listIdFromUrl;
+            } else {
+                // Get from localStorage
+                state.currentListId = localStorage.getItem('currentListId');
             }
             
-            // Save tasks to localStorage
-            function saveTasks() {
-                localStorage.setItem(listId, JSON.stringify(tasks));
+            // Load todos and users for this list
+            const todosKey = `todos_${state.currentListId}`;
+            const usersKey = `users_${state.currentListId}`;
+            
+            state.todos = JSON.parse(localStorage.getItem(todosKey)) || [];
+            state.users = JSON.parse(localStorage.getItem(usersKey)) || [];
+            
+            // If no users, add default ones
+            if (state.users.length === 0) {
+                state.users = [
+                    { id: 1, name: 'أحمد', color: '#3498db' },
+                    { id: 2, name: 'سارة', color: '#e74c3c' },
+                    { id: 3, name: 'محمد', color: '#2ecc71' }
+                ];
+                saveData();
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('currentListId', state.currentListId);
+            
+            const todosKey = `todos_${state.currentListId}`;
+            const usersKey = `users_${state.currentListId}`;
+            
+            localStorage.setItem(todosKey, JSON.stringify(state.todos));
+            localStorage.setItem(usersKey, JSON.stringify(state.users));
+            
+            // Update URL without reloading
+            const newUrl = window.location.origin + window.location.pathname + '?list=' + state.currentListId;
+            window.history.replaceState({}, document.title, newUrl);
+        }
+
+        // Update the share link
+        function updateShareLink() {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const shareUrl = `${baseUrl}?list=${state.currentListId}`;
+            dom.shareLink.value = shareUrl;
+        }
+
+        // Render users list
+        function renderUsers() {
+            // Clear existing options
+            dom.personSelect.innerHTML = '<option value="">-- اختر شخص --</option>';
+            dom.usersList.innerHTML = '';
+            
+            // Add users to select
+            state.users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.id;
+                option.textContent = user.name;
+                dom.personSelect.appendChild(option);
+            });
+            
+            // Render users as tags
+            state.users.forEach(user => {
+                const userTag = document.createElement('div');
+                userTag.className = 'user-tag';
+                userTag.innerHTML = `
+                    <span class="user-color" style="background-color: ${user.color}"></span>
+                    ${user.name}
+                    ${user.id > 3 ? `<button class="remove-user" data-id="${user.id}">&times;</button>` : ''}
+                `;
+                dom.usersList.appendChild(userTag);
+            });
+            
+            // Add event listeners for remove buttons
+            document.querySelectorAll('.remove-user').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userId = parseInt(this.getAttribute('data-id'));
+                    removeUser(userId);
+                });
+            });
+        }
+
+        // Render todos list
+        function renderTodos() {
+            if (state.todos.length === 0) {
+                dom.todosContainer.innerHTML = `
+                    <div class="empty-todos">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>لا توجد مهام حالياً. ابدأ بإضافة مهمة جديدة!</p>
+                    </div>
+                `;
+                dom.currentUsersSection.style.display = 'none';
+                return;
             }
             
-            // Render tasks to the DOM
-            function renderTasks() {
-                if (tasks.length === 0) {
-                    todoList.innerHTML = `
-                        <li class="empty-list">
-                            <i class="fas fa-clipboard-list"></i>
-                            <p>لا توجد مهام حالياً. أضف مهمة جديدة!</p>
-                        </li>
-                    `;
-                    tasksCount.textContent = '0';
-                    return;
-                }
+            dom.todosContainer.innerHTML = '';
+            dom.currentUsersSection.style.display = 'block';
+            
+            // Get unique users from todos
+            const activeUsers = new Set();
+            
+            state.todos.forEach(todo => {
+                const user = state.users.find(u => u.id === todo.userId);
+                if (user) activeUsers.add(user.name);
                 
-                todoList.innerHTML = '';
-                tasksCount.textContent = tasks.length;
-                
-                tasks.forEach((task, index) => {
-                    const taskItem = document.createElement('li');
-                    taskItem.className = `todo-item ${task.completed ? 'completed' : ''}`;
-                    
-                    taskItem.innerHTML = `
-                        <input type="checkbox" class="todo-checkbox" ${task.completed ? 'checked' : ''} data-index="${index}">
-                        <div class="todo-content">
-                            <div class="todo-text">${task.text}</div>
-                            <div class="todo-meta">
-                                <span>بواسطة: ${task.person}</span>
-                                <span>${formatDate(task.createdAt)}</span>
-                            </div>
-                            <div class="person-badge" style="background-color: ${personColors[task.person] || '#e0e0e0'}; color: ${getContrastColor(personColors[task.person] || '#e0e0e0')}">
-                                ${task.person}
-                                <span class="user-color" style="background-color: ${personColors[task.person] || '#e0e0e0'}"></span>
-                            </div>
+                const todoElement = document.createElement('div');
+                todoElement.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+                todoElement.innerHTML = `
+                    <div class="todo-header">
+                        <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-id="${todo.id}">
+                        <div class="todo-text">${todo.text}</div>
+                    </div>
+                    <div class="todo-meta">
+                        <div class="todo-person">
+                            <span class="user-color" style="background-color: ${user?.color || '#ccc'}"></span>
+                            ${user?.name || 'غير محدد'}
                         </div>
+                        <div class="todo-date">${formatDate(todo.createdAt)}</div>
                         <div class="todo-actions">
-                            <button class="${task.completed ? 'secondary' : 'success'}" data-index="${index}" data-action="toggle">
-                                <i class="fas ${task.completed ? 'fa-undo' : 'fa-check'}"></i>
-                            </button>
-                            <button class="danger" data-index="${index}" data-action="delete">
+                            <button class="btn btn-small btn-danger delete-todo" data-id="${todo.id}">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
-                    `;
+                    </div>
+                `;
+                dom.todosContainer.appendChild(todoElement);
+            });
+            
+            // Update current users list
+            dom.currentUsersList.innerHTML = Array.from(activeUsers).map(name => 
+                `<span style="margin-left: 10px; font-weight: bold;">${name}</span>`
+            ).join('، ') || 'لا يوجد أعضاء بعد';
+            
+            // Add event listeners
+            document.querySelectorAll('.todo-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const todoId = parseInt(this.getAttribute('data-id'));
+                    toggleTodoCompletion(todoId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-todo').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const todoId = parseInt(this.getAttribute('data-id'));
+                    removeTodo(todoId);
+                });
+            });
+        }
+
+        // Format date for display
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'الآن';
+            if (diffMins < 60) return `قبل ${diffMins} دقيقة`;
+            if (diffHours < 24) return `قبل ${diffHours} ساعة`;
+            if (diffDays === 1) return 'أمس';
+            if (diffDays < 7) return `قبل ${diffDays} يوم`;
+            
+            return date.toLocaleDateString('ar-EG');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = state.todos.length;
+            const completed = state.todos.filter(todo => todo.completed).length;
+            const pending = total - completed;
+            
+            dom.totalTasks.textContent = total;
+            dom.completedTasks.textContent = completed;
+            dom.pendingTasks.textContent = pending;
+            dom.teamCount.textContent = state.users.length;
+        }
+
+        // Add a new todo
+        function addTodo() {
+            const text = dom.taskInput.value.trim();
+            const userId = parseInt(dom.personSelect.value);
+            
+            if (!text) {
+                alert('يرجى إدخال نص المهمة');
+                dom.taskInput.focus();
+                return;
+            }
+            
+            if (!userId) {
+                alert('يرجى اختيار شخص مسؤول عن المهمة');
+                dom.personSelect.focus();
+                return;
+            }
+            
+            const newTodo = {
+                id: Date.now(),
+                text,
+                userId,
+                completed: false,
+                createdAt: Date.now()
+            };
+            
+            state.todos.unshift(newTodo);
+            saveData();
+            renderTodos();
+            updateStats();
+            
+            // Clear input
+            dom.taskInput.value = '';
+            dom.taskInput.focus();
+        }
+
+        // Toggle todo completion
+        function toggleTodoCompletion(todoId) {
+            const todo = state.todos.find(t => t.id === todoId);
+            if (todo) {
+                todo.completed = !todo.completed;
+                saveData();
+                renderTodos();
+                updateStats();
+            }
+        }
+
+        // Remove a todo
+        function removeTodo(todoId) {
+            if (!confirm('هل أنت متأكد من حذف هذه المهمة؟')) return;
+            
+            state.todos = state.todos.filter(t => t.id !== todoId);
+            saveData();
+            renderTodos();
+            updateStats();
+        }
+
+        // Add a new user
+        function addUser() {
+            dom.userModal.style.display = 'flex';
+            dom.newUserName.focus();
+            
+            // Generate color options
+            dom.colorOptions.innerHTML = '';
+            colorOptions.forEach(color => {
+                const colorOption = document.createElement('div');
+                colorOption.className = `color-option ${color === state.selectedColor ? 'selected' : ''}`;
+                colorOption.style.backgroundColor = color;
+                colorOption.setAttribute('data-color', color);
+                dom.colorOptions.appendChild(colorOption);
+            });
+        }
+
+        // Save new user
+        function saveUser() {
+            const name = dom.newUserName.value.trim();
+            
+            if (!name) {
+                alert('يرجى إدخال اسم العضو');
+                dom.newUserName.focus();
+                return;
+            }
+            
+            // Check if user already exists
+            if (state.users.some(user => user.name === name)) {
+                alert('هذا العضو موجود بالفعل!');
+                return;
+            }
+            
+            const newUser = {
+                id: Date.now(),
+                name,
+                color: state.selectedColor
+            };
+            
+            state.users.push(newUser);
+            saveData();
+            renderUsers();
+            updateStats();
+            
+            // Close modal and reset
+            dom.userModal.style.display = 'none';
+            dom.newUserName.value = '';
+            state.selectedColor = '#3498db';
+        }
+
+        // Remove a user
+        function removeUser(userId) {
+            // Check if user has any todos
+            const userTodos = state.todos.filter(todo => todo.userId === userId);
+            
+            if (userTodos.length > 0) {
+                if (!confirm(`هذا العضو لديه ${userTodos.length} مهمة. حذفه سيحذف مهامه أيضاً. هل تريد المتابعة؟`)) {
+                    return;
+                }
+                
+                // Remove user's todos
+                state.todos = state.todos.filter(todo => todo.userId !== userId);
+            }
+            
+            // Remove user
+            state.users = state.users.filter(user => user.id !== userId);
+            saveData();
+            renderUsers();
+            renderTodos();
+            updateStats();
+        }
+
+        // Clear completed todos
+        function clearCompletedTodos() {
+            const completedCount = state.todos.filter(todo => todo.completed).length;
+            
+            if (completedCount === 0) {
+                alert('لا توجد مهام مكتملة لحذفها');
+                return;
+            }
+            
+            if (confirm(`هل تريد حذف ${completedCount} مهمة مكتملة؟`)) {
+                state.todos = state.todos.filter(todo => !todo.completed);
+                saveData();
+                renderTodos();
+                updateStats();
+            }
+        }
+
+        // Clear all todos
+        function clearAllTodos() {
+            if (state.todos.length === 0) {
+                alert('لا توجد مهام لحذفها');
+                return;
+            }
+            
+            if (confirm(`هل تريد حذف جميع المهام (${state.todos.length} مهمة)؟`)) {
+                state.todos = [];
+                saveData();
+                renderTodos();
+                updateStats();
+            }
+        }
+
+        // Copy share link to clipboard
+        function copyShareLink() {
+            dom.shareLink.select();
+            dom.shareLink.setSelectionRange(0, 99999);
+            
+            navigator.clipboard.writeText(dom.shareLink.value)
+                .then(() => {
+                    const originalText = dom.copyLinkBtn.innerHTML;
+                    dom.copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
+                    dom.copyLinkBtn.classList.add('btn-success');
                     
-                    todoList.appendChild(taskItem);
+                    setTimeout(() => {
+                        dom.copyLinkBtn.innerHTML = originalText;
+                        dom.copyLinkBtn.classList.remove('btn-success');
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                    alert('فشل نسخ الرابط. يرجى المحاولة مرة أخرى.');
                 });
-                
-                // Add event listeners to checkboxes and buttons
-                document.querySelectorAll('.todo-checkbox').forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        toggleTask(this.dataset.index);
-                    });
-                });
-                
-                document.querySelectorAll('.todo-actions button').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const index = this.dataset.index;
-                        const action = this.dataset.action;
-                        
-                        if (action === 'toggle') {
-                            toggleTask(index);
-                        } else if (action === 'delete') {
-                            deleteTask(index);
-                        }
-                    });
-                });
-            }
-            
-            // Format date for display
-            function formatDate(timestamp) {
-                const date = new Date(timestamp);
-                const now = new Date();
-                const diffTime = Math.abs(now - date);
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                
-                if (diffDays === 0) {
-                    return 'اليوم';
-                } else if (diffDays === 1) {
-                    return 'أمس';
-                } else if (diffDays < 7) {
-                    return `قبل ${diffDays} أيام`;
-                } else {
-                    return date.toLocaleDateString('ar-EG');
-                }
-            }
-            
-            // Get contrast color for text based on background
-            function getContrastColor(hexColor) {
-                // Convert hex to RGB
-                const r = parseInt(hexColor.substr(1, 2), 16);
-                const g = parseInt(hexColor.substr(3, 2), 16);
-                const b = parseInt(hexColor.substr(5, 2), 16);
-                
-                // Calculate luminance
-                const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-                
-                // Return black or white based on luminance
-                return luminance > 0.5 ? '#000000' : '#FFFFFF';
-            }
-            
-            // Update statistics
-            function updateStats() {
-                const total = tasks.length;
-                const completed = tasks.filter(task => task.completed).length;
-                const pending = total - completed;
-                
-                totalTasks.textContent = total;
-                completedTasks.textContent = completed;
-                pendingTasks.textContent = pending;
-            }
-            
-            // Add a new task
-            function addTask() {
-                const text = taskText.value.trim();
-                const person = personName.value;
-                
-                if (text === '') {
-                    alert('يرجى إدخال نص المهمة!');
-                    taskText.focus();
-                    return;
-                }
-                
-                const newTask = {
-                    text,
-                    person,
-                    completed: false,
-                    createdAt: new Date().getTime(),
-                    id: Date.now() + Math.random().toString(36).substr(2, 9)
-                };
-                
-                tasks.unshift(newTask);
-                saveTasks();
-                renderTasks();
+        }
+
+        // Generate new list ID
+        function generateNewList() {
+            if (confirm('إنشاء قائمة جديدة سيحذف جميع المهام الحالية. هل تريد المتابعة؟')) {
+                state.currentListId = generateListId();
+                state.todos = [];
+                saveData();
+                updateShareLink();
+                renderTodos();
                 updateStats();
-                
-                // Clear input
-                taskText.value = '';
-                taskText.focus();
+                alert('تم إنشاء قائمة جديدة بنجاح! شارك الرابط الجديد مع فريقك.');
+            }
+        }
+
+        // Import from shared link
+        function importFromLink() {
+            dom.importModal.style.display = 'flex';
+            dom.importLinkInput.focus();
+        }
+
+        // Confirm import
+        function confirmImport() {
+            const importUrl = dom.importLinkInput.value.trim();
+            
+            if (!importUrl) {
+                alert('يرجى إدخال رابط القائمة المشتركة');
+                return;
             }
             
-            // Toggle task completion status
-            function toggleTask(index) {
-                tasks[index].completed = !tasks[index].completed;
-                saveTasks();
-                renderTasks();
+            // Extract list ID from URL
+            const urlParams = new URLSearchParams(importUrl.split('?')[1]);
+            const listId = urlParams.get('list');
+            
+            if (!listId) {
+                alert('الرابط غير صالح. يرجى التأكد من الرابط');
+                return;
+            }
+            
+            // Load data from the shared list
+            const todosKey = `todos_${listId}`;
+            const usersKey = `users_${listId}`;
+            
+            const sharedTodos = JSON.parse(localStorage.getItem(todosKey));
+            const sharedUsers = JSON.parse(localStorage.getItem(usersKey));
+            
+            if (!sharedTodos || !sharedUsers) {
+                alert('لم يتم العثور على قائمة بهذا الرابط. قد تكون القائمة محذوفة أو الرابط غير صحيح.');
+                return;
+            }
+            
+            // Confirm import
+            if (confirm(`سيتم استيراد ${sharedTodos.length} مهمة و ${sharedUsers.length} عضو. هل تريد المتابعة؟`)) {
+                state.currentListId = listId;
+                state.todos = sharedTodos;
+                state.users = sharedUsers;
+                saveData();
+                updateShareLink();
+                renderUsers();
+                renderTodos();
                 updateStats();
+                dom.importModal.style.display = 'none';
+                dom.importLinkInput.value = '';
+                alert('تم استيراد القائمة بنجاح!');
             }
-            
-            // Delete a task
-            function deleteTask(index) {
-                if (confirm('هل أنت متأكد من حذف هذه المهمة؟')) {
-                    tasks.splice(index, 1);
-                    saveTasks();
-                    renderTasks();
-                    updateStats();
-                }
-            }
-            
-            // Clear all completed tasks
-            function clearCompletedTasks() {
-                const completedCount = tasks.filter(task => task.completed).length;
-                
-                if (completedCount === 0) {
-                    alert('لا توجد مهام مكتملة لحذفها!');
-                    return;
-                }
-                
-                if (confirm(`هل أنت متأكد من حذف جميع المهام المكتملة (${completedCount} مهمة)?`)) {
-                    tasks = tasks.filter(task => !task.completed);
-                    saveTasks();
-                    renderTasks();
-                    updateStats();
-                }
-            }
-            
-            // Copy share URL to clipboard
-            function copyShareUrl() {
-                shareUrl.select();
-                shareUrl.setSelectionRange(0, 99999); // For mobile devices
-                
-                navigator.clipboard.writeText(shareUrl.value)
-                    .then(() => {
-                        const originalText = copyUrlBtn.innerHTML;
-                        copyUrlBtn.innerHTML = '<i class="fas fa-check"></i> تم النسخ!';
-                        copyUrlBtn.classList.add('success');
-                        
-                        setTimeout(() => {
-                            copyUrlBtn.innerHTML = originalText;
-                            copyUrlBtn.classList.remove('success');
-                        }, 2000);
-                    })
-                    .catch(err => {
-                        console.error('Failed to copy: ', err);
-                        alert('فشل نسخ الرابط. يرجى المحاولة مرة أخرى.');
-                    });
-            }
-            
-            // Event listeners
-            addTaskBtn.addEventListener('click', addTask);
-            
-            taskText.addEventListener('keypress', function(e) {
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Add task
+            dom.addTaskBtn.addEventListener('click', addTodo);
+            dom.taskInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    addTask();
+                    addTodo();
                 }
             });
             
-            clearCompletedBtn.addEventListener('click', clearCompletedTasks);
-            copyUrlBtn.addEventListener('click', copyShareUrl);
+            // Add user
+            dom.addUserBtn.addEventListener('click', addUser);
             
-            // Initialize the app
-            init();
-        });
+            // Save user
+            dom.saveUserBtn.addEventListener('click', saveUser);
+            
+            // Color selection
+            dom.colorOptions.addEventListener('click', function(e) {
+                if (e.target.classList.contains('color-option')) {
+                    // Remove selected class from all
+                    document.querySelectorAll('.color-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add to clicked
+                    e.target.classList.add('selected');
+                    state.selectedColor = e.target.getAttribute('data-color');
+                }
+            });
+            
+            // Clear todos
+            dom.clearCompletedBtn.addEventListener('click', clearCompletedTodos);
+            dom.clearAllBtn.addEventListener('click', clearAllTodos);
+            
+            // Share link
+            dom.copyLinkBtn.addEventListener('click', copyShareLink);
+            dom.generateNewLinkBtn.addEventListener('click', generateNewList);
+            dom.importLinkBtn.addEventListener('click', importFromLink);
+            
+            // Close modals
+            dom.closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    dom.userModal.style.display = 'none';
+                    dom.importModal.style.display = 'none';
+                });
+            });
+            
+            // Confirm import
+            dom.confirmImportBtn.addEventListener('click', confirmImport);
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === dom.userModal) {
+                    dom.userModal.style.display = 'none';
+                }
+                if (e.target === dom.importModal) {
+                    dom.importModal.style.display = 'none';
+                }
+            });
+        }
+
+        // Simulate real-time updates (for demo purposes)
+        function simulateRealtimeUpdates() {
+            // Check for updates every 5 seconds
+            setInterval(() => {
+                // In a real app, this would check a server for updates
+                // For this demo, we'll just reload from localStorage
+                loadData();
+                renderTodos();
+                updateStats();
+            }, 5000);
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
