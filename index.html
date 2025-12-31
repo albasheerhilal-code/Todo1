@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مهامي - قائمة مهام فريقك</title>
+    <title>قائمة مهام</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -767,8 +767,8 @@
         <!-- Header -->
         <div class="header">
             <div class="header-content">
-                <h1><i class="fas fa-tasks"></i> مهامي - قائمة فريقك</h1>
-                <p>اكتب اسمك وأضف مهامك. شارك القائمة مع فريقك!</p>
+                <h1><i class="fas fa-tasks"></i> قائمة المهام</h1>
+                <p>اكتب اسمك وأضف مهامك. شارك القائمة مع الآخرين!</p>
             </div>
         </div>
 
@@ -802,7 +802,7 @@
                 <!-- Task Input -->
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-edit"></i> اكتب المهمة:</label>
-                    <textarea id="task-input" placeholder="ما الذي تريد إنجازه؟ مثلاً: إعداد عرض تقديمي للعميل..."></textarea>
+                    <textarea id="task-input" placeholder="ما الذي تريد إنجازه؟..."></textarea>
                 </div>
                 
                 <button id="add-task-btn" class="btn btn-success" style="width: 100%; margin-top: 10px;">
@@ -812,9 +812,9 @@
                 <!-- User Management -->
                 <div class="users-management">
                     <div class="users-header">
-                        <h3 class="card-title" style="font-size: 1.5rem; margin: 0;"><i class="fas fa-users"></i> أعضاء الفريق</h3>
+                        <h3 class="card-title" style="font-size: 1.5rem; margin: 0;"><i class="fas fa-users"></i> الأشخاص </h3>
                         <button id="open-user-modal" class="btn btn-small">
-                            <i class="fas fa-user-plus"></i> إضافة عضو
+                            <i class="fas fa-user-plus"></i> إضافة شخص
                         </button>
                     </div>
                     
@@ -853,7 +853,7 @@
                     </div>
                     <div class="stat-card">
                         <span class="stat-number" id="team-size">0</span>
-                        <span class="stat-label">الأعضاء</span>
+                        <span class="stat-label">الأشخاص</span>
                     </div>
                 </div>
             </div>
@@ -919,7 +919,7 @@
         
         <!-- Footer -->
         <div class="footer">
-            <p><strong>مهامي</strong> - تطبيق عربي مجاني لمشاركة المهام مع فريقك</p>
+            <p><strong>مهامي</strong> - موقع عربي مجاني لمشاركة المهام مع الآخرين</p>
             <p>يعمل على جميع الأجهزة • لا يحتاج تسجيل دخول • بياناتك آمنة</p>
             <p>© 2024 - صمم بحب للمستخدم العربي</p>
         </div>
@@ -929,12 +929,12 @@
     <div id="user-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-user-cog"></i> إضافة عضو جديد</h3>
+                <h3><i class="fas fa-user-cog"></i> إضافة شخص جديد</h3>
                 <button class="close-modal">&times;</button>
             </div>
             
             <div class="form-group">
-                <label class="form-label">اسم العضو الجديد:</label>
+                <label class="form-label">اسم الشخص الجديد:</label>
                 <input type="text" id="modal-user-name" placeholder="أدخل الاسم الكامل">
             </div>
             
@@ -947,7 +947,7 @@
             
             <div style="display: flex; gap: 10px;">
                 <button id="add-user-modal" class="btn btn-success" style="flex: 1;">
-                    <i class="fas fa-user-plus"></i> إضافة العضو
+                    <i class="fas fa-user-plus"></i> إضافة الشخص
                 </button>
                 <button id="close-modal-btn" class="btn btn-secondary">
                     إغلاق
@@ -1206,7 +1206,7 @@
                 elements.usersList.innerHTML = `
                     <div class="empty-state" style="padding: 20px;">
                         <i class="fas fa-users"></i>
-                        <p>لا يوجد أعضاء بعد</p>
+                        <p>لا يوجد أشخاص بعد</p>
                     </div>
                 `;
                 return;
@@ -1257,7 +1257,7 @@
                 elements.modalUsersList.innerHTML = `
                     <div style="text-align: center; padding: 20px; color: #95a5a6;">
                         <i class="fas fa-users"></i>
-                        <p>لا يوجد أعضاء بعد</p>
+                        <p>لا يوجد أشخاص بعد</p>
                     </div>
                 `;
                 return;
@@ -1302,13 +1302,13 @@
 
         function addUser(name, color) {
             if (!name.trim()) {
-                showNotification('يرجى إدخال اسم العضو', 'error');
+                showNotification('يرجى إدخال اسم الشخص', 'error');
                 return false;
             }
             
             // Check if user already exists
             if (state.users.some(user => user.name.toLowerCase() === name.toLowerCase())) {
-                showNotification('هذا العضو موجود بالفعل', 'error');
+                showNotification('هذا الشخص موجود بالفعل', 'error');
                 return false;
             }
             
@@ -1324,7 +1324,7 @@
             renderModalUsers();
             updateStats();
             
-            showNotification(`تم إضافة العضو: ${name}`, 'success');
+            showNotification(`تم إضافة الشخص: ${name}`, 'success');
             return true;
         }
 
@@ -1346,7 +1346,7 @@
             const userTasks = state.todos.filter(t => t.userId === userId);
             
             if (userTasks.length > 0) {
-                if (!confirm(`هذا العضو لديه ${userTasks.length} مهمة. حذفه سيحذف مهامه أيضاً. هل تريد المتابعة؟`)) {
+                if (!confirm(`هذا الشخص لديه ${userTasks.length} مهمة. حذفه سيحذف مهامه أيضاً. هل تريد المتابعة؟`)) {
                     return;
                 }
                 
@@ -1364,7 +1364,7 @@
             updateShareLink();
             generateQRCode();
             
-            showNotification('تم حذف العضو', 'success');
+            showNotification('تم حذف الشخص', 'success');
         }
 
         // Task Management Functions
@@ -1539,7 +1539,7 @@
                 return;
             }
             
-            if (confirm('هل تريد مسح جميع المهام والأعضاء؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+            if (confirm('هل تريد مسح جميع المهام والأشخاص؟ هذا الإجراء لا يمكن التراجع عنه.')) {
                 // Reset to empty state
                 state.todos = [];
                 state.users = [];
@@ -1771,7 +1771,7 @@
             
             elements.whatsappShare.addEventListener('click', function() {
                 const shareUrl = generateShareURL();
-                const message = `قائمة المهام المشتركة:\n${shareUrl}`;
+                const message = `قائمة المهام:\n${shareUrl}`;
                 const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
             });
