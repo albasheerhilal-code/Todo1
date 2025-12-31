@@ -170,7 +170,7 @@
             flex: 1;
         }
 
-        input, textarea, select {
+        input, textarea {
             width: 100%;
             padding: 16px;
             border: 2px solid #dfe6e9;
@@ -180,7 +180,7 @@
             background: white;
         }
 
-        input:focus, textarea:focus, select:focus {
+        input:focus, textarea:focus {
             border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
@@ -190,13 +190,6 @@
             min-height: 120px;
             resize: vertical;
             font-family: inherit;
-        }
-
-        select {
-            cursor: pointer;
-            background: white url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%232c3e50'%3E%3Cpath d='M4.5 7.5L8 11l3.5-3.5z'/%3E%3C/svg%3E") no-repeat left 15px center;
-            padding-right: 15px;
-            padding-left: 40px;
         }
 
         /* Buttons */
@@ -728,6 +721,45 @@
         .notification.warning {
             background: var(--warning);
         }
+
+        /* User input section */
+        .current-user-section {
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #c5e3fc;
+            margin-bottom: 25px;
+        }
+
+        .current-user-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e8ecee;
+        }
+
+        .current-user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .current-user-name {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--dark);
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -736,7 +768,7 @@
         <div class="header">
             <div class="header-content">
                 <h1><i class="fas fa-tasks"></i> مهامي - قائمة فريقك</h1>
-                <p>نظم مهام فريقك وشاركها مع الجميع بلغة عربية سهلة</p>
+                <p>اكتب اسمك وأضف مهامك. شارك القائمة مع فريقك!</p>
             </div>
         </div>
 
@@ -746,23 +778,31 @@
             <div class="card">
                 <h2 class="card-title"><i class="fas fa-plus-circle"></i> مهمة جديدة</h2>
                 
+                <!-- Current User Section -->
+                <div class="current-user-section">
+                    <div class="form-group">
+                        <label class="form-label"><i class="fas fa-user"></i> اسمك الحالي:</label>
+                        <div class="input-with-button">
+                            <input type="text" id="current-user-input" placeholder="اكتب اسمك هنا...">
+                            <button id="set-user-btn" class="btn btn-success">
+                                <i class="fas fa-check"></i> تعيين
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="current-user-display" class="current-user-display" style="display: none;">
+                        <div id="current-user-avatar" class="current-user-avatar"></div>
+                        <div id="current-user-name" class="current-user-name"></div>
+                        <button id="change-user-btn" class="btn btn-small">
+                            <i class="fas fa-edit"></i> تغيير
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Task Input -->
                 <div class="form-group">
                     <label class="form-label"><i class="fas fa-edit"></i> اكتب المهمة:</label>
                     <textarea id="task-input" placeholder="ما الذي تريد إنجازه؟ مثلاً: إعداد عرض تقديمي للعميل..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label"><i class="fas fa-user"></i> اختر الشخص:</label>
-                    <select id="user-select">
-                        <option value="">-- اختر شخصًا --</option>
-                    </select>
-                </div>
-                
-                <div class="input-with-button">
-                    <input type="text" id="new-user-name" placeholder="اسم جديد...">
-                    <button id="quick-add-user" class="btn btn-success btn-small">
-                        <i class="fas fa-user-plus"></i> إضافة
-                    </button>
                 </div>
                 
                 <button id="add-task-btn" class="btn btn-success" style="width: 100%; margin-top: 10px;">
@@ -772,9 +812,9 @@
                 <!-- User Management -->
                 <div class="users-management">
                     <div class="users-header">
-                        <h3 class="card-title" style="font-size: 1.5rem; margin: 0;"><i class="fas fa-users"></i> إدارة الأعضاء</h3>
+                        <h3 class="card-title" style="font-size: 1.5rem; margin: 0;"><i class="fas fa-users"></i> أعضاء الفريق</h3>
                         <button id="open-user-modal" class="btn btn-small">
-                            <i class="fas fa-cog"></i> إدارة
+                            <i class="fas fa-user-plus"></i> إضافة عضو
                         </button>
                     </div>
                     
@@ -889,7 +929,7 @@
     <div id="user-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-user-cog"></i> إدارة الأعضاء</h3>
+                <h3><i class="fas fa-user-cog"></i> إضافة عضو جديد</h3>
                 <button class="close-modal">&times;</button>
             </div>
             
@@ -905,11 +945,16 @@
                 </div>
             </div>
             
-            <button id="add-user-modal" class="btn btn-success" style="width: 100%; margin-bottom: 20px;">
-                <i class="fas fa-user-plus"></i> إضافة العضو
-            </button>
+            <div style="display: flex; gap: 10px;">
+                <button id="add-user-modal" class="btn btn-success" style="flex: 1;">
+                    <i class="fas fa-user-plus"></i> إضافة العضو
+                </button>
+                <button id="close-modal-btn" class="btn btn-secondary">
+                    إغلاق
+                </button>
+            </div>
             
-            <div id="modal-users-list">
+            <div id="modal-users-list" style="margin-top: 25px;">
                 <!-- Users list for editing -->
             </div>
         </div>
@@ -926,6 +971,7 @@
         const state = {
             todos: [],
             users: [],
+            currentUser: null,
             selectedColor: '#4361ee'
         };
 
@@ -941,13 +987,13 @@
         const elements = {
             // Inputs
             taskInput: document.getElementById('task-input'),
-            userSelect: document.getElementById('user-select'),
-            newUserName: document.getElementById('new-user-name'),
+            currentUserInput: document.getElementById('current-user-input'),
             modalUserName: document.getElementById('modal-user-name'),
             
             // Buttons
+            setUserBtn: document.getElementById('set-user-btn'),
+            changeUserBtn: document.getElementById('change-user-btn'),
             addTaskBtn: document.getElementById('add-task-btn'),
-            quickAddUser: document.getElementById('quick-add-user'),
             openUserModal: document.getElementById('open-user-modal'),
             copyLinkBtn: document.getElementById('copy-link-btn'),
             refreshQr: document.getElementById('refresh-qr'),
@@ -958,8 +1004,12 @@
             importData: document.getElementById('import-data'),
             resetList: document.getElementById('reset-list'),
             addUserModal: document.getElementById('add-user-modal'),
+            closeModalBtn: document.getElementById('close-modal-btn'),
             
             // Containers
+            currentUserDisplay: document.getElementById('current-user-display'),
+            currentUserAvatar: document.getElementById('current-user-avatar'),
+            currentUserName: document.getElementById('current-user-name'),
             usersList: document.getElementById('users-list'),
             tasksContainer: document.getElementById('tasks-container'),
             modalUsersList: document.getElementById('modal-users-list'),
@@ -984,13 +1034,24 @@
         function init() {
             loadData();
             renderUsers();
-            renderUserSelect();
             renderTasks();
             updateStats();
             updateShareLink();
             generateQRCode();
             setupEventListeners();
-            showNotification('مرحباً! ابدأ بإضافة أعضاء فريقك ثم إضافة المهام.', 'success');
+            
+            // Load current user from localStorage
+            const savedCurrentUser = localStorage.getItem('currentUser');
+            if (savedCurrentUser) {
+                try {
+                    state.currentUser = JSON.parse(savedCurrentUser);
+                    updateCurrentUserDisplay();
+                } catch (error) {
+                    console.error('Error loading current user:', error);
+                }
+            }
+            
+            showNotification('مرحباً! ابدأ بكتابة اسمك ثم أضف مهامك.', 'success');
         }
 
         // Load data from localStorage or URL
@@ -1007,6 +1068,12 @@
                     state.todos = savedState.todos || [];
                     state.users = savedState.users || [];
                     
+                    // Update current user from loaded data if exists
+                    if (savedState.currentUser) {
+                        state.currentUser = savedState.currentUser;
+                        localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+                    }
+                    
                     showNotification('تم تحميل القائمة المشتركة بنجاح!', 'success');
                 } catch (error) {
                     console.error('Error loading from URL:', error);
@@ -1014,16 +1081,6 @@
                 }
             } else {
                 loadFromLocalStorage();
-            }
-            
-            // If no users, add default ones
-            if (state.users.length === 0) {
-                state.users = [
-                    { id: 1, name: 'أحمد', color: '#4361ee', isDefault: true },
-                    { id: 2, name: 'سارة', color: '#e74c3c', isDefault: true },
-                    { id: 3, name: 'محمد', color: '#2ecc71', isDefault: true }
-                ];
-                saveData();
             }
         }
 
@@ -1038,6 +1095,68 @@
         function saveData() {
             localStorage.setItem('mymaaTodos', JSON.stringify(state.todos));
             localStorage.setItem('mymaaUsers', JSON.stringify(state.users));
+            if (state.currentUser) {
+                localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+            }
+        }
+
+        // Set current user
+        function setCurrentUser() {
+            const userName = elements.currentUserInput.value.trim();
+            
+            if (!userName) {
+                showNotification('يرجى كتابة اسمك أولاً', 'error');
+                return;
+            }
+            
+            // Check if user exists in users list
+            let user = state.users.find(u => u.name.toLowerCase() === userName.toLowerCase());
+            
+            if (!user) {
+                // Create new user
+                user = {
+                    id: Date.now(),
+                    name: userName,
+                    color: colorOptions[Math.floor(Math.random() * colorOptions.length)]
+                };
+                state.users.push(user);
+                saveData();
+                renderUsers();
+                renderModalUsers();
+            }
+            
+            state.currentUser = user;
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            updateCurrentUserDisplay();
+            
+            showNotification(`مرحباً ${userName}! يمكنك الآن إضافة المهام.`, 'success');
+            elements.taskInput.focus();
+        }
+
+        function updateCurrentUserDisplay() {
+            if (state.currentUser) {
+                elements.currentUserDisplay.style.display = 'flex';
+                elements.currentUserAvatar.style.backgroundColor = state.currentUser.color;
+                elements.currentUserAvatar.textContent = state.currentUser.name.charAt(0);
+                elements.currentUserName.textContent = state.currentUser.name;
+                elements.currentUserInput.style.display = 'none';
+                elements.setUserBtn.style.display = 'none';
+                elements.changeUserBtn.style.display = 'block';
+            } else {
+                elements.currentUserDisplay.style.display = 'none';
+                elements.currentUserInput.style.display = 'block';
+                elements.setUserBtn.style.display = 'block';
+                elements.changeUserBtn.style.display = 'none';
+            }
+        }
+
+        function changeCurrentUser() {
+            state.currentUser = null;
+            localStorage.removeItem('currentUser');
+            elements.currentUserInput.value = '';
+            updateCurrentUserDisplay();
+            showNotification('يمكنك الآن إدخال اسم جديد', 'success');
+            elements.currentUserInput.focus();
         }
 
         // Generate share URL
@@ -1045,6 +1164,7 @@
             const stateToSave = {
                 todos: state.todos,
                 users: state.users,
+                currentUser: state.currentUser,
                 timestamp: Date.now()
             };
             
@@ -1104,7 +1224,7 @@
                             ${user.name.charAt(0)}
                         </div>
                         <div class="user-details">
-                            <div class="user-name">${user.name}</div>
+                            <div class="user-name">${user.name} ${user.id === state.currentUser?.id ? '<span style="color: #4361ee; font-size: 0.9rem;">(أنت)</span>' : ''}</div>
                             <div class="user-stats">
                                 <span>${userTasks.length} مهمة</span>
                                 <span>${completedTasks} مكتملة</span>
@@ -1112,11 +1232,9 @@
                         </div>
                     </div>
                     <div class="user-actions">
-                        ${!user.isDefault ? `
-                            <button class="btn btn-danger btn-icon delete-user" data-id="${user.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        ` : ''}
+                        <button class="btn btn-danger btn-icon delete-user" data-id="${user.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 `;
                 
@@ -1132,24 +1250,25 @@
             });
         }
 
-        function renderUserSelect() {
-            elements.userSelect.innerHTML = '<option value="">-- اختر شخصًا --</option>';
-            
-            state.users.forEach(user => {
-                const option = document.createElement('option');
-                option.value = user.id;
-                option.textContent = user.name;
-                option.style.color = user.color;
-                elements.userSelect.appendChild(option);
-            });
-        }
-
         function renderModalUsers() {
             elements.modalUsersList.innerHTML = '';
             
+            if (state.users.length === 0) {
+                elements.modalUsersList.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #95a5a6;">
+                        <i class="fas fa-users"></i>
+                        <p>لا يوجد أعضاء بعد</p>
+                    </div>
+                `;
+                return;
+            }
+            
             state.users.forEach(user => {
+                const userTasks = state.todos.filter(t => t.userId === user.id);
+                
                 const userItem = document.createElement('div');
                 userItem.className = 'user-item';
+                userItem.style.marginBottom = '10px';
                 userItem.innerHTML = `
                     <div class="user-info">
                         <div class="user-avatar" style="background-color: ${user.color}">
@@ -1158,18 +1277,14 @@
                         <div class="user-details">
                             <div class="user-name">${user.name}</div>
                             <div class="user-stats">
-                                <span>لون: ${user.color}</span>
+                                <span>${userTasks.length} مهمة</span>
                             </div>
                         </div>
                     </div>
                     <div class="user-actions">
-                        ${!user.isDefault ? `
-                            <button class="btn btn-danger btn-small delete-user-modal" data-id="${user.id}">
-                                <i class="fas fa-trash"></i> حذف
-                            </button>
-                        ` : `
-                            <span style="color: #95a5a6; font-size: 0.9rem;">افتراضي</span>
-                        `}
+                        <button class="btn btn-danger btn-small delete-user-modal" data-id="${user.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
                 `;
                 
@@ -1200,14 +1315,12 @@
             const newUser = {
                 id: Date.now(),
                 name: name.trim(),
-                color: color,
-                isDefault: false
+                color: color
             };
             
             state.users.push(newUser);
             saveData();
             renderUsers();
-            renderUserSelect();
             renderModalUsers();
             updateStats();
             
@@ -1218,6 +1331,16 @@
         function deleteUser(userId) {
             const user = state.users.find(u => u.id === userId);
             if (!user) return;
+            
+            // Check if this is the current user
+            if (state.currentUser && state.currentUser.id === userId) {
+                if (!confirm('أنت تحاول حذف نفسك! هذا سيحذف جميع مهامك. هل تريد المتابعة؟')) {
+                    return;
+                }
+                state.currentUser = null;
+                localStorage.removeItem('currentUser');
+                updateCurrentUserDisplay();
+            }
             
             // Check if user has tasks
             const userTasks = state.todos.filter(t => t.userId === userId);
@@ -1235,7 +1358,6 @@
             state.users = state.users.filter(u => u.id !== userId);
             saveData();
             renderUsers();
-            renderUserSelect();
             renderModalUsers();
             renderTasks();
             updateStats();
@@ -1247,8 +1369,13 @@
 
         // Task Management Functions
         function addTask() {
+            if (!state.currentUser) {
+                showNotification('يرجى كتابة اسمك أولاً', 'error');
+                elements.currentUserInput.focus();
+                return;
+            }
+            
             const taskText = elements.taskInput.value.trim();
-            const userId = parseInt(elements.userSelect.value);
             
             if (!taskText) {
                 showNotification('يرجى كتابة نص المهمة', 'error');
@@ -1256,21 +1383,13 @@
                 return;
             }
             
-            if (!userId) {
-                showNotification('يرجى اختيار شخص للمهمة', 'error');
-                elements.userSelect.focus();
-                return;
-            }
-            
-            const user = state.users.find(u => u.id === userId);
-            
             const newTask = {
                 id: Date.now(),
                 text: taskText,
                 completed: false,
-                userId: userId,
-                userName: user.name,
-                userColor: user.color,
+                userId: state.currentUser.id,
+                userName: state.currentUser.name,
+                userColor: state.currentUser.color,
                 createdAt: Date.now()
             };
             
@@ -1415,22 +1534,20 @@
         }
 
         function resetList() {
-            if (state.todos.length === 0 && state.users.length <= 3) {
+            if (state.todos.length === 0 && state.users.length === 0) {
                 showNotification('القائمة فارغة بالفعل', 'warning');
                 return;
             }
             
-            if (confirm('هل تريد مسح جميع المهام وإعادة ضبط الأعضاء؟ هذا الإجراء لا يمكن التراجع عنه.')) {
-                // Reset to default state
+            if (confirm('هل تريد مسح جميع المهام والأعضاء؟ هذا الإجراء لا يمكن التراجع عنه.')) {
+                // Reset to empty state
                 state.todos = [];
-                state.users = [
-                    { id: 1, name: 'أحمد', color: '#4361ee', isDefault: true },
-                    { id: 2, name: 'سارة', color: '#e74c3c', isDefault: true },
-                    { id: 3, name: 'محمد', color: '#2ecc71', isDefault: true }
-                ];
+                state.users = [];
+                state.currentUser = null;
+                localStorage.removeItem('currentUser');
                 saveData();
+                updateCurrentUserDisplay();
                 renderUsers();
-                renderUserSelect();
                 renderModalUsers();
                 renderTasks();
                 updateStats();
@@ -1513,6 +1630,7 @@
             const dataToExport = {
                 todos: state.todos,
                 users: state.users,
+                currentUser: state.currentUser,
                 exportedAt: new Date().toISOString(),
                 app: 'مهامي - قائمة المهام العربية'
             };
@@ -1549,10 +1667,15 @@
                         
                         state.todos = importedData.todos || [];
                         state.users = importedData.users || [];
+                        state.currentUser = importedData.currentUser || null;
+                        
+                        if (state.currentUser) {
+                            localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
+                        }
                         
                         saveData();
+                        updateCurrentUserDisplay();
                         renderUsers();
-                        renderUserSelect();
                         renderModalUsers();
                         renderTasks();
                         updateStats();
@@ -1573,30 +1696,20 @@
 
         // Event Listeners
         function setupEventListeners() {
+            // Set current user
+            elements.setUserBtn.addEventListener('click', setCurrentUser);
+            elements.currentUserInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') setCurrentUser();
+            });
+            
+            elements.changeUserBtn.addEventListener('click', changeCurrentUser);
+            
             // Add task
             elements.addTaskBtn.addEventListener('click', addTask);
             elements.taskInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     addTask();
-                }
-            });
-            
-            // Quick add user
-            elements.quickAddUser.addEventListener('click', function() {
-                const name = elements.newUserName.value.trim();
-                if (name) {
-                    if (addUser(name, state.selectedColor)) {
-                        elements.newUserName.value = '';
-                    }
-                } else {
-                    showNotification('يرجى إدخال اسم', 'error');
-                }
-            });
-            
-            elements.newUserName.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    elements.quickAddUser.click();
                 }
             });
             
@@ -1618,6 +1731,10 @@
                 } else {
                     showNotification('يرجى إدخال اسم', 'error');
                 }
+            });
+            
+            elements.closeModalBtn.addEventListener('click', function() {
+                elements.userModal.style.display = 'none';
             });
             
             // Close modals
